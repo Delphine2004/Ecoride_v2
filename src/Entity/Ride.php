@@ -5,6 +5,8 @@ namespace App\Entity;
 use DateTimeImmutable;
 
 use App\Repository\RideRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -45,6 +47,23 @@ class Ride
 
     #[ORM\Column]
     private ?DateTimeImmutable $updatedAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'rides')]
+    private ?User $driver = null;
+
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'bookings')]
+    private ?self $ride = null;
+
+    /**
+     * @var Collection<int, self>
+     */
+    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'ride')]
+    private Collection $bookings;
+
+    public function __construct()
+    {
+        $this->bookings = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -167,6 +186,60 @@ class Ride
     public function setUpdatedAt(DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getDriver(): ?User
+    {
+        return $this->driver;
+    }
+
+    public function setDriver(?User $driver): static
+    {
+        $this->driver = $driver;
+
+        return $this;
+    }
+
+    public function getRide(): ?self
+    {
+        return $this->ride;
+    }
+
+    public function setRide(?self $ride): static
+    {
+        $this->ride = $ride;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getBookings(): Collection
+    {
+        return $this->bookings;
+    }
+
+    public function addBooking(self $booking): static
+    {
+        if (!$this->bookings->contains($booking)) {
+            $this->bookings->add($booking);
+            $booking->setRide($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBooking(self $booking): static
+    {
+        if ($this->bookings->removeElement($booking)) {
+            // set the owning side to null (unless already changed)
+            if ($booking->getRide() === $this) {
+                $booking->setRide(null);
+            }
+        }
 
         return $this;
     }
