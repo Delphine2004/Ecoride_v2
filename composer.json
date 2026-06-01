@@ -21,9 +21,11 @@
         "symfony/runtime": "8.0.*",
         "symfony/security-bundle": "8.0.*",
         "symfony/stimulus-bundle": "^3.1",
+        "symfony/translation": "8.0.*",
         "symfony/twig-bundle": "8.0.*",
         "symfony/ux-live-component": "^3.1",
         "symfony/ux-turbo": "^3.1",
+        "symfony/validator": "8.0.*",
         "symfony/yaml": "8.0.*"
     },
     "config": {
