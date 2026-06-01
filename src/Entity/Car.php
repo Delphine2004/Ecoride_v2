@@ -2,10 +2,14 @@
 
 namespace App\Entity;
 
+use App\Repository\CarRepository;
+
+use App\Utils\RegexPatterns;
 use DateTimeImmutable;
 
-use App\Repository\CarRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\DBAL\Types\Types;
+
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CarRepository::class)]
@@ -16,35 +20,68 @@ class Car
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 100)]
+    #[Assert\NotBlank(message: "La marque est obligatoire.")]
+    #[Assert\Regex(RegexPatterns::ONLY_TEXT_REGEX)]
+    #[ORM\Column(type: Types::STRING, length: 100)]
     private ?string $brand = null;
 
-    #[ORM\Column(length: 100)]
+    #[Assert\NotBlank(message: "Le modèle est obligatoire.")]
+    #[Assert\Regex(RegexPatterns::FREE_TEXT_REGEX)]
+    #[ORM\Column(type: Types::STRING, length: 100)]
     private ?string $model = null;
 
-    #[ORM\Column(length: 100)]
+    #[Assert\NotBlank(message: "La couleur est obligatoire.")]
+    #[Assert\Regex(RegexPatterns::ONLY_TEXT_REGEX)]
+    #[ORM\Column(type: Types::STRING, length: 100)]
     private ?string $color = null;
 
-    #[ORM\Column(length: 4)]
+    #[Assert\NotBlank(message: "L'année est obligatoire.")]
+    #[Assert\Regex(RegexPatterns::YEAR_REGEX)]
+    #[ORM\Column(type: Types::STRING, length: 4)]
     private ?string $year = null;
 
-    #[ORM\Column(length: 50)]
+    #[Assert\NotBlank(message: "L'énergie est obligatoire.")]
+    #[Assert\Regex(RegexPatterns::ONLY_TEXT_REGEX)]
+    #[ORM\Column(type: Types::STRING, length: 50)]
     private ?string $power = null;
 
-    #[ORM\Column]
+    #[Assert\NotBlank(message: "Le nombre de place est obligatoire (dont le conducteur.")]
+    #[Assert\GreaterThan(value: 0)]
+    #[Assert\Range(
+        min: 1,
+        max: 10,
+        notInRangeMessage: "Le nombre de place doit être compris entre {{ min }} et {{ max }}."
+    )]
+    #[ORM\Column(type: Types::INTEGER)]
     private ?int $seats = null;
 
-    #[ORM\Column(length: 20)]
+    #[Assert\NotBlank(message: "La plaque d'immatriculation est obligatoire.")]
+    #[Assert\AtLeastOneOf([
+        new Assert\Regex(pattern: RegexPatterns::OLD_REGISTRATION_NUMBER),
+        new Assert\Regex(pattern: RegexPatterns::NEW_REGISTRATION_NUMBER)
+    ], message: "Le numéro d'immatriculation n'est pas correct.")]
+    #[ORM\Column(type: Types::STRING, length: 20)]
     private ?string $registrationNumber = null;
 
+    #[Assert\NotBlank(message: "La date d'immatriculation est obligatoire.")]
+    #[Assert\LessThan(
+        value: 'today',
+        message: "La date doit être strictement inférieure à aujourd'hui."
+    )]
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTime $registrationDate = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'cars')]
     private ?User $owner = null;
+
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
+    {
+        $this->createdAt = new DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {

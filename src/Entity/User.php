@@ -2,36 +2,66 @@
 
 namespace App\Entity;
 
+use App\Repository\UserRepository;
+
+use App\Utils\RegexPatterns;
 use DateTimeImmutable;
 
-use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\DBAL\Types\Types;
+
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-class User
+#[UniqueEntity(fields: ['email'], message: 'Cet email est déjà utilisé.')]
+#[ORM\HasLifecycleCallbacks]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\Regex(RegexPatterns::ONLY_TEXT_REGEX)]
+    #[Assert\Length(min: 2, maxMessage: "Le prénom doit contenir au minimum 2 lettres.")]
+    #[Assert\Length(max: 100, maxMessage: "Le prénom ne doit pas dépasser 100 lettres.")]
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $firstName = null;
 
+    #[Assert\Regex(RegexPatterns::ONLY_TEXT_REGEX)]
+    #[Assert\Length(min: 2, maxMessage: "Le nom doit contenir au minimum 2 lettres.")]
+    #[Assert\Length(max: 100, maxMessage: "Le nom ne doit pas dépasser 100 lettres.")]
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $lastName = null;
 
+    #[Assert\Regex(RegexPatterns::FREE_TEXT_REGEX)]
+    #[Assert\Length(min: 8, maxMessage: "Le login doit contenir au minimum 8 lettres et/ou chiffres.")]
+    #[Assert\Length(max: 25, maxMessage: "Le login ne doit pas dépasser 25 lettres et/ou chiffres.")]
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $login = null;
 
-    #[ORM\Column(length: 255)]
+
+    #[Assert\NotBlank(message: "L'email est obligatoire.")]
+    #[Assert\Email(message: "Email invalide")]
+    #[Assert\Length(max: 255, maxMessage: "L'email ne doit pas dépasser 255 caractères.")]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $email = null;
 
+    // Validation faite dans le type
     #[ORM\Column(length: 255)]
     private ?string $password = null;
+
+    #[Assert\NotNull(message: "Veuillez sélectionner un rôle.")]
+    #[ORM\Column(type: 'json')]
+    private array $roles = [];
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $picture = null;
@@ -39,13 +69,10 @@ class User
     #[ORM\Column(length: 100)]
     private ?string $credit = null;
 
-    #[ORM\Column]
-    private array $roles = [];
-
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     private ?DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     private ?DateTimeImmutable $updatedAt = null;
 
     /**
@@ -60,24 +87,35 @@ class User
     #[ORM\OneToMany(targetEntity: Ride::class, mappedBy: 'driver')]
     private Collection $rides;
 
-    /**
-     * @var Collection<int, Booking>
-     */
-    #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'passenger')]
-    private Collection $bookings;
-
     public function __construct()
     {
         $this->cars = new ArrayCollection();
         $this->rides = new ArrayCollection();
-        $this->bookings = new ArrayCollection();
     }
 
+
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
+    {
+        $this->createdAt = new DateTimeImmutable();
+        $this->updatedAt = new DateTimeImmutable();
+    }
+
+    #[ORM\PreUpdate]
+    public function onPreUpdate(): void
+    {
+        $this->updatedAt = new DateTimeImmutable();
+    }
 
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
     }
 
     public function getFirstName(): ?string
@@ -166,13 +204,25 @@ class User
 
     public function getRoles(): array
     {
-        return $this->roles;
+        $roles = $this->roles ?? [];
+
+        $roles[] = 'ROLE_USER'; // rôle requis par symfony
+
+        return array_unique($roles);
     }
 
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
 
+        return $this;
+    }
+
+    public function addRole(string $role): self
+    {
+        if (!in_array($role, $this->roles, true)) {
+            $this->roles[] = $role;
+        }
         return $this;
     }
 
@@ -254,36 +304,6 @@ class User
             // set the owning side to null (unless already changed)
             if ($ride->getDriver() === $this) {
                 $ride->setDriver(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Booking>
-     */
-    public function getBookings(): Collection
-    {
-        return $this->bookings;
-    }
-
-    public function addBooking(Booking $booking): static
-    {
-        if (!$this->bookings->contains($booking)) {
-            $this->bookings->add($booking);
-            $booking->setPassenger($this);
-        }
-
-        return $this;
-    }
-
-    public function removeBooking(Booking $booking): static
-    {
-        if ($this->bookings->removeElement($booking)) {
-            // set the owning side to null (unless already changed)
-            if ($booking->getPassenger() === $this) {
-                $booking->setPassenger(null);
             }
         }
 

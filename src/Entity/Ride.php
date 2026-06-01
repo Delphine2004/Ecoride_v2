@@ -2,12 +2,17 @@
 
 namespace App\Entity;
 
+use App\Repository\RideRepository;
+
+use App\Utils\RegexPatterns;
 use DateTimeImmutable;
 
-use App\Repository\RideRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\DBAL\Types\Types;
+
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RideRepository::class)]
@@ -18,34 +23,64 @@ class Ride
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
+    #[Assert\NotBlank(message: "La date de départ est obligatoire.")]
+    #[Assert\LessThan(
+        value: 'today',
+        message: "La date doit être strictement supérieure à aujourd'hui."
+    )]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?DateTimeImmutable $departureDate = null;
 
+    #[Assert\NotBlank(message: "La ville d'arrivéee est obligatoire.")]
+    #[Assert\Regex(RegexPatterns::ONLY_TEXT_REGEX)]
     #[ORM\Column(length: 100)]
     private ?string $departurePlace = null;
 
-    #[ORM\Column]
+    #[Assert\NotBlank(message: "La date de départ est obligatoire.")]
+    #[Assert\LessThan(
+        propertyPath: 'departureDate',
+        message: "La date d'arrivée doit être postérieure à la date de départ."
+    )]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?DateTimeImmutable $arrivalDate = null;
 
+    #[Assert\NotBlank(message: "La ville d'arrivéee est obligatoire.")]
+    #[Assert\Regex(RegexPatterns::ONLY_TEXT_REGEX)]
     #[ORM\Column(length: 100)]
     private ?string $arrivalPlace = null;
 
+    #[Assert\NotBlank(message: "Le prix est obligatoir. ")]
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2)]
     private ?string $price = null;
 
+    #[Assert\NotBlank(message: "Le nombre de place disponible est obligatoir.")]
+    #[Assert\GreaterThan(value: 0)]
+    #[Assert\Range(
+        min: 1,
+        max: 5,
+        notInRangeMessage: "Le nombre de place disponible doit être compris entre {{ min }} et {{ max }}."
+    )]
     #[ORM\Column]
     private ?int $availableSeats = null;
 
+    #[Assert\Regex(RegexPatterns::ONLY_TEXT_REGEX)]
     #[ORM\Column(length: 100)]
     private ?string $status = null;
 
+    #[Assert\NotBlank(message: "La commission est obligatoire.")]
+    #[Assert\GreaterThan(value: 0)]
+    #[Assert\Range(
+        min: 1,
+        max: 10,
+        notInRangeMessage: "La commission doit être compris entre {{ min }} et {{ max }}."
+    )]
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2)]
     private ?string $commission = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'rides')]
@@ -63,6 +98,20 @@ class Ride
     public function __construct()
     {
         $this->bookings = new ArrayCollection();
+    }
+
+
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
+    {
+        $this->createdAt = new DateTimeImmutable();
+        $this->updatedAt = new DateTimeImmutable();
+    }
+
+    #[ORM\PreUpdate]
+    public function onPreUpdate(): void
+    {
+        $this->updatedAt = new DateTimeImmutable();
     }
 
     public function getId(): ?int

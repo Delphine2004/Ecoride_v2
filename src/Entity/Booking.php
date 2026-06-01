@@ -2,9 +2,14 @@
 
 namespace App\Entity;
 
+use App\Repository\BookingRepository;
+
+use App\Utils\RegexPatterns;
 use DateTimeImmutable;
 
-use App\Repository\BookingRepository;
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\DBAL\Types\Types;
+
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BookingRepository::class)]
@@ -15,17 +20,33 @@ class Booking
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\Regex(RegexPatterns::ONLY_TEXT_REGEX)]
     #[ORM\Column(length: 100)]
     private ?string $status = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'bookings')]
     private ?User $passenger = null;
+
+
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
+    {
+        $this->createdAt = new DateTimeImmutable();
+        $this->updatedAt = new DateTimeImmutable();
+    }
+
+    #[ORM\PreUpdate]
+    public function onPreUpdate(): void
+    {
+        $this->updatedAt = new DateTimeImmutable();
+    }
+
 
     public function getId(): ?int
     {
