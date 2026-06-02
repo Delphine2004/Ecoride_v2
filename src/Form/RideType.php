@@ -3,42 +3,53 @@
 namespace App\Form;
 
 use App\Entity\Ride;
-use App\Entity\User;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+
+
 class RideType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
+    public function buildForm(
+        FormBuilderInterface $builder,
+        array $options
+    ): void {
         $builder
-            ->add('departureDate', null, [
+            ->add('departureDate', DateType::class, [
                 'widget' => 'single_text',
+                'input' => 'datetime_immutable',
+                'label' => 'Date de départ',
+                'required' => true,
             ])
-            ->add('departurePlace')
-            ->add('arrivalDate', null, [
+            ->add('departurePlace', TextType::class, [
+                'label' => 'Adresse de départ',
+                'required' => true,
+            ])
+            ->add('arrivalDate', DateType::class, [
                 'widget' => 'single_text',
+                'input' => 'datetime_immutable',
+                'label' => 'Date d\'arrivée',
+                'required' => true,
             ])
-            ->add('arrivalPlace')
-            ->add('price')
-            ->add('availableSeats')
-            ->add('status')
-            ->add('commission')
-            ->add('createdAt', null, [
-                'widget' => 'single_text',
+            ->add('arrivalPlace', TextType::class, [
+                'label' => 'Adresse d\'arrivée',
+                'required' => true,
             ])
-            ->add('updatedAt', null, [
-                'widget' => 'single_text',
+            ->add('price', MoneyType::class, [
+                'label' => 'Prix',
+                'currency'    => 'EUR',
+                'scale'       => 2,
+                'required'    => true,
             ])
-            ->add('driver', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'id',
-            ])
-            ->add('ride', EntityType::class, [
-                'class' => Ride::class,
-                'choice_label' => 'id',
+            ->add('availableSeats', IntegerType::class, [
+                'label' => 'Nombre de place',
+                'required' => true,
             ])
         ;
     }
@@ -47,6 +58,7 @@ class RideType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Ride::class,
+            'csrf_protection' => true,
         ]);
     }
 }
