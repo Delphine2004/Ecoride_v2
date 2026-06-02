@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Booking;
+use App\DTO\SearchBooking;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -16,28 +17,71 @@ class BookingRepository extends ServiceEntityRepository
         parent::__construct($registry, Booking::class);
     }
 
-    //    /**
-    //     * @return Booking[] Returns an array of Booking objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('b')
-    //            ->andWhere('b.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('b.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * @return Booking[] Returns an array of Booking objects
+     */
+    public function findBookingsByField(
+        ?SearchBooking $criteria,
+        int $limit = 10,
+        string $orderBy = 'DESC'
+    ): array {
 
-    //    public function findOneBySomeField($value): ?Booking
-    //    {
-    //        return $this->createQueryBuilder('b')
-    //            ->andWhere('b.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        $qb = $this->createQueryBuilder('b')
+            ->leftJoin('b.passenger', 'u')->addSelect('u');
+
+        if ($criteria->getBookingId()) {
+            $qb->andWhere('b.id = :bookingId')
+                ->setParameter('bookingId', $criteria->getBookingId());
+        }
+
+        if ($criteria->getPassengerId()) {
+            $qb->andWhere('u.id = :passengerId')
+                ->setParameter('passengerId', $criteria->getPassengerId());
+        }
+
+        if ($criteria->getLastName()) {
+            $qb->andWhere('u.lastName LIKE :lastName')
+                ->setParameter('lastName', '%' . $criteria->getLastName() . '%');
+        }
+
+        if ($criteria->getEmail()) {
+            $qb->andWhere('u.email LIKE :email')
+                ->setParameter('email', '%' . $criteria->getEmail() . '%');
+        }
+
+        if ($criteria->getStatus()) {
+            $qb->andWhere('b.status = :status')
+                ->setParameter('status', $criteria->getStatus()->value);
+        }
+
+        if ($criteria->getCreatedAt()) {
+            $date = $criteria->getCreatedAt();
+
+            $start = (clone $date)->setTime(0, 0, 0);
+            $end   = (clone $date)->setTime(23, 59, 59);
+
+            $qb->andWhere('b.createdAt BETWEEN :createdAtStart AND :createdAtEnd')
+                ->setParameter('createdAtStart', $start)
+                ->setParameter('createdAtEnd', $end);
+        }
+
+        if ($criteria->getUpdatedAt()) {
+            $date = $criteria->getUpdatedAt();
+
+            $start = (clone $date)->setTime(0, 0, 0);
+            $end   = (clone $date)->setTime(23, 59, 59);
+
+            $qb->andWhere('b.updatedAt BETWEEN :updatedAtStart AND :updatedAtEnd')
+                ->setParameter('updatedAtStart', $start)
+                ->setParameter('updatedAtEnd', $end);
+        }
+
+        return
+            $qb
+            ->orderBy('b.id', $orderBy)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

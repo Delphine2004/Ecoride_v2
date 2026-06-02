@@ -3,6 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\User;
+use App\Enum\UserRole;
+use App\DTO\SearchUser;
+
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -16,28 +19,36 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
-    //    /**
-    //     * @return User[] Returns an array of User objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('u.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function findByFieldAndRole(
+        ?SearchUser $criteria,
+        UserRole $role,
+        int $limit = 10,
+        string $orderBy = 'DESC'
+    ): array {
+        $qb = $this->createQueryBuilder('u');
 
-    //    public function findOneBySomeField($value): ?User
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if ($criteria->getUserId()) {
+            $qb->andWhere('u.id = :id')
+                ->setParameter('id', $criteria->getUserId());
+        }
+
+        if ($criteria->getLastName()) {
+            $qb->andWhere('u.lastName LIKE :lastName')
+                ->setParameter('lastName', '%' . $criteria->getLastName() . '%');
+        }
+
+        if ($criteria->getEmail()) {
+            $qb->andWhere('u.email LIKE :email')
+                ->setParameter('email', '%' . $criteria->getEmail() . '%');
+        }
+
+        $qb->andWhere('u.roles = :role')
+            ->setParameter('role', $role->value);
+
+        return $qb->orderBy('u.id', $orderBy)
+
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
 }
