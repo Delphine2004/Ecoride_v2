@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\Car;
 use App\Entity\Ride;
 
 use Symfony\Component\Form\AbstractType;
@@ -12,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 
 class RideType extends AbstractType
@@ -49,6 +51,13 @@ class RideType extends AbstractType
             ])
             ->add('availableSeats', IntegerType::class, [
                 'label' => 'Nombre de place',
+                'required' => true,
+            ])
+            ->add('car', EntityType::class, [
+                'class' => Car::class,
+                'choice_label' => 'model',
+                'placeholder' => 'Choisir',
+                'label' => 'Voiture',
                 'required' => true,
             ])
         ;
