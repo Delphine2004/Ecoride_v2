@@ -35,6 +35,7 @@ final class CarController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Voiture ajouté avec succés.');
+            // A FAIRE - Changer Redirection
             return $this->redirectToRoute('app_car_index', [], Response::HTTP_SEE_OTHER);
         }
 
