@@ -3,8 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Car;
-use App\Form\Car1Type;
+use App\Form\CarType;
+
+use App\Enum\CarBrand;
+use App\Enum\CarColor;
+use App\Enum\CarPower;
+
 use App\Repository\CarRepository;
+
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,68 +20,81 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/car')]
 final class CarController extends AbstractController
 {
-    #[Route(name: 'app_car_index', methods: ['GET'])]
-    public function index(CarRepository $carRepository): Response
-    {
-        return $this->render('car/index.html.twig', [
-            'cars' => $carRepository->findAll(),
-        ]);
-    }
 
     #[Route('/new', name: 'app_car_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
+    public function new(
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
         $car = new Car();
-        $form = $this->createForm(Car1Type::class, $car);
+        $form = $this->createForm(CarType::class, $car);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($car);
             $entityManager->flush();
 
+            $this->addFlash('success', 'Voiture ajouté avec succés.');
             return $this->redirectToRoute('app_car_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('car/new.html.twig', [
             'car' => $car,
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'app_car_show', methods: ['GET'])]
-    public function show(Car $car): Response
-    {
-        return $this->render('car/show.html.twig', [
-            'car' => $car,
-        ]);
-    }
-
-    #[Route('/{id}/edit', name: 'app_car_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Car $car, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(Car1Type::class, $car);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_car_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('car/edit.html.twig', [
-            'car' => $car,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
     #[Route('/{id}', name: 'app_car_delete', methods: ['POST'])]
-    public function delete(Request $request, Car $car, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$car->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($car);
-            $entityManager->flush();
+    public function delete(
+        Request $request,
+        Car $car,
+        carRepository $carRepository,
+    ): Response {
+
+        // Vérification que la requête est valide
+        if (!$this->isCsrfTokenValid(
+            'delete' . $car->getId(),
+            $request->request->get('_token')
+        )) {
+            throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
 
+        $userConnected = $this->getUser();
+
+        // Vérification que l'utilisateur est connecté
+        if (!$userConnected) {
+            $this->addFlash('sucess', 'Vous devez être connecté.');
+            return $this->redirectToRoute('app_login');
+        }
+
+
+        // Empêche un client de supprimer la voiture d'un autre
+        if ($carRepository->isOwner($userConnected, $car->getId()) && !$this->isGranted('ROLE_EMPLOYE')) {
+            $this->addFlash('sucess', 'Vous devez être connecté.');
+            return $this->redirectToRoute('app_login');
+        }
+
+        // Vérifier que la voiture n'est pas attaché à un trajet
+        if ($car->getRides()) {
+            $this->addFlash(
+                'sucess',
+                'Vous ne pouvez pas supprimer votre compte pendant un séjour en cours.'
+            );
+            // A FAIRE - Changer Redirection
+            return $this->redirectToRoute('app_client_show', [], Response::HTTP_SEE_OTHER);
+        }
+
+        $car->setBrand(CarBrand::NA->value);
+        $car->setModel('NA');
+        $car->setColor(CarColor::NA->value);
+        $car->setYear('NA');
+        $car->setPower(CarPower::NA->value);
+        $car->setSeats(0);
+        $car->setRegistrationNumber('NA');
+        $car->setRegistrationDate(new \DateTime('now', new \DateTimeZone('Europe/Paris')));
+        $car->setOwner(null);
+
+        // A FAIRE - Changer Redirection
         return $this->redirectToRoute('app_car_index', [], Response::HTTP_SEE_OTHER);
     }
 }
