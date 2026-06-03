@@ -95,6 +95,10 @@ class Ride
     #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'ride')]
     private Collection $bookings;
 
+    #[ORM\ManyToOne(inversedBy: 'rides')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Car $car = null;
+
     public function __construct()
     {
         $this->bookings = new ArrayCollection();
@@ -289,6 +293,18 @@ class Ride
                 $booking->setRide(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCar(): ?Car
+    {
+        return $this->car;
+    }
+
+    public function setCar(?Car $car): static
+    {
+        $this->car = $car;
 
         return $this;
     }

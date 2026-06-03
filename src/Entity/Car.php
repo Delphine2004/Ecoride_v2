@@ -6,6 +6,8 @@ use App\Repository\CarRepository;
 
 use App\Utils\RegexPatterns;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\DBAL\Types\Types;
@@ -76,6 +78,17 @@ class Car
 
     #[ORM\ManyToOne(inversedBy: 'cars')]
     private ?User $owner = null;
+
+    /**
+     * @var Collection<int, Ride>
+     */
+    #[ORM\OneToMany(targetEntity: Ride::class, mappedBy: 'car')]
+    private Collection $rides;
+
+    public function __construct()
+    {
+        $this->rides = new ArrayCollection();
+    }
 
     #[ORM\PrePersist]
     public function onPrePersist(): void
@@ -204,6 +217,36 @@ class Car
     public function setOwner(?User $owner): static
     {
         $this->owner = $owner;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Ride>
+     */
+    public function getRides(): Collection
+    {
+        return $this->rides;
+    }
+
+    public function addRide(Ride $ride): static
+    {
+        if (!$this->rides->contains($ride)) {
+            $this->rides->add($ride);
+            $ride->setCar($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRide(Ride $ride): static
+    {
+        if ($this->rides->removeElement($ride)) {
+            // set the owning side to null (unless already changed)
+            if ($ride->getCar() === $this) {
+                $ride->setCar(null);
+            }
+        }
 
         return $this;
     }
