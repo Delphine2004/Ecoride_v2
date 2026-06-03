@@ -99,9 +99,16 @@ class Ride
     #[ORM\JoinColumn(nullable: false)]
     private ?Car $car = null;
 
+    /**
+     * @var Collection<int, Booking>
+     */
+    #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'ride')]
+    private Collection $rideBookings;
+
     public function __construct()
     {
         $this->bookings = new ArrayCollection();
+        $this->rideBookings = new ArrayCollection();
     }
 
 
@@ -305,6 +312,36 @@ class Ride
     public function setCar(?Car $car): static
     {
         $this->car = $car;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Booking>
+     */
+    public function getRideBookings(): Collection
+    {
+        return $this->rideBookings;
+    }
+
+    public function addRideBooking(Booking $rideBooking): static
+    {
+        if (!$this->rideBookings->contains($rideBooking)) {
+            $this->rideBookings->add($rideBooking);
+            $rideBooking->setRide($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRideBooking(Booking $rideBooking): static
+    {
+        if ($this->rideBookings->removeElement($rideBooking)) {
+            // set the owning side to null (unless already changed)
+            if ($rideBooking->getRide() === $this) {
+                $rideBooking->setRide(null);
+            }
+        }
 
         return $this;
     }

@@ -33,6 +33,9 @@ class Booking
     #[ORM\ManyToOne(inversedBy: 'bookings')]
     private ?User $passenger = null;
 
+    #[ORM\ManyToOne(inversedBy: 'rideBookings')]
+    private ?Ride $ride = null;
+
 
     #[ORM\PrePersist]
     public function onPrePersist(): void
@@ -97,6 +100,18 @@ class Booking
     public function setPassenger(?User $passenger): static
     {
         $this->passenger = $passenger;
+
+        return $this;
+    }
+
+    public function getRide(): ?Ride
+    {
+        return $this->ride;
+    }
+
+    public function setRide(?Ride $ride): static
+    {
+        $this->ride = $ride;
 
         return $this;
     }
