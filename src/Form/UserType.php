@@ -68,39 +68,6 @@ class UserType extends AbstractType
             ;
         }
 
-        if ($mode === 'createClient') {
-            $builder
-                ->add('firstName', TextType::class, [
-                    'label' => 'Prénom',
-                    'required' => true,
-                ])
-                ->add('lastName', TextType::class, [
-                    'label' => 'Nom',
-                    'required' => true,
-                ])
-                ->add('email', EmailType::class, [
-                    'label' => 'Adresse e-mail',
-                    'required' => true,
-                ])
-                ->add('phone', TextType::class, [
-                    'label' => 'Téléphone',
-                    'required' => true,
-                ])
-                ->add('address', TextType::class, [
-                    'label' => 'Adresse',
-                    'required' => true,
-                ])
-                ->add('zipCode', TextType::class, [
-                    'label' => 'Code postal',
-                    'required' => true,
-                ])
-                ->add('city', TextType::class, [
-                    'label' => 'Ville',
-                    'required' => true,
-                ])
-            ;
-        }
-
         if ($mode === 'registration') {
             $builder
                 ->add('firstName', TextType::class, [
@@ -115,22 +82,7 @@ class UserType extends AbstractType
                     'label' => 'Adresse e-mail',
                     'required' => true,
                 ])
-                ->add('phone', TextType::class, [
-                    'label' => 'Téléphone',
-                    'required' => true,
-                ])
-                ->add('address', TextType::class, [
-                    'label' => 'Adresse',
-                    'required' => true,
-                ])
-                ->add('zipCode', TextType::class, [
-                    'label' => 'Code postal',
-                    'required' => true,
-                ])
-                ->add('city', TextType::class, [
-                    'label' => 'Ville',
-                    'required' => true,
-                ])->add('agreeTerms', CheckboxType::class, [
+                ->add('agreeTerms', CheckboxType::class, [
                     'mapped' => false,
                     'constraints' => [
                         new IsTrue(
@@ -263,22 +215,6 @@ class UserType extends AbstractType
                 ])
                 ->add('lastName', TextType::class, [
                     'label' => 'Nom',
-                    'required' => false,
-                ])
-                ->add('phone', TextType::class, [
-                    'label' => 'Téléphone',
-                    'required' => false,
-                ])
-                ->add('address', TextType::class, [
-                    'label' => 'Adresse',
-                    'required' => false,
-                ])
-                ->add('zipCode', TextType::class, [
-                    'label' => 'Code postal',
-                    'required' => false,
-                ])
-                ->add('city', TextType::class, [
-                    'label' => 'Ville',
                     'required' => false,
                 ])
                 ->add('email', EmailType::class, [
