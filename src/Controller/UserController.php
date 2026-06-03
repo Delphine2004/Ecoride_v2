@@ -12,10 +12,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/user')]
+
 final class UserController extends AbstractController
 {
-    #[Route(name: 'app_user_index', methods: ['GET'])]
+    #[Route('/users', name: 'app_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
         return $this->render('user/index.html.twig', [
@@ -23,26 +23,26 @@ final class UserController extends AbstractController
         ]);
     }
 
-    #[Route(name: 'app_dashboard_user', methods: ['GET'])]
+    #[Route('/user', name: 'app_dashboard_user', methods: ['GET'])]
     public function dashboardUser(): Response
     {
         return $this->render('user/dashboard_user.html.twig');
     }
 
-    #[Route(name: 'app_dashboard_client', methods: ['GET'])]
+    #[Route('/client', name: 'app_dashboard_client', methods: ['GET'])]
     public function dashboardClient(): Response
     {
         return $this->render('user/dashboard_client.html.twig');
     }
 
-    #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
-    public function new(
+    #[Route('/user/new', name: 'app_user_new', methods: ['GET', 'POST'])]
+    public function newUser(
         Request $request,
         EntityManagerInterface $entityManager
     ): Response {
         $user = new User();
         $user->setRoles([UserRole::EMPLOYEE]);
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserType::class, $user, ['mode' => 'createUser']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -60,7 +60,7 @@ final class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
+    #[Route('/show/{id}', name: 'app_user_show', methods: ['GET'])]
     public function show(
         User $user
     ): Response {
@@ -69,7 +69,7 @@ final class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
+    #[Route('/edit/{id}', name: 'app_user_edit', methods: ['GET', 'POST'])]
     public function editInfo(
         Request $request,
         User $user,
@@ -113,7 +113,7 @@ final class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/picture', name: 'app_user_picture', methods: ['GET', 'POST'])]
+    #[Route('/edit/{id}/picture', name: 'app_user_picture', methods: ['GET', 'POST'])]
     public function editPicture(
         Request $request,
         User $user,
@@ -135,7 +135,7 @@ final class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/credit', name: 'app_user_credit', methods: ['GET', 'POST'])]
+    #[Route('/edit/{id}/credit', name: 'app_user_credit', methods: ['GET', 'POST'])]
     public function addCredit(
         Request $request,
         User $user,
@@ -158,7 +158,7 @@ final class UserController extends AbstractController
     }
 
     // A FAIRE
-    #[Route('/{id}/driver', name: 'app_user_driver', methods: ['GET', 'POST'])]
+    #[Route('/edit/{id}/driver', name: 'app_user_driver', methods: ['GET', 'POST'])]
     public function becomeDriver(
         Request $request,
         User $user,
