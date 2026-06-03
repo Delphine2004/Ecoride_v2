@@ -64,6 +64,40 @@ class UserType extends AbstractType
             ;
         }
 
+        if ($mode === 'createClient') {
+            $builder
+
+                ->add('firstName', TextType::class, [
+                    'label' => 'Prénom',
+                    'required' => true,
+                ])
+                ->add('lastName', TextType::class, [
+                    'label' => 'Nom',
+                    'required' => true,
+                ])
+                ->add('email', EmailType::class, [
+                    'label' => 'Adresse e-mail',
+                    'required' => true,
+                ])
+                ->add('phone', TextType::class, [
+                    'label' => 'Téléphone',
+                    'required' => true,
+                ])
+                ->add('address', TextType::class, [
+                    'label' => 'Adresse',
+                    'required' => true,
+                ])
+                ->add('zipCode', TextType::class, [
+                    'label' => 'Code postal',
+                    'required' => true,
+                ])
+                ->add('city', TextType::class, [
+                    'label' => 'Ville',
+                    'required' => true,
+                ])
+            ;
+        }
+
         if ($mode === 'updateUser') {
             $builder
                 ->add('password', RepeatedType::class, [
@@ -88,18 +122,6 @@ class UserType extends AbstractType
                             message: 'Le mot de passe doit contenir au moins 12 caractères incluant une majuscule, une minuscule, un chiffre et un caractère spécial.',
                         ),
                     ],
-                ]);
-        }
-
-        if ($mode === 'updateUserByAdmin') {
-            $builder
-                ->add('login', TextType::class, [
-                    'label' => 'Nom utilisateur',
-                    'required' => false,
-                ])
-                ->add('email', EmailType::class, [
-                    'label' => 'Adresse e-mail',
-                    'required' => false,
                 ]);
         }
 
@@ -139,6 +161,81 @@ class UserType extends AbstractType
                             message: 'Le mot de passe doit contenir au moins 12 caractères incluant une majuscule, une minuscule, un chiffre et un caractère spécial.',
                         ),
                     ],
+                ]);
+        }
+
+        if ($mode === 'updateAdmin') {
+            $builder
+                ->add('email', EmailType::class, [
+                    'label' => 'Adresse e-mail',
+                    'required' => false,
+                ])
+                ->add('password', RepeatedType::class, [
+                    'type' => PasswordType::class,
+                    'first_options' => [
+                        'label' => 'Mot de passe',
+                    ],
+                    'second_options' => [
+                        'label' => 'Confirmer le mot de passe',
+                    ],
+                    'label' => false,
+                    'required' => true,
+                    'mapped' => false, // n'est pas mappé avec la bd car il sera hashé
+                    'constraints' => [
+                        new Assert\NotBlank(['message' => 'Le mot de passe est obligatoire.']),
+                        new Assert\Length(
+                            max: 255,
+                            maxMessage: 'Le mot de passe ne peut pas dépasser {{ limit }} caractères.',
+                        ),
+                        new Assert\Regex(
+                            pattern: RegexPatterns::PASSWORD,
+                            message: 'Le mot de passe doit contenir au moins 12 caractères incluant une majuscule, une minuscule, un chiffre et un caractère spécial.',
+                        ),
+                    ],
+                ]);
+        }
+
+        if ($mode === 'updateClientByStaff') {
+            $builder
+                ->add('firstName', TextType::class, [
+                    'label' => 'Prénom',
+                    'required' => false,
+                ])
+                ->add('lastName', TextType::class, [
+                    'label' => 'Nom',
+                    'required' => false,
+                ])
+                ->add('phone', TextType::class, [
+                    'label' => 'Téléphone',
+                    'required' => false,
+                ])
+                ->add('address', TextType::class, [
+                    'label' => 'Adresse',
+                    'required' => false,
+                ])
+                ->add('zipCode', TextType::class, [
+                    'label' => 'Code postal',
+                    'required' => false,
+                ])
+                ->add('city', TextType::class, [
+                    'label' => 'Ville',
+                    'required' => false,
+                ])
+                ->add('email', EmailType::class, [
+                    'label' => 'Adresse e-mail',
+                    'required' => true,
+                ]);
+        }
+
+        if ($mode === 'updateUserByAdmin') {
+            $builder
+                ->add('login', TextType::class, [
+                    'label' => 'Nom utilisateur',
+                    'required' => false,
+                ])
+                ->add('email', EmailType::class, [
+                    'label' => 'Adresse e-mail',
+                    'required' => false,
                 ]);
         }
 
