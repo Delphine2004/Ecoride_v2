@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Car;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -26,5 +27,19 @@ class CarRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
+    }
+
+    public function isOwner(
+        User $user,
+        int $carId
+    ): bool {
+        return (bool) $this->createQueryBuilder('c')
+            ->select('COUNT(c.user)')
+            ->where('c.user = :user')
+            ->where('c.id = :carId')
+            ->setParameter('user', $user)
+            ->setParameter('carId', $carId)
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 }
