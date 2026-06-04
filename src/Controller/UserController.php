@@ -2,19 +2,37 @@
 
 namespace App\Controller;
 
+use App\DTO\SearchBooking;
 use App\Entity\User;
+
+use App\Enum\BookingStatus;
 use App\Enum\UserRole;
+
 use App\Form\UserType;
+
 use App\Repository\UserRepository;
+use App\Repository\BookingRepository;
+
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
-
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 final class UserController extends AbstractController
 {
+
+    private UserPasswordHasherInterface $hasher;
+
+    public function __construct(UserPasswordHasherInterface $hasher)
+    {
+        $this->hasher = $hasher;
+    }
+
     #[Route('/users', name: 'app_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
@@ -183,13 +201,81 @@ final class UserController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
-    public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($user);
-            $entityManager->flush();
+    public function delete(
+        Request $request,
+        User $user,
+        BookingRepository $bookingRepository,
+        EntityManagerInterface $entityManager,
+        TokenStorageInterface $tokenStorage
+    ): Response {
+        // Vérification que la requête est valide
+        if (!$this->isCsrfTokenValid(
+            'delete' . $user->getId(),
+            $request->request->get('_token')
+        )) {
+            throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
 
-        return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+        $userConnected = $this->getUser();
+
+        // Vérification que l'utilisateur est connecté
+        if (!$userConnected) {
+            $this->addFlash('sucess', 'Vous devez être connecté.');
+            return $this->redirectToRoute('app_login');
+        }
+
+        // Empêche un client de supprimer un autre compte
+        if ($user !== $userConnected && !$this->isGranted('ROLE_EMPLOYE')) {
+            $this->addFlash('sucess', 'Vous devez être connecté.');
+            return $this->redirectToRoute('app_login');
+        }
+
+        // Vérification que l'utilisateur n'a pas une réservation en cours
+        if ($bookingRepository->hasCurrentReservation($user)) {
+            $this->addFlash(
+                'sucess',
+                'Vous ne pouvez pas supprimer votre compte pendant un séjour en cours.'
+            );
+            return $this->redirectToRoute('app_client_show', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
+        }
+
+        // Récupérer et annuler les réservations à venir
+        try {
+            $datas = [
+                'passengerId' => $user->getId(),
+                'status' => BookingStatus::CONFIRMED
+            ];
+            $searchBookingDto = new SearchBooking($datas);
+
+            $bookings = $bookingRepository->findBookingsByField($searchBookingDto);
+
+            foreach ($bookings as $booking) {
+                $booking->setStatus(BookingStatus::CANCELLED->value);
+            }
+        } catch (\Exception $e) {
+            $this->addFlash(
+                'sucess',
+                'Une erreur est survenue.'
+            );
+
+            $this->addFlash('sucess', 'Une erreur est survenue.');
+            return $this->redirectToRoute('app_client_show', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
+        }
+
+        $user->setFirstName('anonyme');
+        $user->setLastName('anonyme');
+        $user->setLogin('anonyme' . $user->getId());
+        $user->setEmail('anonyme_' . $user->getId() . '@example.com');
+        $hashedPassword = $this->hasher->hashPassword($user, 'Anonymised12*');
+        $user->setPassword($hashedPassword);
+        $user->setRoles([UserRole::ANONYMIZED]);
+
+
+        $entityManager->flush();
+
+        // Déconnexion
+        $tokenStorage->setToken(null);
+        $request->getSession()->invalidate();
+        return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
     }
 }
