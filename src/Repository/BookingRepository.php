@@ -3,7 +3,12 @@
 namespace App\Repository;
 
 use App\Entity\Booking;
+use App\Entity\User;
 use App\DTO\SearchBooking;
+use App\Enum\BookingStatus;
+
+use DateTimeImmutable;
+
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -83,5 +88,17 @@ class BookingRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
+    }
+
+    public function hasCurrentReservation(User $user): bool
+    {
+        return (bool) $this->createQueryBuilder('b')
+            ->select('COUNT(b.id)')
+            ->where('b.user = :user')
+            ->andWhere('b.status = :status')
+            ->setParameter('user', $user)
+            ->setParameter('status', BookingStatus::RUNNING)
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 }
