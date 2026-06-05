@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Ride;
 use App\Form\RideType;
 
+use App\Enum\UserRole;
 use App\Enum\RideStatus;
 
 use App\Repository\RideRepository;
@@ -13,7 +14,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+
+#[IsGranted(UserRole::DRIVER->value)]
 #[Route('/ride')]
 final class RideController extends AbstractController
 {
@@ -42,8 +46,7 @@ final class RideController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Trajet ajouté avec succés.');
-            // A FAIRE - Changer Redirection
-            return $this->redirectToRoute('app_ride_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('ride/new.html.twig', [
@@ -77,8 +80,7 @@ final class RideController extends AbstractController
         $entityManager->flush();
 
         $this->addFlash('success', 'Départ confirmé.');
-        // A FAIRE - Changer Redirection
-        return $this->redirectToRoute('app_user_dashboard', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/{id}/stop', name: 'app_ride_stop', methods: ['POST'])]
@@ -97,8 +99,7 @@ final class RideController extends AbstractController
         $entityManager->flush();
 
         $this->addFlash('success', 'Arrêt confirmé.');
-        // A FAIRE - Changer Redirection
-        return $this->redirectToRoute('app_user_dashboard', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/{id}/cancel', name: 'app_ride_cancel', methods: ['POST'])]
@@ -117,7 +118,10 @@ final class RideController extends AbstractController
         $entityManager->flush();
 
         $this->addFlash('success', 'Annulation confirmée.');
-        // A FAIRE - Changer Redirection
-        return $this->redirectToRoute('app_user_dashboard', [], Response::HTTP_SEE_OTHER);
+        if ($this->isGranted('ROLE_EMPLOYE')) {
+            return $this->redirectToRoute('app_dashboard_user', [], Response::HTTP_SEE_OTHER);
+        } else {
+            return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
+        }
     }
 }

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Booking;
 use App\Form\BookingType;
 use App\Enum\BookingStatus;
+use App\Enum\UserRole;
 
 use App\Repository\BookingRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -12,7 +13,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+
+#[IsGranted(UserRole::PASSENGER->value)]
 #[Route('/booking')]
 final class BookingController extends AbstractController
 {
@@ -41,8 +45,7 @@ final class BookingController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Réservation confirmée.');
-            // A FAIRE - Changer Redirection
-            return $this->redirectToRoute('app_booking_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('booking/new.html.twig', [
@@ -75,8 +78,12 @@ final class BookingController extends AbstractController
 
         $entityManager->flush();
 
-        $this->addFlash('success', 'Annulation confirmée.');
-        // A FAIRE - Changer Redirection
-        return $this->redirectToRoute('app_user_dashboard', [], Response::HTTP_SEE_OTHER);
+        if ($this->isGranted('ROLE_EMPLOYE')) {
+            $this->addFlash('success', 'Annulation confirmée.');
+            return $this->redirectToRoute('app_dashboard_user', [], Response::HTTP_SEE_OTHER);
+        } else {
+            $this->addFlash('success', 'Annulation confirmée.');
+            return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
+        }
     }
 }

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Car;
 use App\Form\CarType;
 
+use App\Enum\UserRole;
 use App\Enum\CarBrand;
 use App\Enum\CarColor;
 use App\Enum\CarPower;
@@ -16,7 +17,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+
+#[IsGranted(UserRole::DRIVER->value)]
 #[Route('/car')]
 final class CarController extends AbstractController
 {
@@ -35,8 +39,7 @@ final class CarController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Voiture ajouté avec succés.');
-            // A FAIRE - Changer Redirection
-            return $this->redirectToRoute('app_car_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_dashboard_user', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('car/new.html.twig', [
@@ -64,25 +67,24 @@ final class CarController extends AbstractController
 
         // Vérification que l'utilisateur est connecté
         if (!$userConnected) {
-            $this->addFlash('sucess', 'Vous devez être connecté.');
+            $this->addFlash('error', 'Vous devez être connecté.');
             return $this->redirectToRoute('app_login');
         }
 
 
         // Empêche un client de supprimer la voiture d'un autre
         if ($carRepository->isOwner($userConnected, $car->getId()) && !$this->isGranted('ROLE_EMPLOYE')) {
-            $this->addFlash('sucess', 'Vous devez être connecté.');
+            $this->addFlash('error', 'Vous n\'êtes pas autorisé.');
             return $this->redirectToRoute('app_login');
         }
 
         // Vérifier que la voiture n'est pas attaché à un trajet
         if ($car->getRides()) {
             $this->addFlash(
-                'sucess',
+                'error',
                 'Vous ne pouvez pas supprimer votre compte pendant un séjour en cours.'
             );
-            // A FAIRE - Changer Redirection
-            return $this->redirectToRoute('app_client_show', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_dashboard_user', [], Response::HTTP_SEE_OTHER);
         }
 
         $car->setBrand(CarBrand::NA->value);
@@ -95,7 +97,10 @@ final class CarController extends AbstractController
         $car->setRegistrationDate(new \DateTime('now', new \DateTimeZone('Europe/Paris')));
         $car->setOwner(null);
 
-        // A FAIRE - Changer Redirection
-        return $this->redirectToRoute('app_car_index', [], Response::HTTP_SEE_OTHER);
+        $this->addFlash(
+            'success',
+            'Voiture supprimée avec succés.'
+        );
+        return $this->redirectToRoute('app_dashboard_user', [], Response::HTTP_SEE_OTHER);
     }
 }
