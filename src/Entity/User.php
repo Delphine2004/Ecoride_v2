@@ -66,7 +66,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $picture = null;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 100, nullable: true)]
     private ?string $credit = null;
 
     #[Assert\AtLeastOneOf([
@@ -207,7 +207,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->credit;
     }
 
-    public function setCredit(string $credit): static
+    public function setCredit(?string $credit): static
     {
         $this->credit = $credit;
 
