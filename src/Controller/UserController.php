@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\DTO\SearchBooking;
 use App\Entity\User;
+use App\Entity\Car;
 
 use App\Enum\BookingStatus;
 use App\Enum\UserRole;
@@ -23,17 +24,20 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
+
+
 final class UserController extends AbstractController
 {
 
     private UserPasswordHasherInterface $hasher;
 
-    public function __construct(UserPasswordHasherInterface $hasher)
+    public function __construct(UserPasswordHasherInterface $hasher, private string $uploadsUsersDirectory)
     {
         $this->hasher = $hasher;
     }
 
-    #[Route('/users', name: 'app_user_index', methods: ['GET'])]
+    #[IsGranted(UserRole::EMPLOYEE->value)]
+    #[Route('/user/search', name: 'app_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
         return $this->render('user/index.html.twig', [
@@ -41,18 +45,21 @@ final class UserController extends AbstractController
         ]);
     }
 
+    #[IsGranted(UserRole::EMPLOYEE->value)]
     #[Route('/user', name: 'app_dashboard_user', methods: ['GET'])]
     public function dashboardUser(): Response
     {
         return $this->render('user/dashboard_user.html.twig');
     }
 
+    #[IsGranted(UserRole::PASSENGER->value)]
     #[Route('/client', name: 'app_dashboard_client', methods: ['GET'])]
     public function dashboardClient(): Response
     {
         return $this->render('user/dashboard_client.html.twig');
     }
 
+    #[IsGranted(UserRole::EMPLOYEE->value)]
     #[Route('/user/new', name: 'app_user_new', methods: ['GET', 'POST'])]
     public function newUser(
         Request $request,
@@ -67,8 +74,7 @@ final class UserController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Réservation confirmée.');
-            // A FAIRE - Changer Redirection
+            $this->addFlash('success', 'Utilisateur créé.');
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -78,6 +84,7 @@ final class UserController extends AbstractController
         ]);
     }
 
+    #[IsGranted(UserRole::EMPLOYEE->value)]
     #[Route('/show/{id}', name: 'app_user_show', methods: ['GET'])]
     public function show(
         User $user
@@ -87,6 +94,7 @@ final class UserController extends AbstractController
         ]);
     }
 
+    #[IsGranted(UserRole::PASSENGER->value)]
     #[Route('/edit/{id}', name: 'app_user_edit', methods: ['GET', 'POST'])]
     public function editInfo(
         Request $request,
@@ -120,9 +128,12 @@ final class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            $this->addFlash('success', 'Modifié avec succés.');
-            // A FAIRE - Changer Redirection
-            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash('success', 'Annulation confirmée.');
+            if ($clientUpdate) {
+                return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
+            } else {
+                return $this->redirectToRoute('app_user_show', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
+            }
         }
 
         return $this->render('user/edit.html.twig', [
@@ -131,6 +142,7 @@ final class UserController extends AbstractController
         ]);
     }
 
+    #[IsGranted(UserRole::PASSENGER->value)]
     #[Route('/edit/{id}/picture', name: 'app_user_picture', methods: ['GET', 'POST'])]
     public function editPicture(
         Request $request,
@@ -144,7 +156,8 @@ final class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash('success', 'Modifié avec succés.');
+            return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('user/edit.html.twig', [
@@ -153,6 +166,7 @@ final class UserController extends AbstractController
         ]);
     }
 
+    #[IsGranted(UserRole::PASSENGER->value)]
     #[Route('/edit/{id}/credit', name: 'app_user_credit', methods: ['GET', 'POST'])]
     public function addCredit(
         Request $request,
@@ -164,9 +178,20 @@ final class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
 
-            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+            $uploadedFile = $form->get('picture')->getData();
+            if ($uploadedFile) {
+                $fileName = uniqid() . '.' . $uploadedFile->guessExtension();
+                $uploadedFile->move($this->uploadsUsersDirectory, $fileName);
+                $user->setPicture($fileName);
+
+                $entityManager->persist($user);
+            }
+
+
+            $entityManager->flush();
+            $this->addFlash('success', 'Crédit ajoutés avec succés.');
+            return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('user/edit.html.twig', [
@@ -175,7 +200,7 @@ final class UserController extends AbstractController
         ]);
     }
 
-    // A FAIRE
+    #[IsGranted(UserRole::PASSENGER->value)]
     #[Route('/edit/{id}/driver', name: 'app_user_driver', methods: ['GET', 'POST'])]
     public function becomeDriver(
         Request $request,
@@ -183,15 +208,43 @@ final class UserController extends AbstractController
         EntityManagerInterface $entityManager
     ): Response {
 
-        $form = $this->createForm(UserType::class, $user, ['mode' => 'becomeDriver']); // A FAIRE
+        $form = $this->createForm(UserType::class, $user, ['mode' => 'becomeDriver']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // Récupérations des données
+            $licence = $form->get('licence')->getData();
+            $brand = $form->get('brand')->getData();
+            $model = $form->get('model')->getData();
+            $color = $form->get('color')->getData();
+            $year = $form->get('year')->getData();
+            $power = $form->get('power')->getData();
+            $seats = $form->get('seats')->getData();
+            $registrationNumber = $form->get('registrationNumber')->getData();
+            $registrationDate = $form->get('registrationDate')->getData();
+
+            // Assignation des valeurs
+            $user->setLicence($licence);
+            $user->addRole(UserRole::DRIVER->value);
+
+            $car = new Car();
+            $car->setBrand($brand);
+            $car->setModel($model);
+            $car->setColor($color);
+            $car->setYear($year);
+            $car->setPower($power);
+            $car->setSeats($seats);
+            $car->setRegistrationNumber($registrationNumber);
+            $car->setRegistrationDate($registrationDate);
+
+
+            $entityManager->persist($user);
+            $entityManager->persist($car);
             $entityManager->flush();
 
             $this->addFlash('success', 'Modifié avec succés.');
-            // A FAIRE - Changer Redirection
-            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('user/edit.html.twig', [
@@ -200,6 +253,7 @@ final class UserController extends AbstractController
         ]);
     }
 
+    #[IsGranted(UserRole::PASSENGER->value)]
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
     public function delete(
         Request $request,
