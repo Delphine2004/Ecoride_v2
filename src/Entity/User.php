@@ -42,7 +42,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $lastName = null;
 
-    #[Assert\Regex(RegexPatterns::FREE_TEXT_REGEX)]
+    #[Assert\Regex(RegexPatterns::LOGIN)]
     #[Assert\Length(min: 8, maxMessage: "Le login doit contenir au minimum 8 lettres et/ou chiffres.")]
     #[Assert\Length(max: 25, maxMessage: "Le login ne doit pas dépasser 25 lettres et/ou chiffres.")]
     #[ORM\Column(length: 50, nullable: true)]
@@ -69,6 +69,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 100)]
     private ?string $credit = null;
 
+    #[Assert\AtLeastOneOf([
+        new Assert\Regex(pattern: RegexPatterns::OLD_LICENCE_NUMBER),
+        new Assert\Regex(pattern: RegexPatterns::NEW_LICENCE_NUMBER)
+    ], message: "Le numéro de permis n'est pas correct.")]
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $licence = null;
+
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     private ?DateTimeImmutable $createdAt = null;
 
@@ -89,6 +96,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private bool $isVerified = false;
+
+
 
     public function __construct()
     {
@@ -321,6 +330,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function getLicence(): ?string
+    {
+        return $this->licence;
+    }
+
+    public function setLicence(?string $licence): static
+    {
+        $this->licence = $licence;
 
         return $this;
     }
