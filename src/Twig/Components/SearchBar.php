@@ -2,10 +2,11 @@
 
 namespace App\Twig\Components;
 
-use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
-use Symfony\UX\LiveComponent\Attribute\LiveProp;
-use Symfony\UX\LiveComponent\DefaultActionTrait;
+use Symfony\Component\Form\FormView;
 
 #[AsTwigComponent]
-final class SearchBar {}
+final class SearchBar
+{
+    public FormView $form;
+}
