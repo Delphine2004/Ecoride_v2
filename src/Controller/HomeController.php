@@ -12,27 +12,9 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class HomeController extends AbstractController
 {
-    #[Route('/', name: 'app_home', methods: ['GET'])]
-    public function index(
-        Request $request,
-        RideRepository $rideRepository
-    ): Response {
-
-        $form = $this->createForm(SearchRideType::class);
-        $form->handleRequest($request);
-
-        $rides = [];
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-
-            $rides = $rideRepository->findRidesByField($data);
-        }
-
-        return $this->render('home/index.html.twig', [
-            'form' => $form->createView(),
-            'rides' => $rides,
-            'controller_name' => 'HomeController',
-        ]);
+    #[Route('/', name: 'app_home')]
+    public function index(): Response
+    {
+        return $this->render('home/index.html.twig');
     }
 }
