@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\DTO\SearchRide;
+use App\DTO\SearchRideDTO;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -40,7 +40,7 @@ class SearchRideType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => SearchRide::class,
+            'data_class' => SearchRideDTO::class,
             'mode' => null
         ]);
     }
