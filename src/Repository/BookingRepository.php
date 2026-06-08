@@ -4,10 +4,9 @@ namespace App\Repository;
 
 use App\Entity\Booking;
 use App\Entity\User;
-use App\DTO\SearchBooking;
+use App\DTO\SearchBookingDTO;
 use App\Enum\BookingStatus;
 
-use DateTimeImmutable;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -26,7 +25,7 @@ class BookingRepository extends ServiceEntityRepository
      * @return Booking[] Returns an array of Booking objects
      */
     public function findBookingsByField(
-        ?SearchBooking $criteria,
+        ?SearchBookingDTO $criteria,
         int $limit = 10,
         string $orderBy = 'DESC'
     ): array {

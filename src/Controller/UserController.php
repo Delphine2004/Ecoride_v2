@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\DTO\SearchBooking;
+use App\DTO\SearchBookingDTO;
 use App\Entity\User;
 use App\Entity\Car;
 
@@ -299,7 +299,7 @@ final class UserController extends AbstractController
                 'passengerId' => $user->getId(),
                 'status' => BookingStatus::CONFIRMED
             ];
-            $searchBookingDto = new SearchBooking($datas);
+            $searchBookingDto = new SearchBookingDTO($datas);
 
             $bookings = $bookingRepository->findBookingsByField($searchBookingDto);
 

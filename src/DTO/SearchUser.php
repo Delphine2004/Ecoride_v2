@@ -2,7 +2,7 @@
 
 namespace App\DTO;
 
-class SearchUser
+class SearchUserDTO
 {
 
     public ?int $id = null;

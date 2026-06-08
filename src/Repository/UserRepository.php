@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use App\Entity\User;
 use App\Enum\UserRole;
-use App\DTO\SearchUser;
+use App\DTO\SearchUserDTO;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -20,7 +20,7 @@ class UserRepository extends ServiceEntityRepository
     }
 
     public function findByFieldAndRole(
-        ?SearchUser $criteria,
+        ?SearchUserDTO $criteria,
         UserRole $role,
         int $limit = 10,
         string $orderBy = 'DESC'
