@@ -4,6 +4,10 @@ namespace App\Repository;
 
 use App\Entity\Ride;
 use App\DTO\SearchRideDTO;
+use App\Enum\RideStatus;
+
+use DateTimeImmutable;
+
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -105,5 +109,31 @@ class RideRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
+    }
+
+
+    public function findAvailableRides(
+        DateTimeImmutable $departureDate,
+        string $departurePlace,
+        string $arrivalPlace
+    ): array {
+
+        $start = $departureDate->setTime(0, 0, 0);
+        $end   = $departureDate->setTime(23, 59, 59);
+
+        return $this->createQueryBuilder('r')
+            ->leftJoin('r.driver', 'u')->addSelect('u')
+            ->leftJoin('r.car', 'c')->addSelect('c')
+            ->andWhere('r.departureDate BETWEEN :start AND :end')
+            ->andWhere('r.departurePlace = :departurePlace')
+            ->andWhere('r.arrivalPlace = :arrivalPlace')
+            ->andWhere('r.status = :status')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->setParameter('departurePlace', $departurePlace)
+            ->setParameter('arrivalPlace', $arrivalPlace)
+            ->setParameter('status', RideStatus::AVAILABLE->value)
+            ->getQuery()
+            ->getResult();
     }
 }
