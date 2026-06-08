@@ -31,8 +31,20 @@ final class SearchRide extends AbstractController // On étend AbstractControlle
     #[LiveAction]
     public function search(): void
     {
-        $formData = $this->getForm()->getData();
+        $this->submitForm();
 
-        $this->results = $this->rideRepository->findRidesByField($formData);
+        $departureDate = $this->getForm()
+            ->get('departureDate')
+            ->getData();
+
+
+        $departurePlace = $this->getForm()
+            ->get('departurePlace')
+            ->getData();
+        $arrivalPlace = $this->getForm()
+            ->get('arrivalPlace')
+            ->getData();
+
+        $this->results = $this->rideRepository->findAvailableRides($departureDate, $departurePlace, $arrivalPlace);
     }
 }
