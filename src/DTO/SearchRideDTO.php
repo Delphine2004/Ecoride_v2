@@ -5,7 +5,7 @@ namespace App\DTO;
 use App\Enum\RideStatus;
 use DateTimeImmutable;
 
-class SearchRide
+class SearchRideDTO
 {
 
     public ?int $rideId = null;
