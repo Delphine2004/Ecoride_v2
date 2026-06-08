@@ -97,6 +97,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $isVerified = false;
 
+    #[ORM\OneToOne(mappedBy: 'owner', cascade: ['persist', 'remove'])]
+    private ?Car $car = null;
+
 
 
     public function __construct()
@@ -342,6 +345,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLicence(?string $licence): static
     {
         $this->licence = $licence;
+
+        return $this;
+    }
+
+    public function getCar(): ?Car
+    {
+        return $this->car;
+    }
+
+    public function setCar(?Car $car): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($car === null && $this->car !== null) {
+            $this->car->setOwner(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($car !== null && $car->getOwner() !== $this) {
+            $car->setOwner($this);
+        }
+
+        $this->car = $car;
 
         return $this;
     }

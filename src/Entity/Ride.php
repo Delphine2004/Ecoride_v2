@@ -15,6 +15,7 @@ use Doctrine\DBAL\Types\Types;
 
 use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: RideRepository::class)]
 class Ride
 {
@@ -24,22 +25,22 @@ class Ride
     private ?int $id = null;
 
     #[Assert\NotBlank(message: "La date de départ est obligatoire.")]
-    #[Assert\LessThan(
+    #[Assert\GreaterThan(
         value: 'today',
         message: "La date doit être strictement supérieure à aujourd'hui."
     )]
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?DateTimeImmutable $departureDate = null;
 
-    #[Assert\NotBlank(message: "La ville d'arrivéee est obligatoire.")]
+    #[Assert\NotBlank(message: "La ville de départ est obligatoire.")]
     #[Assert\Regex(RegexPatterns::ONLY_TEXT_REGEX)]
     #[ORM\Column(length: 100)]
     private ?string $departurePlace = null;
 
     #[Assert\NotBlank(message: "La date de départ est obligatoire.")]
-    #[Assert\LessThan(
+    #[Assert\GreaterThan(
         propertyPath: 'departureDate',
-        message: "La date d'arrivée doit être postérieure à la date de départ."
+        message: "La date de départ doit être postérieure à la date d'arrivée."
     )]
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?DateTimeImmutable $arrivalDate = null;
@@ -49,12 +50,12 @@ class Ride
     #[ORM\Column(length: 100)]
     private ?string $arrivalPlace = null;
 
-    #[Assert\NotBlank(message: "Le prix est obligatoir. ")]
+    #[Assert\NotBlank(message: "Le prix est obligatoire. ")]
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2)]
+    #[Assert\Positive]
     private ?string $price = null;
 
-    #[Assert\NotBlank(message: "Le nombre de place disponible est obligatoir.")]
-    #[Assert\GreaterThan(value: 0)]
+    #[Assert\NotBlank(message: "Le nombre de place disponible est obligatoire.")]
     #[Assert\Range(
         min: 1,
         max: 5,
@@ -68,14 +69,21 @@ class Ride
     private ?string $status = null;
 
     #[Assert\NotBlank(message: "La commission est obligatoire.")]
-    #[Assert\GreaterThan(value: 0)]
     #[Assert\Range(
         min: 1,
         max: 10,
-        notInRangeMessage: "La commission doit être compris entre {{ min }} et {{ max }}."
+        notInRangeMessage: "La commission doit être comprise entre {{ min }} et {{ max }}."
     )]
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2)]
     private ?string $commission = null;
+
+    #[ORM\ManyToOne(inversedBy: 'rides')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $driver = null;
+
+    #[ORM\ManyToOne(inversedBy: 'rides')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Car $car = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?DateTimeImmutable $createdAt = null;
@@ -83,21 +91,6 @@ class Ride
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?DateTimeImmutable $updatedAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'rides')]
-    private ?User $driver = null;
-
-    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'bookings')]
-    private ?self $ride = null;
-
-    /**
-     * @var Collection<int, self>
-     */
-    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'ride')]
-    private Collection $bookings;
-
-    #[ORM\ManyToOne(inversedBy: 'rides')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Car $car = null;
 
     /**
      * @var Collection<int, Booking>
@@ -107,7 +100,6 @@ class Ride
 
     public function __construct()
     {
-        $this->bookings = new ArrayCollection();
         $this->rideBookings = new ArrayCollection();
     }
 
@@ -226,30 +218,6 @@ class Ride
         return $this;
     }
 
-    public function getCreatedAt(): ?DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(DateTimeImmutable $updatedAt): static
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
     public function getDriver(): ?User
     {
         return $this->driver;
@@ -262,47 +230,6 @@ class Ride
         return $this;
     }
 
-    public function getRide(): ?self
-    {
-        return $this->ride;
-    }
-
-    public function setRide(?self $ride): static
-    {
-        $this->ride = $ride;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, self>
-     */
-    public function getBookings(): Collection
-    {
-        return $this->bookings;
-    }
-
-    public function addBooking(self $booking): static
-    {
-        if (!$this->bookings->contains($booking)) {
-            $this->bookings->add($booking);
-            $booking->setRide($this);
-        }
-
-        return $this;
-    }
-
-    public function removeBooking(self $booking): static
-    {
-        if ($this->bookings->removeElement($booking)) {
-            // set the owning side to null (unless already changed)
-            if ($booking->getRide() === $this) {
-                $booking->setRide(null);
-            }
-        }
-
-        return $this;
-    }
 
     public function getCar(): ?Car
     {
@@ -342,6 +269,30 @@ class Ride
                 $rideBooking->setRide(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(DateTimeImmutable $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

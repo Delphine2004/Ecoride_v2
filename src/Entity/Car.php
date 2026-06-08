@@ -14,6 +14,7 @@ use Doctrine\DBAL\Types\Types;
 
 use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: CarRepository::class)]
 class Car
 {
@@ -76,14 +77,15 @@ class Car
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?DateTimeImmutable $createdAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'cars')]
-    private ?User $owner = null;
 
     /**
      * @var Collection<int, Ride>
      */
     #[ORM\OneToMany(targetEntity: Ride::class, mappedBy: 'car')]
     private Collection $rides;
+
+    #[ORM\OneToOne(inversedBy: 'car', cascade: ['persist', 'remove'])]
+    private ?User $owner = null;
 
     public function __construct()
     {
@@ -197,30 +199,6 @@ class Car
         return $this;
     }
 
-    public function getCreatedAt(): ?DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getOwner(): ?User
-    {
-        return $this->owner;
-    }
-
-    public function setOwner(?User $owner): static
-    {
-        $this->owner = $owner;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Ride>
      */
@@ -247,6 +225,30 @@ class Car
                 $ride->setCar(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?User $owner): static
+    {
+        $this->owner = $owner;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }
