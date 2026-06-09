@@ -8,7 +8,7 @@ use App\Entity\User;
 
 use App\Enum\RideStatus;
 
-use DateTime;
+use DateTimeImmutable;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -20,7 +20,7 @@ class RideFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager): void
     {
 
-        $today = new \DateTimeImmutable('now', new \DateTimeZone('Europe/Paris'));
+        $today = new DateTimeImmutable('now', new \DateTimeZone('Europe/Paris'));
 
         $rideData = [
             // trajet du jour
@@ -87,7 +87,7 @@ class RideFixtures extends Fixture implements DependentFixtureInterface
                 'departurePlace' => 'AMIENS',
                 'arrivalDate' => $today->modify('+8 days')->setTime(17, 15),
                 'arrivalPlace' => 'PARIS',
-                'price' => '25',
+                'price' => '12',
                 'availableSeats' => 0,
                 'status' => RideStatus::CANCELLED,
                 'createdAt' => $today,
@@ -101,7 +101,7 @@ class RideFixtures extends Fixture implements DependentFixtureInterface
                 'departurePlace' => 'CAEN',
                 'arrivalDate' => $today->modify('+3 days')->setTime(22, 45),
                 'arrivalPlace' => 'PARIS',
-                'price' => '25',
+                'price' => '22',
                 'availableSeats' => 2,
                 'status' => RideStatus::AVAILABLE,
                 'createdAt' => $today->modify('-2 days'),
@@ -114,7 +114,7 @@ class RideFixtures extends Fixture implements DependentFixtureInterface
                 'departurePlace' => 'ROUEN',
                 'arrivalDate' => $today->modify('+14 days')->setTime(13, 45),
                 'arrivalPlace' => 'CAEN',
-                'price' => '18',
+                'price' => '19',
                 'availableSeats' => 1,
                 'status' => RideStatus::AVAILABLE,
                 'createdAt' => $today->modify('-3 days'),
@@ -238,7 +238,7 @@ class RideFixtures extends Fixture implements DependentFixtureInterface
                 'departurePlace' => 'MONTPELLIER',
                 'arrivalDate' => $today->modify('-2 days')->setTime(11, 30),
                 'arrivalPlace' => 'TOULOUSE',
-                'price' => '22',
+                'price' => '25',
                 'availableSeats' => 1,
                 'status' => RideStatus::COMPLETED,
                 'createdAt' => $today->modify('-6 days'),
@@ -264,7 +264,7 @@ class RideFixtures extends Fixture implements DependentFixtureInterface
                 'departurePlace' => 'PARIS',
                 'arrivalDate' => $today->modify('-9 days')->setTime(12, 30),
                 'arrivalPlace' => 'STRASBOURG',
-                'price' => '22',
+                'price' => '21',
                 'availableSeats' => 1,
                 'status' => RideStatus::COMPLETED,
                 'createdAt' => $today->modify('-12 days'),
@@ -278,7 +278,7 @@ class RideFixtures extends Fixture implements DependentFixtureInterface
                 'departurePlace' => 'STRASBOURG',
                 'arrivalDate' => $today->modify('-4 days')->setTime(11, 30),
                 'arrivalPlace' => 'LILLE',
-                'price' => '22',
+                'price' => '18',
                 'availableSeats' => 1,
                 'status' => RideStatus::COMPLETED,
                 'createdAt' => $today->modify('-9 days'),
@@ -291,7 +291,7 @@ class RideFixtures extends Fixture implements DependentFixtureInterface
                 'departurePlace' => 'LYON',
                 'arrivalDate' => $today->modify('-6 days')->setTime(14, 30),
                 'arrivalPlace' => 'ORLEANS',
-                'price' => '22',
+                'price' => '24',
                 'availableSeats' => 1,
                 'status' => RideStatus::COMPLETED,
                 'createdAt' => $today->modify('-9 days'),
@@ -318,7 +318,7 @@ class RideFixtures extends Fixture implements DependentFixtureInterface
                 'departurePlace' => 'CAEN',
                 'arrivalDate' => $today->modify('-2 days')->setTime(22, 00),
                 'arrivalPlace' => 'PARIS',
-                'price' => '22',
+                'price' => '17',
                 'availableSeats' => 2,
                 'status' => RideStatus::COMPLETED,
                 'createdAt' => $today->modify('-2 days'),
