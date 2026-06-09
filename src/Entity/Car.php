@@ -111,7 +111,7 @@ class Car
         return $this->id;
     }
 
-    public function getBrand(): ?string
+    public function getBrand(): ?CarBrand
     {
         return $this->brand;
     }
@@ -135,7 +135,7 @@ class Car
         return $this;
     }
 
-    public function getColor(): ?string
+    public function getColor(): ?CarColor
     {
         return $this->color;
     }
@@ -159,7 +159,7 @@ class Car
         return $this;
     }
 
-    public function getPower(): ?string
+    public function getPower(): ?CarPower
     {
         return $this->power;
     }

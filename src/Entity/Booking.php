@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\BookingRepository;
+use App\Enum\BookingStatus;
 
 use App\Utils\RegexPatterns;
 use DateTimeImmutable;
@@ -22,8 +23,8 @@ class Booking
     private ?int $id = null;
 
     #[Assert\Regex(RegexPatterns::ONLY_TEXT_REGEX)]
-    #[ORM\Column(length: 100)]
-    private ?string $status = null;
+    #[ORM\Column(length: 100, enumType: BookingStatus::class)]
+    private ?BookingStatus $status = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?DateTimeImmutable $createdAt = null;
@@ -59,12 +60,12 @@ class Booking
         return $this->id;
     }
 
-    public function getStatus(): ?string
+    public function getStatus(): ?BookingStatus
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): static
+    public function setStatus(BookingStatus $status): static
     {
         $this->status = $status;
 

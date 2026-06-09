@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\RideStatus;
 use App\Repository\RideRepository;
 
 use App\Utils\RegexPatterns;
@@ -65,8 +66,8 @@ class Ride
     private ?int $availableSeats = null;
 
     #[Assert\Regex(RegexPatterns::ONLY_TEXT_REGEX)]
-    #[ORM\Column(length: 100)]
-    private ?string $status = null;
+    #[ORM\Column(length: 100, enumType: RideStatus::class)]
+    private ?RideStatus $status = null;
 
     #[Assert\NotBlank(message: "La commission est obligatoire.")]
     #[Assert\Range(
@@ -194,12 +195,12 @@ class Ride
         return $this;
     }
 
-    public function getStatus(): ?string
+    public function getStatus(): ?RideStatus
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): static
+    public function setStatus(RideStatus $status): static
     {
         $this->status = $status;
 
