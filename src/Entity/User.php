@@ -82,11 +82,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     private ?DateTimeImmutable $updatedAt = null;
 
-    /**
-     * @var Collection<int, Car>
-     */
-    #[ORM\OneToMany(targetEntity: Car::class, mappedBy: 'owner')]
-    private Collection $cars;
 
     /**
      * @var Collection<int, Ride>
@@ -94,18 +89,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Ride::class, mappedBy: 'driver')]
     private Collection $rides;
 
+    /**
+     * @var Collection<int, Car>
+     */
+    #[ORM\OneToMany(targetEntity: Car::class, mappedBy: 'owner')]
+    private Collection $cars;
+
     #[ORM\Column]
     private bool $isVerified = false;
-
-    #[ORM\OneToOne(mappedBy: 'owner', cascade: ['persist', 'remove'])]
-    private ?Car $car = null;
-
 
 
     public function __construct()
     {
-        $this->cars = new ArrayCollection();
         $this->rides = new ArrayCollection();
+        $this->cars = new ArrayCollection();
     }
 
 
@@ -241,6 +238,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getLicence(): ?string
+    {
+        return $this->licence;
+    }
+
+    public function setLicence(?string $licence): static
+    {
+        $this->licence = $licence;
+
+        return $this;
+    }
+
     public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->createdAt;
@@ -261,6 +270,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUpdatedAt(DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+
+
+    /**
+     * @return Collection<int, Ride>
+     */
+    public function getRides(): Collection
+    {
+        return $this->rides;
+    }
+
+    public function addRide(Ride $ride): static
+    {
+        if (!$this->rides->contains($ride)) {
+            $this->rides->add($ride);
+            $ride->setDriver($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRide(Ride $ride): static
+    {
+        if ($this->rides->removeElement($ride)) {
+            // set the owning side to null (unless already changed)
+            if ($ride->getDriver() === $this) {
+                $ride->setDriver(null);
+            }
+        }
 
         return $this;
     }
@@ -295,36 +336,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, Ride>
-     */
-    public function getRides(): Collection
-    {
-        return $this->rides;
-    }
-
-    public function addRide(Ride $ride): static
-    {
-        if (!$this->rides->contains($ride)) {
-            $this->rides->add($ride);
-            $ride->setDriver($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRide(Ride $ride): static
-    {
-        if ($this->rides->removeElement($ride)) {
-            // set the owning side to null (unless already changed)
-            if ($ride->getDriver() === $this) {
-                $ride->setDriver(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function isVerified(): bool
     {
         return $this->isVerified;
@@ -333,40 +344,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
-
-        return $this;
-    }
-
-    public function getLicence(): ?string
-    {
-        return $this->licence;
-    }
-
-    public function setLicence(?string $licence): static
-    {
-        $this->licence = $licence;
-
-        return $this;
-    }
-
-    public function getCar(): ?Car
-    {
-        return $this->car;
-    }
-
-    public function setCar(?Car $car): static
-    {
-        // unset the owning side of the relation if necessary
-        if ($car === null && $this->car !== null) {
-            $this->car->setOwner(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($car !== null && $car->getOwner() !== $this) {
-            $car->setOwner($this);
-        }
-
-        $this->car = $car;
 
         return $this;
     }
