@@ -2,6 +2,10 @@
 
 namespace App\Entity;
 
+use App\Enum\CarBrand;
+use App\Enum\CarColor;
+use App\Enum\CarPower;
+
 use App\Repository\CarRepository;
 
 use App\Utils\RegexPatterns;
@@ -25,8 +29,8 @@ class Car
 
     #[Assert\NotBlank(message: "La marque est obligatoire.")]
     #[Assert\Regex(RegexPatterns::ONLY_TEXT_REGEX)]
-    #[ORM\Column(type: Types::STRING, length: 100)]
-    private ?string $brand = null;
+    #[ORM\Column(type: Types::STRING, length: 100, enumType: CarBrand::class)]
+    private ?CarBrand $brand = null;
 
     #[Assert\NotBlank(message: "Le modèle est obligatoire.")]
     #[Assert\Regex(RegexPatterns::FREE_TEXT_REGEX)]
@@ -35,8 +39,8 @@ class Car
 
     #[Assert\NotBlank(message: "La couleur est obligatoire.")]
     #[Assert\Regex(RegexPatterns::ONLY_TEXT_REGEX)]
-    #[ORM\Column(type: Types::STRING, length: 100)]
-    private ?string $color = null;
+    #[ORM\Column(type: Types::STRING, length: 100, enumType: CarColor::class)]
+    private ?CarColor $color = null;
 
     #[Assert\NotBlank(message: "L'année est obligatoire.")]
     #[Assert\Regex(RegexPatterns::YEAR_REGEX)]
@@ -45,8 +49,8 @@ class Car
 
     #[Assert\NotBlank(message: "L'énergie est obligatoire.")]
     #[Assert\Regex(RegexPatterns::ONLY_TEXT_REGEX)]
-    #[ORM\Column(type: Types::STRING, length: 50)]
-    private ?string $power = null;
+    #[ORM\Column(type: Types::STRING, length: 50, enumType: CarPower::class)]
+    private ?CarPower $power = null;
 
     #[Assert\NotBlank(message: "Le nombre de place est obligatoire (dont le conducteur.")]
     #[Assert\GreaterThan(value: 0)]
@@ -84,8 +88,12 @@ class Car
     #[ORM\OneToMany(targetEntity: Ride::class, mappedBy: 'car')]
     private Collection $rides;
 
-    #[ORM\OneToOne(inversedBy: 'car', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'cars')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?User $owner = null;
+
+
+
 
     public function __construct()
     {
@@ -108,7 +116,7 @@ class Car
         return $this->brand;
     }
 
-    public function setBrand(string $brand): static
+    public function setBrand(CarBrand $brand): static
     {
         $this->brand = $brand;
 
@@ -132,7 +140,7 @@ class Car
         return $this->color;
     }
 
-    public function setColor(string $color): static
+    public function setColor(CarColor $color): static
     {
         $this->color = $color;
 
@@ -156,7 +164,7 @@ class Car
         return $this->power;
     }
 
-    public function setPower(string $power): static
+    public function setPower(CarPower $power): static
     {
         $this->power = $power;
 
