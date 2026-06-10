@@ -19,7 +19,7 @@
         "symfony/flex": "^2",
         "symfony/form": "8.0.*",
         "symfony/framework-bundle": "8.0.*",
-        "symfony/mailer": "8.0.*",
+        "symfony/mailer": "8.1.*",
         "symfony/runtime": "8.0.*",
         "symfony/security-bundle": "8.0.*",
         "symfony/stimulus-bundle": "^3.1",
