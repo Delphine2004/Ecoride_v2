@@ -1,26 +1,23 @@
 <div {{ attributes }}>
-    {{ form_start(form, {
-        attr: {
-            'data-action': 'live#action',
-            'data-live-action-param': 'search'
-        }
-    }) }}
+	{{ form_start(form) }}
 
-    {{ form_row(form.departureDate) }}
-    {{ form_row(form.departurePlace) }}
-    {{ form_row(form.arrivalPlace) }}
+	{{ form_row(form.departureDate) }}
+	{{ form_row(form.departurePlace) }}
+	{{ form_row(form.arrivalPlace) }}
 
-    <button type="submit">
-        Rechercher
-    </button>
+	<button type="button" data-action="live#action" data-live-action-param="search">
+		Rechercher
+	</button>
 
-    {{ form_end(form) }}
+	{{ form_end(form) }}
 
-    <div>
-        {% for ride in results %}
-            <div>{{ ride.departurePlace }} → {{ ride.arrivalPlace }}</div>
-        {% else %}
-            <div>Aucun résultat</div>
-        {% endfor %}
-    </div>
+	<div>
+		{% for ride in this.results %}
+			<div>{{ ride.departurePlace }}
+				→
+				{{ ride.arrivalPlace }}</div>
+		{% else %}
+			<div>Aucun résultat</div>
+		{% endfor %}
+	</div>
 </div>
