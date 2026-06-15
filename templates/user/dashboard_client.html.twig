@@ -1,7 +1,36 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit User{% endblock %}
+{% block title %}Compte Client
+{% endblock %}
 
 {% block body %}
-<h1>Compte client</h1>
+	<h1>Compte client</h1>
+	<div>{{ user.email }}</div>
+
+
+	<div>
+		<h2>Réservations à venir</h2>
+		<ul>
+			{% for booking in bookings %}
+				<li>{{ booking.id}}
+					-
+					{{ booking.status.value}}</li>
+			{% else %}
+				<li>Aucune réservation</li>
+			{% endfor %}
+		</ul>
+	</div>
+	<div>
+		<h2>Trajets à venir</h2>
+		<ul>
+			{% for ride in rides %}
+				<li>{{ ride.id}}
+					-
+					{{ ride.status.value}}</li>
+			{% else %}
+				<li>Aucun trajet</li>
+			{% endfor %}
+		</ul>
+	</div>
+
 {% endblock %}
