@@ -98,11 +98,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $isVerified = false;
 
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'bookings')]
+    private ?self $passenger = null;
+
+    /**
+     * @var Collection<int, self>
+     */
+    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'passenger')]
+    private Collection $bookings;
+
 
     public function __construct()
     {
         $this->rides = new ArrayCollection();
         $this->cars = new ArrayCollection();
+        $this->bookings = new ArrayCollection();
     }
 
 
@@ -344,6 +354,48 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function getPassenger(): ?self
+    {
+        return $this->passenger;
+    }
+
+    public function setPassenger(?self $passenger): static
+    {
+        $this->passenger = $passenger;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getBookings(): Collection
+    {
+        return $this->bookings;
+    }
+
+    public function addBooking(self $booking): static
+    {
+        if (!$this->bookings->contains($booking)) {
+            $this->bookings->add($booking);
+            $booking->setPassenger($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBooking(self $booking): static
+    {
+        if ($this->bookings->removeElement($booking)) {
+            // set the owning side to null (unless already changed)
+            if ($booking->getPassenger() === $this) {
+                $booking->setPassenger(null);
+            }
+        }
 
         return $this;
     }

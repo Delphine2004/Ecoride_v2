@@ -32,13 +32,14 @@ class Booking
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?DateTimeImmutable $updatedAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'bookings')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $passenger = null;
 
     #[ORM\ManyToOne(inversedBy: 'rideBookings')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Ride $ride = null;
+
+    #[ORM\ManyToOne(inversedBy: 'bookings')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $passenger = null;
 
 
     #[ORM\PrePersist]
@@ -96,17 +97,6 @@ class Booking
         return $this;
     }
 
-    public function getPassenger(): ?User
-    {
-        return $this->passenger;
-    }
-
-    public function setPassenger(?User $passenger): static
-    {
-        $this->passenger = $passenger;
-
-        return $this;
-    }
 
     public function getRide(): ?Ride
     {
@@ -116,6 +106,18 @@ class Booking
     public function setRide(?Ride $ride): static
     {
         $this->ride = $ride;
+
+        return $this;
+    }
+
+    public function getPassenger(): ?User
+    {
+        return $this->passenger;
+    }
+
+    public function setPassenger(?User $passenger): static
+    {
+        $this->passenger = $passenger;
 
         return $this;
     }
