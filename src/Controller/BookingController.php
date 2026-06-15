@@ -35,7 +35,7 @@ final class BookingController extends AbstractController
         EntityManagerInterface $entityManager
     ): Response {
         $booking = new Booking();
-        $booking->setStatus(BookingStatus::CONFIRMED->value);
+        $booking->setStatus(BookingStatus::CONFIRMED);
         $booking->setPassenger($this->getUser());
         $form = $this->createForm(BookingType::class, $booking);
         $form->handleRequest($request);
@@ -74,7 +74,7 @@ final class BookingController extends AbstractController
             throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
 
-        $booking->setStatus(BookingStatus::CANCELLED->value);
+        $booking->setStatus(BookingStatus::CANCELLED);
 
         $entityManager->flush();
 
