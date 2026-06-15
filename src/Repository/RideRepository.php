@@ -111,7 +111,6 @@ class RideRepository extends ServiceEntityRepository
         ;
     }
 
-
     public function findAvailableRides(
         DateTimeImmutable $departureDate,
         string $departurePlace,
@@ -133,6 +132,23 @@ class RideRepository extends ServiceEntityRepository
             ->setParameter('departurePlace', $departurePlace)
             ->setParameter('arrivalPlace', $arrivalPlace)
             ->setParameter('status', RideStatus::AVAILABLE->value)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findUpcomingRidesByClient(
+        int $userId
+    ): array {
+        $today = new DateTimeImmutable('today');
+        $start = $today->setTime(0, 0, 0);
+
+        return $this->createQueryBuilder('r')
+            ->leftJoin('r.driver', 'u')->addSelect('u')
+            ->andWhere('r.driver = :userId')
+            ->andWhere('r.arrivalDate >= :start')
+            ->setParameter('userId', $userId)
+            ->setParameter('start', $start)
+            ->orderBy('r.departureDate', 'ASC')
             ->getQuery()
             ->getResult();
     }
