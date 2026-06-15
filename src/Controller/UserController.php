@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\DTO\SearchBookingDTO;
+use App\DTO\SearchRideDTO;
 use App\Entity\User;
 use App\Entity\Car;
 
@@ -13,6 +14,7 @@ use App\Form\UserType;
 
 use App\Repository\UserRepository;
 use App\Repository\BookingRepository;
+use App\Repository\RideRepository;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -53,10 +55,19 @@ final class UserController extends AbstractController
     }
 
     #[IsGranted(UserRole::PASSENGER->value)]
-    #[Route('/client', name: 'app_dashboard_client', methods: ['GET'])]
-    public function dashboardClient(): Response
-    {
-        return $this->render('user/dashboard_client.html.twig');
+    #[Route('/client/{id}', name: 'app_dashboard_client', methods: ['GET'])]
+    public function dashboardClient(
+        User $user,
+        RideRepository $rideRepository,
+        BookingRepository $bookingRepository
+    ): Response {
+
+        return $this->render('user/dashboard_client.html.twig', [
+            'user' => $user,
+            'bookings' => $bookingRepository->findUpcomingBookingsByClient($user->getId()),
+            'rides' => $rideRepository->findUpcomingRidesByClient($user->getId()),
+
+        ]);
     }
 
     #[IsGranted(UserRole::EMPLOYEE->value)]
@@ -304,7 +315,7 @@ final class UserController extends AbstractController
             $bookings = $bookingRepository->findBookingsByField($searchBookingDto);
 
             foreach ($bookings as $booking) {
-                $booking->setStatus(BookingStatus::CANCELLED->value);
+                $booking->setStatus(BookingStatus::CANCELLED);
             }
         } catch (\Exception $e) {
             $this->addFlash(
