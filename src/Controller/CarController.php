@@ -87,11 +87,11 @@ final class CarController extends AbstractController
             return $this->redirectToRoute('app_dashboard_user', [], Response::HTTP_SEE_OTHER);
         }
 
-        $car->setBrand(CarBrand::NA->value);
+        $car->setBrand(CarBrand::NA);
         $car->setModel('NA');
-        $car->setColor(CarColor::NA->value);
+        $car->setColor(CarColor::NA);
         $car->setYear('NA');
-        $car->setPower(CarPower::NA->value);
+        $car->setPower(CarPower::NA);
         $car->setSeats(0);
         $car->setRegistrationNumber('NA');
         $car->setRegistrationDate(new \DateTime('now', new \DateTimeZone('Europe/Paris')));

@@ -36,7 +36,7 @@ final class RideController extends AbstractController
         EntityManagerInterface $entityManager
     ): Response {
         $ride = new Ride();
-        $ride->setStatus(RideStatus::AVAILABLE->value);
+        $ride->setStatus(RideStatus::AVAILABLE);
         $form = $this->createForm(RideType::class, $ride);
         $form->handleRequest($request);
 
@@ -75,7 +75,7 @@ final class RideController extends AbstractController
             throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
 
-        $ride->setStatus(RideStatus::RUNNING->value);
+        $ride->setStatus(RideStatus::RUNNING);
 
         $entityManager->flush();
 
@@ -94,7 +94,7 @@ final class RideController extends AbstractController
             throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
 
-        $ride->setStatus(RideStatus::PENDING->value);
+        $ride->setStatus(RideStatus::PENDING);
 
         $entityManager->flush();
 
@@ -113,7 +113,7 @@ final class RideController extends AbstractController
             throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
 
-        $ride->setStatus(RideStatus::CANCELLED->value);
+        $ride->setStatus(RideStatus::CANCELLED);
 
         $entityManager->flush();
 
