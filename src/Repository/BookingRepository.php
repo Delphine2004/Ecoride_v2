@@ -7,8 +7,6 @@ use App\Entity\User;
 use App\DTO\SearchBookingDTO;
 use App\Enum\BookingStatus;
 
-use DateTimeImmutable;
-
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -100,23 +98,5 @@ class BookingRepository extends ServiceEntityRepository
             ->setParameter('status', BookingStatus::RUNNING)
             ->getQuery()
             ->getSingleScalarResult();
-    }
-
-    public function findUpcomingBookingsByClient(
-        int $userId
-    ): array {
-        $today = new DateTimeImmutable('today');
-        $start = $today->setTime(0, 0, 0);
-
-        return $this->createQueryBuilder('b')
-            ->leftJoin('b.passenger', 'u')->addSelect('u')
-            ->leftJoin('b.ride', 'r')->addSelect('r')
-            ->andWhere('u.id = :userId')
-            ->andWhere('r.arrivalDate >= :start')
-            ->setParameter('userId', $userId)
-            ->setParameter('start', $start)
-            ->orderBy('r.departureDate', 'ASC')
-            ->getQuery()
-            ->getResult();
     }
 }
