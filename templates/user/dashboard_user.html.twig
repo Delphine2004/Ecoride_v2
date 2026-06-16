@@ -1,6 +1,21 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit User{% endblock %}
+{% block title %}Tableau de bord
+{% endblock %}
 
 {% block body %}
-<h1>Compte employé</h1>{% endblock %}
+	<h1>Tableau de bord</h1>
+
+  	<div>
+		<h2>Réservations à verifier</h2>
+		<ul>
+			{% for booking in bookings %}
+				<li>{{ booking.id}}
+					-
+					{{ booking.status.value}}</li>
+			{% else %}
+				<li>Aucune réservation</li>
+			{% endfor %}
+		</ul>
+	</div>
+{% endblock %}
