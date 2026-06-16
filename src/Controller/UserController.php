@@ -49,9 +49,16 @@ final class UserController extends AbstractController
 
     #[IsGranted(UserRole::EMPLOYEE->value)]
     #[Route('/user', name: 'app_dashboard_user', methods: ['GET'])]
-    public function dashboardUser(): Response
-    {
-        return $this->render('user/dashboard_user.html.twig');
+    public function dashboardUser(
+        BookingRepository $bookingRepository
+    ): Response {
+
+        $criteria = new SearchBookingDTO();
+        $criteria->status = BookingStatus::REPORTED;
+
+        return $this->render('user/dashboard_user.html.twig', [
+            'bookings' => $bookingRepository->findBookingsByField($criteria)
+        ]);
     }
 
     #[IsGranted(UserRole::PASSENGER->value)]
@@ -62,11 +69,16 @@ final class UserController extends AbstractController
         BookingRepository $bookingRepository
     ): Response {
 
+        $criteriaBooking = new SearchBookingDTO();
+        $criteriaBooking->passengerId = $user->getId();
+
+        $criteriaRide = new SearchRideDTO();
+        $criteriaRide->driverId  = $user->getId();
+
         return $this->render('user/dashboard_client.html.twig', [
             'user' => $user,
-            'bookings' => $bookingRepository->findUpcomingBookingsByClient($user->getId()),
-            'rides' => $rideRepository->findUpcomingRidesByClient($user->getId()),
-
+            'bookings' => $bookingRepository->findBookingsByField($criteriaBooking),
+            'rides' => $rideRepository->findRidesByField($criteriaRide),
         ]);
     }
 
