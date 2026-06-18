@@ -137,18 +137,49 @@ class RideRepository extends ServiceEntityRepository
     }
 
     public function findActionsRideByClient(
-        SearchRideDTO $criteria
+        int $driverId
     ): array {
         $today = new DateTimeImmutable('today');
+        $tomorrow = $today->modify('+1 day');
 
         return $this->createQueryBuilder('r')
             ->leftJoin('r.driver', 'u')->addSelect('u')
             ->andWhere('u.id = :driverId')
-            ->andWhere('r.status IN (:statuses)')
-            ->andWhere('r.departureDate >= :today')
-            ->setParameter('driverId', $criteria->getDriverId())
-            ->setParameter('statuses', $criteria->getStatuses())
+            ->andWhere(
+                '(r.status IN (:alwaysVisibleStatuses))
+        OR
+        (
+            r.status = :confirmed
+            AND r.departureDate >= :today
+            AND r.departureDate < :tomorrow
+        )'
+            )
+            ->setParameter('driverId', $driverId)
+            ->setParameter('alwaysVisibleStatuses', [
+                RideStatus::PENDING,
+                RideStatus::RUNNING,
+            ])
+            ->setParameter('confirmed', RideStatus::CONFIRMED)
             ->setParameter('today', $today)
+            ->setParameter('tomorrow', $tomorrow)
+            ->orderBy('r.id', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findUpcomingRideByClient(
+        int $driverId
+    ): array {
+        $tomorrow = new DateTimeImmutable('tomorrow');
+
+        return $this->createQueryBuilder('r')
+            ->leftJoin('r.driver', 'u')->addSelect('u')
+            ->andWhere('u.id = :driverId')
+            ->andWhere('r.status = :status')
+            ->andWhere('r.departureDate > :tomorrow')
+            ->setParameter('driverId', $driverId)
+            ->setParameter('status', RideStatus::CONFIRMED)
+            ->setParameter('tomorrow', $tomorrow)
             ->orderBy('r.id', 'DESC')
             ->getQuery()
             ->getResult();
