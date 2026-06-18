@@ -53,9 +53,9 @@ class RideRepository extends ServiceEntityRepository
                 ->setParameter('arrivalPlace', $criteria->getArrivalPlace());
         }
 
-        if ($criteria->getStatus()) {
-            $qb->andWhere('r.status = :status')
-                ->setParameter('status', $criteria->getStatus()->value);
+        if ($criteria->getStatuses()) {
+            $qb->andWhere('r.status IN (:statuses)')
+                ->setParameter('statuses', $criteria->getStatuses());
         }
 
         if ($criteria->getDepartureDate()) {
@@ -131,7 +131,25 @@ class RideRepository extends ServiceEntityRepository
             ->setParameter('end', $end)
             ->setParameter('departurePlace', $departurePlace)
             ->setParameter('arrivalPlace', $arrivalPlace)
-            ->setParameter('status', RideStatus::AVAILABLE->value)
+            ->setParameter('status', RideStatus::CONFIRMED->value)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findActionsRideByClient(
+        SearchRideDTO $criteria
+    ): array {
+        $today = new DateTimeImmutable('today');
+
+        return $this->createQueryBuilder('r')
+            ->leftJoin('r.driver', 'u')->addSelect('u')
+            ->andWhere('u.id = :driverId')
+            ->andWhere('r.status IN (:statuses)')
+            ->andWhere('r.departureDate >= :today')
+            ->setParameter('driverId', $criteria->getDriverId())
+            ->setParameter('statuses', $criteria->getStatuses())
+            ->setParameter('today', $today)
+            ->orderBy('r.id', 'DESC')
             ->getQuery()
             ->getResult();
     }

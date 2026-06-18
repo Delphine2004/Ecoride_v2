@@ -7,6 +7,8 @@ use App\Entity\User;
 use App\DTO\SearchBookingDTO;
 use App\Enum\BookingStatus;
 
+use DateTimeImmutable;
+
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -52,9 +54,9 @@ class BookingRepository extends ServiceEntityRepository
                 ->setParameter('email', '%' . $criteria->getEmail() . '%');
         }
 
-        if ($criteria->getStatus()) {
-            $qb->andWhere('b.status = :status')
-                ->setParameter('status', $criteria->getStatus()->value);
+        if ($criteria->getStatuses()) {
+            $qb->andWhere('b.status IN (:statuses)')
+                ->setParameter('statuses', $criteria->getStatuses());
         }
 
         if ($criteria->getCreatedAt()) {
@@ -98,5 +100,24 @@ class BookingRepository extends ServiceEntityRepository
             ->setParameter('status', BookingStatus::RUNNING)
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    public function findActionsBookingByClient(
+        SearchBookingDTO $criteria
+    ): array {
+        $today = new DateTimeImmutable('today');
+
+        return $this->createQueryBuilder('b')
+            ->leftJoin('b.ride', 'r')->addSelect('r')
+            ->leftJoin('b.passenger', 'u')->addSelect('u')
+            ->andWhere('u.id = :passengerId')
+            ->andWhere('r.status IN (:statuses)')
+            ->andWhere('r.departureDate >= :today')
+            ->setParameter('passengerId', $criteria->getPassengerId())
+            ->setParameter('statuses', $criteria->getStatuses())
+            ->setParameter('today', $today)
+            ->orderBy('b.id', 'DESC')
+            ->getQuery()
+            ->getResult();
     }
 }
