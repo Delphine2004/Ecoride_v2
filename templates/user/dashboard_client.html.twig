@@ -7,14 +7,36 @@
 	<h1>Compte client</h1>
 	<div>{{ user.email }}</div>
 
+	<div>
+		<h2>Réservations: actions en attente</h2>
+		<ul>
+			{% for booking in actionToDoBookings %}
+				<li><twig:BookingActions booking="{{ booking }}"/>
+				</li>
+			{% else %}
+				<li>Aucune réservation</li>
+			{% endfor %}
+		</ul>
+	</div>
+	<div>
+		<h2>Trajets: actions en attente</h2>
+		<ul>
+			{% for ride in actionToDoRides %}
+				<li>
+					<twig:RideActions ride="{{ ride }}"/>
+				</li>
+			{% else %}
+				<li>Aucun trajet</li>
+			{% endfor %}
+		</ul>
+	</div>
+
 
 	<div>
 		<h2>Réservations à venir</h2>
 		<ul>
-			{% for booking in bookings %}
-				<li>{{ booking.id}}
-					-
-					{{ booking.status.value}}</li>
+			{% for booking in upcomingBookings %}
+				<li><twig:BookingActions booking="{{ booking }}"/></li>
 			{% else %}
 				<li>Aucune réservation</li>
 			{% endfor %}
@@ -23,10 +45,10 @@
 	<div>
 		<h2>Trajets à venir</h2>
 		<ul>
-			{% for ride in rides %}
-				<li>{{ ride.id}}
-					-
-					{{ ride.status.value}}</li>
+			{% for ride in upcomingRides %}
+				<li>
+					<twig:RideActions ride="{{ ride }}"/>
+				</li>
 			{% else %}
 				<li>Aucun trajet</li>
 			{% endfor %}
