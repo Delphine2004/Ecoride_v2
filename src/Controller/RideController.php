@@ -36,7 +36,7 @@ final class RideController extends AbstractController
         EntityManagerInterface $entityManager
     ): Response {
         $ride = new Ride();
-        $ride->setStatus(RideStatus::AVAILABLE);
+        $ride->setStatus(RideStatus::CONFIRMED);
         $form = $this->createForm(RideType::class, $ride);
         $form->handleRequest($request);
 
