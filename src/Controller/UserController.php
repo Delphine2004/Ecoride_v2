@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\DTO\SearchBookingDTO;
-use App\DTO\SearchRideDTO;
 use App\Entity\User;
 use App\Entity\Car;
 
@@ -54,7 +53,7 @@ final class UserController extends AbstractController
     ): Response {
 
         $criteria = new SearchBookingDTO();
-        $criteria->status = BookingStatus::REPORTED;
+        $criteria->statuses = [BookingStatus::REPORTED];
 
         return $this->render('user/dashboard_user.html.twig', [
             'bookings' => $bookingRepository->findBookingsByField($criteria)
@@ -69,16 +68,23 @@ final class UserController extends AbstractController
         BookingRepository $bookingRepository
     ): Response {
 
-        $criteriaBooking = new SearchBookingDTO();
-        $criteriaBooking->passengerId = $user->getId();
+        $userId  = $user->getId();
 
-        $criteriaRide = new SearchRideDTO();
-        $criteriaRide->driverId  = $user->getId();
+        $criteriaUpcomingBooking = new SearchBookingDTO();
+        $criteriaUpcomingBooking->passengerId = $userId;
+        $criteriaUpcomingBooking->statuses = [BookingStatus::CONFIRMED];
+
+        $criteriaActionToDoBooking = new SearchBookingDTO();
+        $criteriaActionToDoBooking->passengerId = $userId;
+        $criteriaActionToDoBooking->statuses = [BookingStatus::CONFIRMED, BookingStatus::PENDING, BookingStatus::RUNNING];
+
 
         return $this->render('user/dashboard_client.html.twig', [
             'user' => $user,
-            'bookings' => $bookingRepository->findBookingsByField($criteriaBooking),
-            'rides' => $rideRepository->findRidesByField($criteriaRide),
+            'actionToDoBookings' => $bookingRepository->findActionsBookingByClient($criteriaActionToDoBooking),
+            'actionToDoRides' => $rideRepository->findActionsRideByClient($userId),
+            'upcomingBookings' => $bookingRepository->findBookingsByField($criteriaUpcomingBooking),
+            'upcomingRides' => $rideRepository->findUpcomingRideByClient($userId),
         ]);
     }
 
