@@ -4,8 +4,7 @@ namespace App\Enum;
 
 enum RideStatus: string
 {
-    case AVAILABLE = "Disponible";
-    case FULL = "Complet";
+    case CONFIRMED = "Confirmee";
     case CANCELLED = "Annule";
     case RUNNING = "En cours";
     case PENDING = "En attente";
