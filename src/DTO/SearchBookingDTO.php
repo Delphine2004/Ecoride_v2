@@ -2,7 +2,6 @@
 
 namespace App\DTO;
 
-use App\Enum\BookingStatus;
 use DateTimeImmutable;
 
 class SearchBookingDTO
@@ -13,7 +12,7 @@ class SearchBookingDTO
     public ?string $lastName = null;
     public ?string $email = null;
 
-    public ?BookingStatus $status = null;
+    public array $statuses = [];
 
     public ?DateTimeImmutable $createdAt = null;
     public ?DateTimeImmutable $updatedAt = null;
@@ -40,9 +39,9 @@ class SearchBookingDTO
         return $this->email;
     }
 
-    public function getStatus(): ?BookingStatus
+    public function getStatuses(): ?array
     {
-        return $this->status;
+        return $this->statuses;
     }
 
     public function getCreatedAt(): ?DateTimeImmutable

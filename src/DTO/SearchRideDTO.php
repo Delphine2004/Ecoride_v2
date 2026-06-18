@@ -2,7 +2,6 @@
 
 namespace App\DTO;
 
-use App\Enum\RideStatus;
 use DateTimeImmutable;
 
 class SearchRideDTO
@@ -14,7 +13,7 @@ class SearchRideDTO
     public ?string $departurePlace = null;
     public ?string $arrivalPlace = null;
 
-    public ?RideStatus $status = null;
+    public array $statuses = [];
 
     public ?DateTimeImmutable $arrivalDate = null;
     public ?DateTimeImmutable $departureDate = null;
@@ -33,9 +32,9 @@ class SearchRideDTO
         return $this->driverId;
     }
 
-    public function getStatus(): ?RideStatus
+    public function getStatuses(): ?array
     {
-        return $this->status;
+        return $this->statuses;
     }
 
     public function getDeparturePlace(): ?string
