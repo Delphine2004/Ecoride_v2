@@ -98,13 +98,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $isVerified = false;
 
-    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'bookings')]
-    private ?self $passenger = null;
 
     /**
-     * @var Collection<int, self>
+     * @var Collection<int, Booking>
      */
-    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'passenger')]
+    #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'passenger')]
     private Collection $bookings;
 
 
@@ -358,27 +356,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getPassenger(): ?self
-    {
-        return $this->passenger;
-    }
-
-    public function setPassenger(?self $passenger): static
-    {
-        $this->passenger = $passenger;
-
-        return $this;
-    }
 
     /**
-     * @return Collection<int, self>
+     * @return Collection<int, Booking>
      */
     public function getBookings(): Collection
     {
         return $this->bookings;
     }
 
-    public function addBooking(self $booking): static
+    public function addBooking(Booking $booking): static
     {
         if (!$this->bookings->contains($booking)) {
             $this->bookings->add($booking);
@@ -388,10 +375,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeBooking(self $booking): static
+    public function removeBooking(Booking $booking): static
     {
         if ($this->bookings->removeElement($booking)) {
-            // set the owning side to null (unless already changed)
             if ($booking->getPassenger() === $this) {
                 $booking->setPassenger(null);
             }
