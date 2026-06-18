@@ -1,0 +1,34 @@
+<div{{attributes}}>
+	{{ booking.id}}
+	-
+	{{ booking.status.value}}
+	-
+
+	{% if booking.status == constant('App\\Enum\\BookingStatus::CONFIRMED') and booking.ride.departureDate|date('Y-m-d') == 'now'|date('Y-m-d')%}
+		<p>En attente du démarrage par le conducteur</p>
+
+	{% elseif booking.status == constant('App\\Enum\\BookingStatus::CONFIRMED') %}
+		<button {{ live_action('cancel') }}>
+			Annuler
+		</button>
+
+	{% elseif booking.status == constant('App\\Enum\\BookingStatus::RUNNING') %}
+		<p>Le trajet a demarré</p>
+
+	{% elseif booking.status == constant('App\\Enum\\BookingStatus::PENDING') %}
+		<button {{ live_action('finalize') }}>
+			Tout est OK
+		</button>
+		<button {{ live_action('report') }}>
+			Signaler
+		</button>
+
+	{% elseif booking.status == constant('App\\Enum\\BookingStatus::REPORTED')  %}
+		<button {{ live_action('finalize') }}>
+			Finaliser
+		</button>
+		<button {{ live_action('refund') }}>
+			Rembourser
+		</button>
+	{% endif %}
+</div>

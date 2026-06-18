@@ -1,0 +1,25 @@
+<div{{attributes}}>
+	{{ ride.id}}
+	-
+	{{ ride.status.value}}
+	-
+
+	{% if ride.status == constant('App\\Enum\\RideStatus::CONFIRMED') and ride.departureDate|date('Y-m-d') == 'now'|date('Y-m-d')%}
+		<button {{ live_action('start') }}>
+			Démarrer
+		</button>
+
+	{% elseif ride.status == constant('App\\Enum\\RideStatus::CONFIRMED') %}
+		<button {{ live_action('cancel') }}>
+			Annuler
+		</button>
+
+	{% elseif ride.status == constant('App\\Enum\\RideStatus::RUNNING') %}
+		<button {{ live_action('stop') }}>
+			Arrêter
+		</button>
+
+	{% elseif ride.status == constant('App\\Enum\\RideStatus::PENDING') %}
+		<p>En attente de confirmation de tous les passagers</p>
+	{% endif %}
+</div>
