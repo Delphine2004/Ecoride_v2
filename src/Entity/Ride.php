@@ -65,7 +65,6 @@ class Ride
     #[ORM\Column]
     private ?int $availableSeats = null;
 
-    #[Assert\Regex(RegexPatterns::ONLY_TEXT_REGEX)]
     #[ORM\Column(length: 100, enumType: RideStatus::class)]
     private ?RideStatus $status = null;
 

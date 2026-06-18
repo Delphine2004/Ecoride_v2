@@ -28,7 +28,6 @@ class Car
     private ?int $id = null;
 
     #[Assert\NotBlank(message: "La marque est obligatoire.")]
-    #[Assert\Regex(RegexPatterns::ONLY_TEXT_REGEX)]
     #[ORM\Column(type: Types::STRING, length: 100, enumType: CarBrand::class)]
     private ?CarBrand $brand = null;
 
@@ -38,7 +37,6 @@ class Car
     private ?string $model = null;
 
     #[Assert\NotBlank(message: "La couleur est obligatoire.")]
-    #[Assert\Regex(RegexPatterns::ONLY_TEXT_REGEX)]
     #[ORM\Column(type: Types::STRING, length: 100, enumType: CarColor::class)]
     private ?CarColor $color = null;
 
@@ -48,7 +46,6 @@ class Car
     private ?string $year = null;
 
     #[Assert\NotBlank(message: "L'énergie est obligatoire.")]
-    #[Assert\Regex(RegexPatterns::ONLY_TEXT_REGEX)]
     #[ORM\Column(type: Types::STRING, length: 50, enumType: CarPower::class)]
     private ?CarPower $power = null;
 

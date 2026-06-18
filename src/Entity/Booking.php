@@ -22,7 +22,6 @@ class Booking
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Assert\Regex(RegexPatterns::ONLY_TEXT_REGEX)]
     #[ORM\Column(length: 100, enumType: BookingStatus::class)]
     private ?BookingStatus $status = null;
 
