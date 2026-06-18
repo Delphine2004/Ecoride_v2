@@ -57,7 +57,7 @@ class BookingFixtures extends Fixture implements DependentFixtureInterface
             ],
             [
                 'number' => '5',
-                'status' => BookingStatus::PENDING,
+                'status' => BookingStatus::REPORTED,
                 'createdAt' => $today->modify('-1 days'),
                 'passenger' => $this->getReference('client_6', User::class),
                 'ride' => $this->getReference('ride_2', Ride::class),
