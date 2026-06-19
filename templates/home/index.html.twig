@@ -4,12 +4,21 @@
 {% endblock %}
 
 {% block body %}
+	<main>
+		<section class="container-fluid">
+			<div class="class=" container"">
 
-	<div class="example-wrapper">
-		<h1>Hello</h1>
+				{{ component('search_ride') }}
+			</div>
+		</section>
 
-		{{ component('search_ride') }}
+		<section class="container-fluid">
+			<div class="container"></div>
+		</section>
 
+		<section class="container-fluid">
+			<div class="container"></div>
+		</section>
+	</main>
 
-	</div>
 {% endblock %}
