@@ -1,0 +1,14 @@
+@use "../utils/colors";
+
+#hero {
+    background-image: url("../img/img1.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    h1,
+    p {
+        color: colors.$vanilla-custard;
+        font-weight: bold;
+    }
+}
