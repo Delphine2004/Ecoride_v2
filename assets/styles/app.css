@@ -19,7 +19,7 @@ body {
   font-family: "Open Sans", sans-serif;
   font-size: 16px;
   line-height: 1.4;
-  background-color: #d0db97;
+  background-color: #e1e7c7;
   color: #181d27;
 }
 
@@ -60,7 +60,7 @@ h3 {
   background-color: #3a7d44;
 }
 .navbar a {
-  color: #d0db97;
+  color: #e1e7c7;
 }
 .navbar a:hover {
   color: #181d27;
@@ -74,12 +74,24 @@ h3 {
 .btn {
   background-color: #3a7d44;
   border: 2px solid #254d32;
-  color: #d0db97;
+  color: #e1e7c7;
 }
 
 .btn:hover {
   background-color: #69b578;
   color: #181d27;
+}
+
+#hero {
+  background-image: url("../img/img1.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+#hero h1,
+#hero p {
+  color: #e1e7c7;
+  font-weight: bold;
 }
 
 /*# sourceMappingURL=app.css.map */
