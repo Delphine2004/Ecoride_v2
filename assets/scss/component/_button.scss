@@ -1,0 +1,12 @@
+@use "../utils/colors";
+
+.btn {
+    background-color: colors.$fern;
+    border: colors.$border-green;
+    color: colors.$vanilla-custard;
+}
+
+.btn:hover {
+    background-color: colors.$emerald;
+    color: colors.$shadow-grey;
+}

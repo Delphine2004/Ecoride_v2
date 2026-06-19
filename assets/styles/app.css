@@ -1,3 +1,85 @@
-body {
-    background-color: skyblue;
+@charset "UTF-8";
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style: none;
+  text-decoration: none;
 }
+
+a {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+  line-height: 1.4;
+  background-color: #d0db97;
+  color: #181d27;
+}
+
+header,
+footer {
+  flex-shrink: 0; /* Empêche le header/footer de rétrécir */
+  background-color: #3a7d44;
+}
+
+a {
+  text-decoration: none;
+}
+
+main {
+  flex-grow: 1; /* prend tout l'espace disponible */
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Roboto", sans-serif;
+  font-weight: bold;
+  text-align: center;
+  margin: 2rem;
+}
+
+.custom-size {
+  width: 100%;
+}
+@media (min-width: 768px) {
+  .custom-size {
+    width: unset;
+  }
+}
+
+.navbar {
+  min-height: 60px;
+  background-color: #3a7d44;
+}
+.navbar a {
+  color: #d0db97;
+}
+.navbar a:hover {
+  color: #181d27;
+}
+@media (max-width: 992px) {
+  .navbar .navbar {
+    min-height: 55px;
+  }
+}
+
+.btn {
+  background-color: #3a7d44;
+  border: 2px solid #254d32;
+  color: #d0db97;
+}
+
+.btn:hover {
+  background-color: #69b578;
+  color: #181d27;
+}
+
+/*# sourceMappingURL=app.css.map */

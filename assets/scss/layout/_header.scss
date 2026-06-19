@@ -1,0 +1,22 @@
+@use "../utils/fonts";
+@use "../utils/variables";
+@use "../utils/colors";
+
+.navbar {
+    min-height: variables.$header-height-mobile;
+    background-color: colors.$fern;
+
+    a {
+        color: colors.$vanilla-custard;
+    }
+
+    a:hover {
+        color: colors.$shadow-grey;
+    }
+
+    @media (max-width: 992px) {
+        .navbar {
+            min-height: variables.$header-height-desktop;
+        }
+    }
+}
