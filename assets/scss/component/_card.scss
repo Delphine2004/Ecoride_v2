@@ -1,0 +1,13 @@
+@use "../utils/colors";
+
+.card {
+    border: colors.$border-green;
+    border-radius: colors.$border-radius;
+    background-color: colors.$vanilla-custard;
+
+    .card-header,
+    .card-footer {
+        background-color: colors.$fern;
+        color: colors.$vanilla-custard;
+    }
+}
