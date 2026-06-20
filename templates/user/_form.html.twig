@@ -1,4 +1,164 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_start(form, {'attr': {'novalidate':  true}}) }}
+<div class="row g-3 justify-content-around my-3">
+
+	{% if form.firstName is defined %}
+		<div class="col-12 col-md-6 mb-3">
+			{{ form_label(form.firstName) }}
+			{{ form_widget(form.firstName, {attr: {class: 'form-control'}}) }}
+			{{ form_errors(form.firstName) }}
+		</div>
+	{% endif %}
+
+	{% if form.lastName is defined %}
+		<div class="col-12 col-md-6 mb-3">
+			{{ form_label(form.lastName) }}
+			{{ form_widget(form.lastName, {attr: {class: 'form-control'}}) }}
+			{{ form_errors(form.lastName) }}
+		</div>
+	{% endif %}
+
+	{% if form.login is defined %}
+		<div class="col-12 mb-3">
+			{{ form_label(form.login) }}
+			{{ form_widget(form.login, {attr: {class: 'form-control'}}) }}
+			{{ form_errors(form.login) }}
+		</div>
+	{% endif %}
+
+	{% if form.email is defined %}
+		<div class="col-12 mb-3">
+			{{ form_label(form.email) }}
+			{{ form_widget(form.email, {attr: {class: 'form-control'}}) }}
+			{{ form_errors(form.email) }}
+		</div>
+	{% endif %}
+
+	{% if form.picture is defined %}
+		<div class="col-12 mb-3">
+			{{ form_label(form.picture) }}
+			{{ form_widget(form.picture, {attr: {class: 'form-control'}}) }}
+			{{ form_errors(form.picture) }}
+		</div>
+	{% endif %}
+
+	{% if form.credit is defined %}
+		<div class="col-12 mb-3">
+			{{ form_label(form.credit) }}
+			{{ form_widget(form.credit, {attr: {class: 'form-control'}}) }}
+			{{ form_errors(form.credit) }}
+		</div>
+	{% endif %}
+
+	{% if form.plainPassword is defined %}
+		<div class="col-12 mb-3">
+			{{ form_label(form.plainPassword) }}
+			{{ form_widget(form.plainPassword, {attr: {class: 'form-control'}}) }}
+			{{ form_errors(form.plainPassword) }}
+		</div>
+	{% endif %}
+
+	{% if form.password is defined %}
+		<div class="col-12 mb-3">
+			{{ form_label(form.password.first) }}
+			{{ form_widget(form.password.first, { attr: {class: 'form-control'}}) }}
+			{{ form_errors(form.password.first) }}
+		</div>
+		<div class="col-12 mb-3">
+			{{ form_label(form.password.second) }}
+			{{ form_widget(form.password.second, {attr: {class: 'form-control'}}) }}
+			{{ form_errors(form.password.second) }}
+		</div>
+	{% endif %}
+
+	{% if form.agreeTerms is defined %}
+		<div class="col-12 col-md-10 mb-3">
+			<div class="form-check">
+				{{ form_widget(form.agreeTerms, {'attr': {'class': 'form-check-input'}}) }}
+				<label class="form-check-label">
+					J'accepte le traitement de mes données conformément à la
+					<a class="fw-bold" href="#">politique de confidentialité</a>.
+				</label>
+				{{ form_errors(form.agreeTerms) }}
+			</div>
+		</div>
+	{% endif %}
+
+	{% if form.licence is defined %}
+		<div class="col-12 mb-3">
+			{{ form_label(form.licence) }}
+			{{ form_widget(form.licence, {attr: {class: 'form-control'}}) }}
+			{{ form_errors(form.licence) }}
+		</div>
+	{% endif %}
+
+	{% if form.brand is defined %}
+		<div class="col-12 col-md-6 mb-3">
+			{{ form_label(form.brand) }}
+			{{ form_widget(form.brand, {attr: {class: 'form-control'}}) }}
+			{{ form_errors(form.brand) }}
+		</div>
+	{% endif %}
+
+	{% if form.model is defined %}
+		<div class="col-12 col-md-6 mb-3">
+			{{ form_label(form.model) }}
+			{{ form_widget(form.model, {attr: {class: 'form-control'}}) }}
+			{{ form_errors(form.model) }}
+		</div>
+	{% endif %}
+
+	{% if form.color is defined %}
+		<div class="col-12 col-md-6 mb-3">
+			{{ form_label(form.color) }}
+			{{ form_widget(form.color, {attr: {class: 'form-control'}}) }}
+			{{ form_errors(form.color) }}
+		</div>
+	{% endif %}
+
+	{% if form.year is defined %}
+		<div class="col-12 col-md-6 mb-3">
+			{{ form_label(form.year) }}
+			{{ form_widget(form.year, {attr: {class: 'form-control'}}) }}
+			{{ form_errors(form.year) }}
+		</div>
+	{% endif %}
+
+	{% if form.power is defined %}
+		<div class="col-12 col-md-6 mb-3">
+			{{ form_label(form.power) }}
+			{{ form_widget(form.power, {attr: {class: 'form-control'}}) }}
+			{{ form_errors(form.power) }}
+		</div>
+	{% endif %}
+
+	{% if form.seats is defined %}
+		<div class="col-12 col-md-6 mb-3">
+			{{ form_label(form.seats) }}
+			{{ form_widget(form.seats, {attr: {class: 'form-control'}}) }}
+			{{ form_errors(form.seats) }}
+		</div>
+	{% endif %}
+
+	{% if form.registrationNumber is defined %}
+		<div class="col-12 col-md-6 mb-3">
+			{{ form_label(form.registrationNumber) }}
+			{{ form_widget(form.registrationNumber, {attr: {class: 'form-control'}}) }}
+			{{ form_errors(form.registrationNumber) }}
+		</div>
+	{% endif %}
+
+	{% if form.registrationDate is defined %}
+		<div class="col-12 col-md-6 mb-3">
+			{{ form_label(form.registrationDate) }}
+			{{ form_widget(form.registrationDate, {attr: {class: 'form-control'}}) }}
+			{{ form_errors(form.registrationDate) }}
+		</div>
+	{% endif %}
+</div>
+
+<div class="row g-3 justify-content-around my-3">
+	<div class="col-12 col-md-4 mb-3">
+		<button class="btn w-100">{{ button_label|default('Enregistrer') }}</button>
+	</div>
+</div>
 {{ form_end(form) }}
