@@ -1,11 +1,31 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Ride{% endblock %}
+{% block title %}Trajet
+{% endblock %}
 
 {% block body %}
-    <h1>Create new Ride</h1>
+	<main class="py-5">
+		<section class="container-fluid">
+			<div class="container">
+				<div class="row justify-content-center">
 
-    {{ include('ride/_form.html.twig') }}
+					<div class="col-12 col-md-10 col-lg-8">
+						<div class="card card-form shadow-sm justify-content-evenly p-4 my-5">
+							<h1>Ajouter un trajet</h1>
 
-    <a href="{{ path('app_ride_index') }}">back to list</a>
+							{{ include('ride/_form.html.twig') }}
+						</div>
+					</div>
+
+					<div class="col-12 col-md-10 col-lg-8">
+						<div class="text-center m-3">
+							<a class="btn" href="{{ path('app_dashboard_client', { id: app.user.id }) }}">Retour sur le compte</a>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</section>
+	</main>
+
 {% endblock %}

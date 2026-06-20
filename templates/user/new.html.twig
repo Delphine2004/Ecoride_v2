@@ -1,11 +1,36 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New User{% endblock %}
+{% block title %}Ecoride V2
+{% endblock %}
 
 {% block body %}
-    <h1>Create new User</h1>
 
-    {{ include('user/_form.html.twig') }}
+	<main class="py-5">
+		<section class="container-fluid">
+			<div class="container">
+				<div class="row justify-content-center">
 
-    <a href="{{ path('app_user_index') }}">back to list</a>
+					<div class="col-12 col-md-10 col-lg-8">
+						<div class="card card-form shadow-sm justify-content-evenly p-4 my-5">
+							<h1>Inscription</h1>
+							{{ include('user/_form.html.twig') }}
+						</div>
+					</div>
+
+					<div class="col-12 col-md-10 col-lg-8">
+						{% if is_granted('ROLE_EMPLOYE') %}
+							<div class="text-center m-3">
+								<a class="btn" href="{{ path('app_hotel_settings') }}">Retour aux paramétres</a>
+							</div>
+						{% else %}
+							<div class="text-center m-3">
+								<a class="btn" href="{{ path('app_login') }}">Déjà inscrit(e)?</a>
+							</div>
+						{% endif %}
+					</div>
+
+				</div>
+			</div>
+		</section>
+	</main>
 {% endblock %}
