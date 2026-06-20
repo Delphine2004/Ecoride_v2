@@ -3,13 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Car;
+use App\Entity\User;
 use App\Form\CarType;
-
 use App\Enum\UserRole;
 use App\Enum\CarBrand;
 use App\Enum\CarColor;
 use App\Enum\CarPower;
-
 use App\Repository\CarRepository;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,18 +17,27 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-
+use Symfony\Bundle\SecurityBundle\Security;
 
 #[IsGranted(UserRole::DRIVER->value)]
 #[Route('/car')]
 final class CarController extends AbstractController
 {
 
+    public function __construct(
+        private Security $security
+    ) {}
+
     #[Route('/new', name: 'app_car_new', methods: ['GET', 'POST'])]
     public function new(
         Request $request,
         EntityManagerInterface $entityManager
     ): Response {
+        $user = $this->security->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+
         $car = new Car();
         $form = $this->createForm(CarType::class, $car);
         $form->handleRequest($request);
@@ -39,7 +47,7 @@ final class CarController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Voiture ajouté avec succés.');
-            return $this->redirectToRoute('app_dashboard_user', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_dashboard_client', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('car/new.html.twig', [
@@ -63,17 +71,20 @@ final class CarController extends AbstractController
             throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
 
-        $userConnected = $this->getUser();
+        $user = $this->security->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
 
         // Vérification que l'utilisateur est connecté
-        if (!$userConnected) {
+        if (!$user) {
             $this->addFlash('error', 'Vous devez être connecté.');
             return $this->redirectToRoute('app_login');
         }
 
 
         // Empêche un client de supprimer la voiture d'un autre
-        if ($carRepository->isOwner($userConnected, $car->getId()) && !$this->isGranted('ROLE_EMPLOYE')) {
+        if ($carRepository->isOwner($user, $car->getId()) && !$this->isGranted('ROLE_EMPLOYE')) {
             $this->addFlash('error', 'Vous n\'êtes pas autorisé.');
             return $this->redirectToRoute('app_login');
         }
@@ -84,7 +95,7 @@ final class CarController extends AbstractController
                 'error',
                 'Vous ne pouvez pas supprimer votre compte pendant un séjour en cours.'
             );
-            return $this->redirectToRoute('app_dashboard_user', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_dashboard_client', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
         }
 
         $car->setBrand(CarBrand::NA);
@@ -101,6 +112,6 @@ final class CarController extends AbstractController
             'success',
             'Voiture supprimée avec succés.'
         );
-        return $this->redirectToRoute('app_dashboard_user', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_dashboard_client', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
     }
 }

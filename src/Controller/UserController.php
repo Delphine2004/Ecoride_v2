@@ -159,7 +159,7 @@ final class UserController extends AbstractController
 
             $this->addFlash('success', 'Annulation confirmée.');
             if ($clientUpdate) {
-                return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
+                return $this->redirectToRoute('app_dashboard_client', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
             } else {
                 return $this->redirectToRoute('app_user_show', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
             }
@@ -186,7 +186,7 @@ final class UserController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Modifié avec succés.');
-            return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_dashboard_client', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('user/edit.html.twig', [
@@ -220,7 +220,7 @@ final class UserController extends AbstractController
 
             $entityManager->flush();
             $this->addFlash('success', 'Crédit ajoutés avec succés.');
-            return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_dashboard_client', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('user/edit.html.twig', [
@@ -273,7 +273,7 @@ final class UserController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Modifié avec succés.');
-            return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_dashboard_client', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('user/edit.html.twig', [

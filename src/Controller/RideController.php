@@ -3,24 +3,30 @@
 namespace App\Controller;
 
 use App\Entity\Ride;
+use App\Entity\User;
 use App\Form\RideType;
-
 use App\Enum\UserRole;
 use App\Enum\RideStatus;
-
 use App\Repository\RideRepository;
+
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Bundle\SecurityBundle\Security;
 
 
 #[IsGranted(UserRole::DRIVER->value)]
 #[Route('/ride')]
 final class RideController extends AbstractController
 {
+
+    public function __construct(
+        private Security $security
+    ) {}
+
     #[Route(name: 'app_ride_index', methods: ['GET'])]
     public function index(
         RideRepository $rideRepository
@@ -35,6 +41,11 @@ final class RideController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager
     ): Response {
+        $user = $this->security->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+
         $ride = new Ride();
         $ride->setStatus(RideStatus::CONFIRMED);
         $form = $this->createForm(RideType::class, $ride);
@@ -46,7 +57,7 @@ final class RideController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Trajet ajouté avec succés.');
-            return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_dashboard_client', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('ride/new.html.twig', [
@@ -75,12 +86,17 @@ final class RideController extends AbstractController
             throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
 
+        $user = $this->security->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+
         $ride->setStatus(RideStatus::RUNNING);
 
         $entityManager->flush();
 
         $this->addFlash('success', 'Départ confirmé.');
-        return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_dashboard_client', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/{id}/stop', name: 'app_ride_stop', methods: ['POST'])]
@@ -94,12 +110,17 @@ final class RideController extends AbstractController
             throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
 
+        $user = $this->security->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+
         $ride->setStatus(RideStatus::PENDING);
 
         $entityManager->flush();
 
         $this->addFlash('success', 'Arrêt confirmé.');
-        return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_dashboard_client', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/{id}/cancel', name: 'app_ride_cancel', methods: ['POST'])]
@@ -113,15 +134,20 @@ final class RideController extends AbstractController
             throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
 
+        $user = $this->security->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+
         $ride->setStatus(RideStatus::CANCELLED);
 
         $entityManager->flush();
 
         $this->addFlash('success', 'Annulation confirmée.');
         if ($this->isGranted('ROLE_EMPLOYE')) {
-            return $this->redirectToRoute('app_dashboard_user', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_dashboard_user', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
         } else {
-            return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_dashboard_client', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
         }
     }
 }

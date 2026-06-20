@@ -3,23 +3,30 @@
 namespace App\Controller;
 
 use App\Entity\Booking;
+use App\Entity\User;
 use App\Form\BookingType;
 use App\Enum\BookingStatus;
 use App\Enum\UserRole;
-
 use App\Repository\BookingRepository;
+
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Bundle\SecurityBundle\Security;
 
 
 #[IsGranted(UserRole::PASSENGER->value)]
 #[Route('/booking')]
 final class BookingController extends AbstractController
 {
+
+    public function __construct(
+        private Security $security
+    ) {}
+
     #[Route(name: 'app_booking_index', methods: ['GET'])]
     public function index(
         BookingRepository $bookingRepository
@@ -34,6 +41,11 @@ final class BookingController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager
     ): Response {
+        $user = $this->security->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+
         $booking = new Booking();
         $booking->setStatus(BookingStatus::CONFIRMED);
         $booking->setPassenger($this->getUser());
@@ -45,7 +57,7 @@ final class BookingController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Réservation confirmée.');
-            return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_dashboard_client', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('booking/new.html.twig', [
@@ -74,16 +86,21 @@ final class BookingController extends AbstractController
             throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
 
+        $user = $this->security->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+
         $booking->setStatus(BookingStatus::CANCELLED);
 
         $entityManager->flush();
 
         if ($this->isGranted('ROLE_EMPLOYE')) {
             $this->addFlash('success', 'Annulation confirmée.');
-            return $this->redirectToRoute('app_dashboard_user', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_dashboard_user', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
         } else {
             $this->addFlash('success', 'Annulation confirmée.');
-            return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_dashboard_client', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
         }
     }
 }
