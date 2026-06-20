@@ -62,7 +62,7 @@ class UserType extends AbstractType
                     'required' => true,
                     'mapped' => false,
                     'constraints' => [
-                        new Assert\NotBlank(['message' => 'Le mot de passe est obligatoire.']),
+                        new Assert\NotBlank(message: 'Le mot de passe est obligatoire.'),
                         new Assert\Length(
                             max: 255,
                             maxMessage: 'Le mot de passe ne peut pas dépasser {{ limit }} caractères.'
@@ -98,20 +98,26 @@ class UserType extends AbstractType
                         ),
                     ],
                 ])
-                ->add('plainPassword', PasswordType::class, [
-                    // instead of being set onto the object directly,
-                    // this is read and encoded in the controller
-                    'mapped' => false,
-                    'attr' => ['autocomplete' => 'new-password'],
+                ->add('password', RepeatedType::class, [
+                    'type' => PasswordType::class,
+                    'first_options' => [
+                        'label' => 'Mot de passe',
+                    ],
+                    'second_options' => [
+                        'label' => 'Confirmer le mot de passe',
+                    ],
+                    'label' => false,
+                    'required' => true,
+                    'mapped' => false, // n'est pas mappé avec la bd car il sera hashé
                     'constraints' => [
-                        new NotBlank(
-                            message: 'Please enter a password',
+                        new Assert\NotBlank(message: 'Le mot de passe est obligatoire.'),
+                        new Assert\Length(
+                            max: 255,
+                            maxMessage: 'Le mot de passe ne peut pas dépasser {{ limit }} caractères.',
                         ),
-                        new Length(
-                            min: 6,
-                            minMessage: 'Your password should be at least {{ limit }} characters',
-                            // max length allowed by Symfony for security reasons
-                            max: 4096,
+                        new Assert\Regex(
+                            pattern: RegexPatterns::PASSWORD,
+                            message: 'Le mot de passe doit contenir au moins 12 caractères incluant une majuscule, une minuscule, un chiffre et un caractère spécial.',
                         ),
                     ],
                 ])
@@ -171,7 +177,7 @@ class UserType extends AbstractType
                     'required' => false,
                     'mapped' => false, // n'est pas mappé avec la bd car il sera hashé
                     'constraints' => [
-                        new Assert\NotBlank(['message' => 'Le mot de passe est obligatoire.']),
+                        new Assert\NotBlank(message: 'Le mot de passe est obligatoire.'),
                         new Assert\Length(
                             max: 255,
                             maxMessage: 'Le mot de passe ne peut pas dépasser {{ limit }} caractères.',
@@ -202,7 +208,7 @@ class UserType extends AbstractType
                     'required' => true,
                     'mapped' => false, // n'est pas mappé avec la bd car il sera hashé
                     'constraints' => [
-                        new Assert\NotBlank(['message' => 'Le mot de passe est obligatoire.']),
+                        new Assert\NotBlank(message: 'Le mot de passe est obligatoire.'),
                         new Assert\Length(
                             max: 255,
                             maxMessage: 'Le mot de passe ne peut pas dépasser {{ limit }} caractères.',
