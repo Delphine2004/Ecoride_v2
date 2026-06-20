@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\DTO\SearchBookingDTO;
+use App\DTO\SearchRideDTO;
 use App\Entity\User;
 use App\Entity\Car;
 
 use App\Enum\BookingStatus;
+use App\Enum\RideStatus;
 use App\Enum\UserRole;
 
 use App\Form\UserType;
@@ -279,6 +281,30 @@ final class UserController extends AbstractController
         return $this->render('user/edit.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
+        ]);
+    }
+
+    #[IsGranted(UserRole::PASSENGER->value)]
+    #[Route('/history/{id}', name: 'app_user_history', methods: ['GET'])]
+    public function history(
+        User $user,
+        RideRepository $rideRepository,
+        BookingRepository $bookingRepository
+    ): Response {
+        $userId  = $user->getId();
+
+        $criteriaBooking = new SearchBookingDTO();
+        $criteriaBooking->passengerId = $userId;
+        $criteriaBooking->statuses = [BookingStatus::CANCELLED, BookingStatus::FINALIZED, BookingStatus::REFUNDED];
+
+        $criteriaRides = new SearchRideDTO();
+        $criteriaRides->driverId = $userId;
+        $criteriaRides->statuses = [RideStatus::CONFIRMED, RideStatus::PENDING, RideStatus::RUNNING];
+
+        return $this->render('user/history.html.twig', [
+            'user' => $user,
+            'bookings' => $bookingRepository->findBookingsByField($criteriaBooking),
+            'rides' => $rideRepository->findRidesByField($criteriaRides)
         ]);
     }
 
