@@ -19,7 +19,6 @@ body {
   font-family: "Open Sans", sans-serif;
   font-size: 16px;
   line-height: 1.4;
-  background-color: #e1e7c7;
   color: #181d27;
 }
 
@@ -43,7 +42,7 @@ h3 {
   font-family: "Roboto", sans-serif;
   font-weight: bold;
   text-align: center;
-  margin: 2rem;
+  margin: 2rem auto;
 }
 
 .custom-size {
@@ -80,6 +79,17 @@ h3 {
 .btn:hover {
   background-color: #69b578;
   color: #181d27;
+}
+
+.card {
+  border: 2px solid #254d32;
+  border-radius: 0.4rem;
+  background-color: #e1e7c7;
+}
+.card .card-header,
+.card .card-footer {
+  background-color: #3a7d44;
+  color: #e1e7c7;
 }
 
 #hero {
