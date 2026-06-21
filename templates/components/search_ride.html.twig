@@ -1,23 +1,63 @@
 <div {{ attributes }}>
 	{{ form_start(form) }}
-
-	{{ form_row(form.departureDate) }}
-	{{ form_row(form.departurePlace) }}
-	{{ form_row(form.arrivalPlace) }}
-
-	<button type="button" data-action="live#action" data-live-action-param="search">
-		Rechercher
-	</button>
-
+	<div class="row align-items-end justify-content-around my-3">
+		<div class="col-12 col-md-2 mb-3">
+			{{ form_label(form.departureDate) }}
+			{{ form_widget(form.departureDate, {
+        attr: {
+            class: 'form-control'
+        }
+    }) }}
+			{{ form_errors(form.departureDate) }}</div>
+		<div class="col-12 col-md-4 mb-3">
+			{{ form_label(form.departurePlace) }}
+			{{ form_widget(form.departurePlace, {
+        attr: {
+            class: 'form-control'
+        }
+    }) }}
+			{{ form_errors(form.departurePlace) }}</div>
+		<div class="col-12 col-md-4 mb-3">
+			{{ form_label(form.arrivalPlace) }}
+			{{ form_widget(form.arrivalPlace, {
+        attr: {
+            class: 'form-control'
+        }
+    }) }}
+			{{ form_errors(form.arrivalPlace) }}</div>
+	</div>
+	<div class="row align-items-end justify-content-around my-3">
+		<div class="col-12 col-md-4 mb-3">
+			<button class="btn w-100" type="button" data-action="live#action" data-live-action-param="search">
+				Rechercher
+			</button>
+		</div>
+	</div>
 	{{ form_end(form) }}
 
-	<div>
-		{% for ride in this.results %}
-			<div>{{ ride.departurePlace }}
-				→
-				{{ ride.arrivalPlace }}</div>
-		{% else %}
-			<div>Aucun résultat</div>
-		{% endfor %}
+	<div class="row my-3">
+
+		{% if this.showDescription and not this.hasSearched %}
+			<div>
+				<p>A FAIRE - COMPOSANT - affichera le composant de description</p>
+			</div>
+		{% endif %}
+
+		{% if this.hasSearched %}
+			{% if this.results is empty %}
+				<div class="col-12">
+					<p>Aucun résultat</p>
+				</div>
+			{% else %}
+				{% for ride in this.results %}
+					<div class="col-12">
+A FAIRE - COMPOSANT
+						{{ ride.departurePlace }}
+						→
+						{{ ride.arrivalPlace }}</div>
+				{% endfor %}
+			{% endif %}
+
+		{% endif %}
 	</div>
 </div>
