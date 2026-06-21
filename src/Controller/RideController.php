@@ -48,7 +48,9 @@ final class RideController extends AbstractController
 
         $ride = new Ride();
         $ride->setStatus(RideStatus::CONFIRMED);
-        $form = $this->createForm(RideType::class, $ride);
+        $form = $this->createForm(RideType::class, $ride, [
+            'user' => $this->getUser(),
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
