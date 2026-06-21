@@ -28,6 +28,7 @@ class ClientFixtures extends Fixture
                 'firstName' => 'Bruce',
                 'email' => 'batman@batman.com',
                 'credit' => '10',
+                'picture' => null,
                 'licence' => '527934098',
                 'roles' => [
                     UserRole::PASSENGER,
@@ -40,6 +41,7 @@ class ClientFixtures extends Fixture
                 'firstName' => 'Clark',
                 'email' => 'superman@dailyplanet.com',
                 'credit' => '10',
+                'picture' => null,
                 'licence' => '127987498',
                 'roles' => [
                     UserRole::PASSENGER,
@@ -52,6 +54,7 @@ class ClientFixtures extends Fixture
                 'firstName' => 'Tony',
                 'email' => 'ironman@starkindustries.com',
                 'credit' => '10',
+                'picture' => null,
                 'licence' => 'AG24896412S321',
                 'roles' => [
                     UserRole::PASSENGER,
@@ -64,6 +67,7 @@ class ClientFixtures extends Fixture
                 'firstName' => 'Peter',
                 'email' => 'spiderman@bugle.com',
                 'credit' => '10',
+                'picture' => null,
                 'licence' => 'OP67856412F321',
                 'roles' => [
                     UserRole::PASSENGER,
@@ -76,6 +80,8 @@ class ClientFixtures extends Fixture
                 'firstName' => 'Hermione',
                 'email' => 'hermione@poudlard.com',
                 'credit' => '20',
+                'picture' => null,
+                'licence' => null,
                 'roles' => [
                     UserRole::PASSENGER
                 ],
@@ -86,6 +92,8 @@ class ClientFixtures extends Fixture
                 'firstName' => 'James',
                 'email' => 'bond007@mi6.co.uk',
                 'credit' => '75',
+                'picture' => null,
+                'licence' => null,
                 'roles' => [
                     UserRole::PASSENGER
                 ],
@@ -98,6 +106,9 @@ class ClientFixtures extends Fixture
             $client->setLastName($data['lastName']);
             $client->setEmail($data['email']);
             $client->setRoles($data['roles']);
+            $client->setCredit($data['credit']);
+            $client->setLicence($data['licence']);
+            $client->setPicture($data['picture']);
             $hashedPassword = $this->hasher->hashPassword($client, 'Azertyuiop12*');
             $client->setPassword($hashedPassword, true);
 
