@@ -26,7 +26,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 
 final class UserController extends AbstractController
@@ -248,7 +248,8 @@ final class UserController extends AbstractController
     public function becomeDriver(
         Request $request,
         User $user,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        TokenStorageInterface $tokenStorage
     ): Response {
 
         if ($user->getCars()->isEmpty()) {
@@ -258,37 +259,33 @@ final class UserController extends AbstractController
         $form = $this->createForm(UserType::class, $user, ['mode' => 'becomeDriver']);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
 
+        if ($form->isSubmitted() && $form->isValid()) {
             // Récupérations des données
             $licence = $form->get('licence')->getData();
-            $brand = $form->get('brand')->getData();
-            $model = $form->get('model')->getData();
-            $color = $form->get('color')->getData();
-            $year = $form->get('year')->getData();
-            $power = $form->get('power')->getData();
-            $seats = $form->get('seats')->getData();
-            $registrationNumber = $form->get('registrationNumber')->getData();
-            $registrationDate = $form->get('registrationDate')->getData();
 
             // Assignation des valeurs
             $user->setLicence($licence);
             $user->addRole(UserRole::DRIVER->value);
 
-            $car = new Car();
-            $car->setBrand($brand);
-            $car->setModel($model);
-            $car->setColor($color);
-            $car->setYear($year);
-            $car->setPower($power);
-            $car->setSeats($seats);
-            $car->setRegistrationNumber($registrationNumber);
-            $car->setRegistrationDate($registrationDate);
 
+            // La voiture est déjà remplie par le formulaire
+            $user->getCars()->first();
 
             $entityManager->persist($user);
-            $entityManager->persist($car);
             $entityManager->flush();
+
+            $token = $tokenStorage->getToken();
+
+            if ($token) {
+                $tokenStorage->setToken(
+                    new UsernamePasswordToken(
+                        $user,
+                        'main',
+                        $user->getRoles()
+                    )
+                );
+            }
 
             $this->addFlash('success', 'Modifié avec succés.');
             return $this->redirectToRoute('app_dashboard_client', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
