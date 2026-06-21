@@ -18,12 +18,12 @@
 								<div class="d-flex flex-column flex-md-row justify-content-around">
 									<div class="d-flex flex-column">
 										<p>image</p>
-										<a class="btn mb-2" href="">Modifier</a>
+										<a class="btn mb-2" href="{{ path('app_user_picture', { id: user.id }) }}">Modifier</a>
 									</div>
 									<div class="d-flex flex-column">
 										<p>{{ user.credit }}
 											crédits</p>
-										<a class="btn mb-2" href="">Ajouter</a>
+										<a class="btn mb-2" href="{{ path('app_user_credit', { id: user.id }) }}">Ajouter</a>
 									</div>
 								</div>
 
@@ -32,12 +32,12 @@
 						<div class="card shadow-sm m-3">
 
 							<div class="d-flex flex-column flex-md-row justify-content-around align-items-md-center flex-wrap m-2">
-								<a class="btn my-sm-4 mb-md-4" href="{{ path('app_user_edit', { id: user.id }) }}">Informations</a>
-								<a class="btn mb-4" href="{{ path('app_user_history', { id: user.id }) }}">Historique</a>
+								<a class="btn my-4" href="{{ path('app_user_edit', { id: user.id }) }}">Informations</a>
+								<a class="btn my-4" href="{{ path('app_user_history', { id: user.id }) }}">Historique</a>
 								{% if is_granted('ROLE_DRIVER') %}
-									<a class="btn mb-4" href="{{ path('app_ride_new') }}">Ajouter un trajet</a>
+									<a class="btn my-4" href="{{ path('app_ride_new') }}">Ajouter un trajet</a>
 								{% else %}
-									<a class="btn mb-4" href="{{ path('app_user_driver') }}">Devenir conducteur</a>
+									<a class="btn my-4" href="{{ path('app_user_driver', { id: user.id }) }}">Devenir conducteur</a>
 								{% endif %}
 							</div>
 						</div>
