@@ -5,6 +5,8 @@ namespace App\Form;
 use App\Entity\Car;
 use App\Entity\Ride;
 
+use App\Repository\CarRepository;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,13 +17,14 @@ use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
-
 class RideType extends AbstractType
 {
     public function buildForm(
         FormBuilderInterface $builder,
         array $options
     ): void {
+        $user = $options['user'];
+
         $builder
             ->add('departureDate', DateType::class, [
                 'widget' => 'single_text',
@@ -59,6 +62,11 @@ class RideType extends AbstractType
                 'placeholder' => 'Choisir',
                 'label' => 'Voiture',
                 'required' => true,
+                'query_builder' => function (CarRepository $carRepository) use ($user) {
+                    return $carRepository->createQueryBuilder('c')
+                        ->where('c.owner = :user')
+                        ->setParameter('user', $user);
+                },
             ])
         ;
     }
@@ -67,6 +75,7 @@ class RideType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Ride::class,
+            'user' => null,
             'csrf_protection' => true,
         ]);
     }
