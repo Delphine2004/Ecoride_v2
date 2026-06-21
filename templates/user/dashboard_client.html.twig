@@ -36,6 +36,7 @@
 								<a class="btn my-4" href="{{ path('app_user_history', { id: user.id }) }}">Historique</a>
 								{% if is_granted('ROLE_DRIVER') %}
 									<a class="btn my-4" href="{{ path('app_ride_new') }}">Ajouter un trajet</a>
+                  <a class="btn my-4" href="{{ path('app_car_index') }}">Voiture(s)</a>
 								{% else %}
 									<a class="btn my-4" href="{{ path('app_user_driver', { id: user.id }) }}">Devenir conducteur</a>
 								{% endif %}
