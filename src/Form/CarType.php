@@ -62,7 +62,7 @@ class CarType extends AbstractType
             ])
             ->add('registrationDate', DateType::class, [
                 'widget' => 'single_text',
-                'input' => 'datetime_immutable',
+                'input' => 'datetime',
                 'label' => 'Date d\'immatriculation',
                 'required' => true,
             ])
