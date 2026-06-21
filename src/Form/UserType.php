@@ -28,6 +28,7 @@ use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Validator\Constraints\File;
 
 
@@ -256,15 +257,15 @@ class UserType extends AbstractType
                     'mapped' => false,
                     'required' => true,
                     'constraints' => [
-                        new File([
-                            'maxSize' => '10M',
-                            'mimeTypes' => [
+                        new File(
+                            maxSize: '10M',
+                            mimeTypes: [
                                 'image/jpeg',
                                 'image/png',
                                 'image/webp',
                             ],
-                            'mimeTypesMessage' => 'Merci d’uploader une image valide (jpeg, png, webp)',
-                        ])
+                            mimeTypesMessage: 'Merci d’uploader une image valide (jpeg, png, webp)',
+                        )
                     ],
                 ]);
         }
@@ -285,48 +286,14 @@ class UserType extends AbstractType
                     'label' => 'N° de permis',
                     'required' => true,
                 ])
-                ->add('brand', EnumType::class, [
-                    'class' => CarBrand::class,
-                    'label' => 'Marque',
-                    'choice_label' => fn(CarBrand $choice) => $choice->value,
-                    'placeholder' => 'Choisir',
-                    'required' => true,
-                ])
-                ->add('model', TextType::class, [
-                    'label' => 'Modèle',
-                    'required' => true,
-                ])
-                ->add('color', EnumType::class, [
-                    'class' => CarColor::class,
-                    'label' => 'Couleur',
-                    'choice_label' => fn(CarColor $choice) => $choice->value,
-                    'placeholder' => 'Choisir',
-                    'required' => true,
-                ])
-                ->add('year', TextType::class, [
-                    'label' => 'Année',
-                    'required' => true,
-                ])
-                ->add('power', EnumType::class, [
-                    'class' => CarPower::class,
-                    'label' => 'Energie',
-                    'choice_label' => fn(CarPower $choice) => $choice->value,
-                    'placeholder' => 'Choisir',
-                    'required' => true,
-                ])
-                ->add('seats', IntegerType::class, [
-                    'label' => 'Nombre total de siége',
-                    'required' => true,
-                ])
-                ->add('registrationNumber', TextType::class, [
-                    'label' => 'Numéro d\'immatriculation',
-                    'required' => true,
-                ])
-                ->add('registrationDate', DateType::class, [
-                    'widget' => 'single_text',
-                    'input' => 'datetime_immutable',
-                    'label' => 'Date d\'immatriculation',
-                    'required' => true,
+                ->add('cars', CollectionType::class, [
+                    'entry_type' => CarType::class,
+                    'entry_options' => [
+                        'label' => false,
+                    ],
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'by_reference' => false,
                 ]);
         }
     }
