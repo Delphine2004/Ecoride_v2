@@ -1,8 +1,53 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Historique{% endblock %}
+{% block title %}Historique
+{% endblock %}
 
 {% block body %}
-    <h1>Page à faire</h1>
+	<main class="py-5">
+		<section class="container-fluid">
+			<div class="container">
+				<div class="row justify-content-center">
 
-{% endblock %}
+					<div class="col-12 col-md-10 col-lg-8">
+						<div class="text-center m-3">
+							<a class="btn" href="{{ path('app_dashboard_client', { id: app.user.id }) }}">Retour sur le compte</a>
+						</div>
+					</div>
+
+					<div class="col-12 col-md-10 col-lg-8">
+						<div class="card shadow-sm m-3">
+							<div class="card-header">
+								<h1>Historique</h1>
+							</div>
+
+							<div class="card-body">
+								<h2>Réservations</h2>
+								<ul>
+									{% for booking in bookings %}
+										<li><twig:BookingActions booking="{{ booking }}"/>
+										</li>
+									{% else %}
+										<li>Aucune réservation</li>
+									{% endfor %}
+								</ul>
+							</div>
+
+							<div class="card-body">
+								<h2>Trajets</h2>
+								<ul>
+									{% for ride in rides %}
+										<li><twig:RideActions ride="{{ ride }}"/>
+										</li>
+									{% else %}
+										<li>Aucune réservation</li>
+									{% endfor %}
+								</ul>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</section>
+		</main>
+	{% endblock %}
