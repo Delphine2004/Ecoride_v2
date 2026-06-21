@@ -133,11 +133,23 @@ final class UserController extends AbstractController
         EntityManagerInterface $entityManager
     ): Response {
 
-        $clientUpdate = $this->getUser() === $user && $this->isGranted(UserRole::PASSENGER);
-        $userUpdate = $this->getUser() === $user && $this->isGranted(UserRole::EMPLOYEE);
-        $adminUpdate = $this->getUser() === $user && $this->isGranted(UserRole::ADMIN);
-        $userByAdminUpdate = $user->getRoles() === UserRole::EMPLOYEE && $this->isGranted(UserRole::ADMIN);
-        $clientByStaffUpdate = $user->getRoles() === UserRole::PASSENGER && $this->isGranted(UserRole::EMPLOYEE);
+        $clientUpdate = $this->getUser() === $user && in_array(UserRole::PASSENGER->value, $user->getRoles())
+            && $this->isGranted(UserRole::PASSENGER->value);
+
+        $userUpdate = $this->getUser() === $user && in_array(UserRole::EMPLOYEE->value, $user->getRoles())
+            && $this->isGranted(UserRole::EMPLOYEE->value);
+
+        $adminUpdate = $this->getUser() === $user && in_array(UserRole::ADMIN->value, $user->getRoles())
+            && $this->isGranted(UserRole::ADMIN->value);
+        $userByAdminUpdate = in_array(UserRole::EMPLOYEE->value, $user->getRoles()) && $this->isGranted(UserRole::ADMIN->value);
+        $clientByStaffUpdate = in_array(UserRole::PASSENGER->value, $user->getRoles()) && $this->isGranted(UserRole::EMPLOYEE->value);
+
+        /*
+        dd([
+            'roles' => $this->getUser()->getRoles(),
+            'allowed' => in_array(UserRole::PASSENGER->value, $user->getRoles())
+                && $this->isGranted(UserRole::PASSENGER->value),
+        ]);*/
 
         $mode = '';
 
