@@ -251,6 +251,10 @@ final class UserController extends AbstractController
         EntityManagerInterface $entityManager
     ): Response {
 
+        if ($user->getCars()->isEmpty()) {
+            $user->addCar(new Car());
+        }
+
         $form = $this->createForm(UserType::class, $user, ['mode' => 'becomeDriver']);
         $form->handleRequest($request);
 
