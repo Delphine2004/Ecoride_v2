@@ -28,6 +28,15 @@ final class CarController extends AbstractController
         private Security $security
     ) {}
 
+    #[Route(name: 'app_car_index', methods: ['GET'])]
+    public function index(
+        CarRepository $carRepository
+    ): Response {
+        return $this->render('car/index.html.twig', [
+            'cars' => $carRepository->findAll(),
+        ]);
+    }
+
     #[Route('/new', name: 'app_car_new', methods: ['GET', 'POST'])]
     public function new(
         Request $request,
