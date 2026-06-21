@@ -23,6 +23,12 @@ final class SearchRide extends AbstractController
     #[LiveProp]
     public array $rideIds = [];
 
+    #[LiveProp]
+    public bool $hasSearched = false;
+
+    #[LiveProp]
+    public bool $showDescription = true;
+
     public function __construct(
         private RideRepository $rideRepository,
     ) {}
@@ -56,6 +62,8 @@ final class SearchRide extends AbstractController
             static fn(Ride $ride) => $ride->getId(),
             $rides
         );
+
+        $this->hasSearched = true;
     }
 
     // reconstruction des résultats à partir de l'id
