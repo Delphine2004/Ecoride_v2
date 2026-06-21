@@ -91,68 +91,73 @@
 		</div>
 	{% endif %}
 
-	{% if form.brand is defined %}
-		<div class="col-12 col-md-6 mb-3">
-			{{ form_label(form.brand) }}
-			{{ form_widget(form.brand, {attr: {class: 'form-control'}}) }}
-			{{ form_errors(form.brand) }}
-		</div>
-	{% endif %}
+	{% if form.cars is defined %}
+		{% for carForm in form.cars %}
+			{% if carForm.brand is defined %}
+				<div class="col-12 col-md-6 mb-3">
+					{{ form_label(carForm.brand) }}
+					{{ form_widget(carForm.brand, {attr: {class: 'form-control'}}) }}
+					{{ form_errors(carForm.brand) }}
+				</div>
+			{% endif %}
 
-	{% if form.model is defined %}
-		<div class="col-12 col-md-6 mb-3">
-			{{ form_label(form.model) }}
-			{{ form_widget(form.model, {attr: {class: 'form-control'}}) }}
-			{{ form_errors(form.model) }}
-		</div>
-	{% endif %}
+			{% if carForm.model is defined %}
+				<div class="col-12 col-md-6 mb-3">
+					{{ form_label(carForm.model) }}
+					{{ form_widget(carForm.model, {attr: {class: 'form-control'}}) }}
+					{{ form_errors(carForm.model) }}
+				</div>
+			{% endif %}
 
-	{% if form.color is defined %}
-		<div class="col-12 col-md-6 mb-3">
-			{{ form_label(form.color) }}
-			{{ form_widget(form.color, {attr: {class: 'form-control'}}) }}
-			{{ form_errors(form.color) }}
-		</div>
-	{% endif %}
+			{% if carForm.color is defined %}
+				<div class="col-12 col-md-6 mb-3">
+					{{ form_label(carForm.color) }}
+					{{ form_widget(carForm.color, {attr: {class: 'form-control'}}) }}
+					{{ form_errors(carForm.color) }}
+				</div>
+			{% endif %}
 
-	{% if form.year is defined %}
-		<div class="col-12 col-md-6 mb-3">
-			{{ form_label(form.year) }}
-			{{ form_widget(form.year, {attr: {class: 'form-control'}}) }}
-			{{ form_errors(form.year) }}
-		</div>
-	{% endif %}
+			{% if carForm.year is defined %}
+				<div class="col-12 col-md-6 mb-3">
+					{{ form_label(carForm.year) }}
+					{{ form_widget(carForm.year, {attr: {class: 'form-control'}}) }}
+					{{ form_errors(carForm.year) }}
+				</div>
+			{% endif %}
 
-	{% if form.power is defined %}
-		<div class="col-12 col-md-6 mb-3">
-			{{ form_label(form.power) }}
-			{{ form_widget(form.power, {attr: {class: 'form-control'}}) }}
-			{{ form_errors(form.power) }}
-		</div>
-	{% endif %}
+			{% if carForm.power is defined %}
+				<div class="col-12 col-md-6 mb-3">
+					{{ form_label(carForm.power) }}
+					{{ form_widget(carForm.power, {attr: {class: 'form-control'}}) }}
+					{{ form_errors(carForm.power) }}
+				</div>
+			{% endif %}
 
-	{% if form.seats is defined %}
-		<div class="col-12 col-md-6 mb-3">
-			{{ form_label(form.seats) }}
-			{{ form_widget(form.seats, {attr: {class: 'form-control'}}) }}
-			{{ form_errors(form.seats) }}
-		</div>
-	{% endif %}
+			{% if carForm.seats is defined %}
+				<div class="col-12 col-md-6 mb-3">
+					{{ form_label(carForm.seats) }}
+					{{ form_widget(carForm.seats, {attr: {class: 'form-control'}}) }}
+					{{ form_errors(carForm.seats) }}
+				</div>
+			{% endif %}
 
-	{% if form.registrationNumber is defined %}
-		<div class="col-12 col-md-6 mb-3">
-			{{ form_label(form.registrationNumber) }}
-			{{ form_widget(form.registrationNumber, {attr: {class: 'form-control'}}) }}
-			{{ form_errors(form.registrationNumber) }}
-		</div>
-	{% endif %}
+			{% if carForm.registrationNumber is defined %}
+				<div class="col-12 col-md-6 mb-3">
+					{{ form_label(carForm.registrationNumber) }}
+					{{ form_widget(carForm.registrationNumber, {attr: {class: 'form-control'}}) }}
+					{{ form_errors(carForm.registrationNumber) }}
+				</div>
+			{% endif %}
 
-	{% if form.registrationDate is defined %}
-		<div class="col-12 col-md-6 mb-3">
-			{{ form_label(form.registrationDate) }}
-			{{ form_widget(form.registrationDate, {attr: {class: 'form-control'}}) }}
-			{{ form_errors(form.registrationDate) }}
-		</div>
+			{% if carForm.registrationDate is defined %}
+				<div class="col-12 col-md-6 mb-3">
+					{{ form_label(carForm.registrationDate) }}
+					{{ form_widget(carForm.registrationDate, {attr: {class: 'form-control'}}) }}
+					{{ form_errors(carForm.registrationDate) }}
+				</div>
+			{% endif %}
+
+		{% endfor %}
 	{% endif %}
 </div>
 
