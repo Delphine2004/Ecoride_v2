@@ -312,7 +312,7 @@ final class UserController extends AbstractController
 
         $criteriaRides = new SearchRideDTO();
         $criteriaRides->driverId = $userId;
-        $criteriaRides->statuses = [RideStatus::CONFIRMED, RideStatus::PENDING, RideStatus::RUNNING];
+        $criteriaRides->statuses = [RideStatus::CANCELLED, RideStatus::COMPLETED];
 
         return $this->render('user/history.html.twig', [
             'user' => $user,
