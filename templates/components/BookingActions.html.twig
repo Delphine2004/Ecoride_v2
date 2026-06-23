@@ -17,7 +17,7 @@
 			<a href="{{ path('app_booking_show', {'id': booking.id}) }}">Plus de détails</a>
 		</div>
 
-
+<!-- A FAIRE REMPLACER PAR UNE COMPOSANT BTN -->
 		{% if booking.status == constant('App\\Enum\\BookingStatus::CONFIRMED') and booking.ride.departureDate|date('Y-m-d') == 'now'|date('Y-m-d')%}
 			<div class="d-flex flex-column flex-md-row">
 				<p class="text-start text-md-center mb-0">En attente ...</p>
