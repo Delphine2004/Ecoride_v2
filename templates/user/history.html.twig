@@ -23,27 +23,28 @@
 
 							<div class="card-body">
 								<h2>Réservations</h2>
-								<ul>
-									{% for booking in bookings %}
-										<li><twig:BookingActions booking="{{ booking }}"/>
-										</li>
-									{% else %}
-										<li>Aucune réservation</li>
-									{% endfor %}
-								</ul>
+
+								{% for booking in bookings %}
+									<twig:BookingActions booking="{{ booking }}"/>
+								{% else %}
+									<p class="text-center">Aucune réservation</p>
+								{% endfor %}
+
 							</div>
 
-							<div class="card-body">
-								<h2>Trajets</h2>
-								<ul>
+
+							{% if is_granted('ROLE_DRIVER')%}
+								<div class="card-body">
+									<h2>Trajets</h2>
+
 									{% for ride in rides %}
-										<li><twig:RideActions ride="{{ ride }}"/>
-										</li>
+										<twig:RideActions ride="{{ ride }}"/>
 									{% else %}
-										<li>Aucune réservation</li>
+										<p class="text-center">Aucune réservation</p>
 									{% endfor %}
-								</ul>
-							</div>
+								</div>
+							{% endif %}
+              
 						</div>
 					</div>
 

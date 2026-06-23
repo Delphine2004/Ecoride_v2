@@ -36,7 +36,7 @@
 								<a class="btn my-4" href="{{ path('app_user_history', { id: user.id }) }}">Historique</a>
 								{% if is_granted('ROLE_DRIVER') %}
 									<a class="btn my-4" href="{{ path('app_ride_new') }}">Ajouter un trajet</a>
-                  <a class="btn my-4" href="{{ path('app_car_index') }}">Voiture(s)</a>
+									<a class="btn my-4" href="{{ path('app_car_index') }}">Voiture(s)</a>
 								{% else %}
 									<a class="btn my-4" href="{{ path('app_user_driver', { id: user.id }) }}">Devenir conducteur</a>
 								{% endif %}
@@ -61,29 +61,28 @@
 							</div>
 							<div class="card-body">
 								<h3>Réservations</h3>
-								<ul>
-									{% for booking in actionToDoBookings %}
-										<li><twig:BookingActions booking="{{ booking }}"/>
-										</li>
-									{% else %}
-										<li>Aucune réservation</li>
-									{% endfor %}
-								</ul>
+
+								{% for booking in actionToDoBookings %}
+									<twig:BookingActions booking="{{ booking }}"/>
+								{% else %}
+									<p class="text-center">Aucune réservation</p>
+								{% endfor %}
+
 							</div>
 
-							<div class="card-body">
-								<h3>Trajets</h3>
-								<ul>
+
+							{% if is_granted('ROLE_DRIVER')%}
+								<div class="card-body">
+									<h3>Trajets</h3>
+
 									{% for ride in actionToDoRides %}
-										<li>
-											<twig:RideActions ride="{{ ride }}"/>
-										</li>
+										<twig:RideActions ride="{{ ride }}"/>
 									{% else %}
-										<li>Aucun trajet</li>
+										<p class="text-center">Aucun trajet</p>
 									{% endfor %}
-								</ul>
-							</div>
 
+								</div>
+							{% endif %}
 						</div>
 					</div>
 
@@ -95,27 +94,26 @@
 							</div>
 							<div class="card-body">
 								<h3>Réservation(s)</h3>
-								<ul>
-									{% for booking in upcomingBookings %}
-										<li><twig:BookingActions booking="{{ booking }}"/></li>
-									{% else %}
-										<li>Aucune réservation</li>
-									{% endfor %}
-								</ul>
+
+								{% for booking in upcomingBookings %}
+									<twig:BookingActions booking="{{ booking }}"/>
+								{% else %}
+									<p class="text-center">Aucune réservation</p>
+								{% endfor %}
+
 							</div>
 
-							<div class="card-body">
-								<h2>Trajet(s)</h2>
-								<ul>
+							{% if is_granted('ROLE_DRIVER')%}
+								<div class="card-body">
+									<h3>Trajet(s)</h3>
 									{% for ride in upcomingRides %}
-										<li>
-											<twig:RideActions ride="{{ ride }}"/>
-										</li>
+										<twig:RideActions ride="{{ ride }}"/>
 									{% else %}
-										<li>Aucun trajet</li>
+										<p class="text-center">Aucun trajet</p>
 									{% endfor %}
-								</ul>
-							</div>
+								</div>
+							{% endif %}
+
 						</div>
 					</div>
 
