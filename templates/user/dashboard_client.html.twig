@@ -14,22 +14,22 @@
 
 							<div class="row flex-column flex-md-row justify-content-around align-items-md-center">
 								<div class="col-12 col-md-6 order-md-2">
-									<h1>Bonjour
-										{{ user.firstName }}</h1>
+									<div class="d-flex flex-column align-items-md-center p-2 my-2">
+										<h1>Bonjour
+											{{ user.firstName }}</h1>
+										<div class="d-flex flex-column ">
+											<h4 class="text-center">{{ user.credit }}
+												crédits</h4>
+											<a class="btn my-4" href="{{ path('app_user_credit', { id: user.id }) }}">Ajouter</a>
+										</div>
+									</div>
 								</div>
 								<div class="col-12 col-md-6 order-md-1">
-									<div class="d-flex flex-column align-items-center p-2 mb-2">
+									<div class="d-flex flex-column  align-items-md-center p-2 my-2">
 										<div class="avatar m-2">
 											<img src="{% if user.picture %} {{ asset('uploads/users/' ~ user.picture) }} {% else %} {{ asset('uploads/users/user-default.svg') }} {% endif %}" alt="avatar de {{ user.login }}">
 										</div>
 										<a class="btn my-2" href="{{ path('app_user_picture', { id: user.id }) }}">Modifier</a>
-									</div>
-								</div>
-								<div class="col-12 order-md-3">
-									<div class="d-flex flex-column align-items-md-center py-2 my-2">
-										<p class="text-center">{{ user.credit }}
-											crédits</p>
-										<a class="btn my-2" href="{{ path('app_user_credit', { id: user.id }) }}">Ajouter</a>
 									</div>
 								</div>
 							</div>
@@ -38,18 +38,34 @@
 
 						<div class="card shadow-sm m-3">
 
-							<div class="d-flex flex-column flex-md-row justify-content-around align-items-md-center flex-wrap m-2">
-								<a class="btn my-4" href="{{ path('app_user_edit', { id: user.id }) }}">Informations</a>
-								<a class="btn my-4" href="{{ path('app_user_history', { id: user.id }) }}">Historique</a>
+							<div class="row flex-column flex-md-row justify-content-around align-items-md-center flex-wrap m-2">
+								<div class="col-12 col-md-5">
+									<a class="btn w-100 my-4" href="{{ path('app_user_edit', { id: user.id }) }}">Informations</a>
+								</div>
+								<div class="col-12 col-md-5">
+									<a class="btn w-100 my-4" href="{{ path('app_user_history', { id: user.id }) }}">Historique</a>
+								</div>
+
 								{% if is_granted('ROLE_DRIVER') %}
-									<a class="btn my-4" href="{{ path('app_ride_new') }}">Ajouter un trajet</a>
-									<a class="btn my-4" href="{{ path('app_car_index') }}">Voiture(s)</a>
+									<div class="col-12 col-md-5">
+										<a class="btn w-100 my-4" href="{{ path('app_ride_new') }}">Ajouter un trajet</a>
+									</div>
+									<div class="col-12 col-md-5">
+										<a class="btn w-100 my-4" href="{{ path('app_car_index', { id: user.id }) }}">Voiture(s)</a>
+									</div>
+
 								{% else %}
-									<a class="btn my-4" href="{{ path('app_user_driver', { id: user.id }) }}">Devenir conducteur</a>
+									<div class="col-12 col-md-5">
+										<a class="btn w-100 my-4" href="{{ path('app_user_driver', { id: user.id }) }}">Devenir conducteur</a>
+									</div>
+
 								{% endif %}
+
 							</div>
+
 						</div>
 					</div>
+
 
 					{% for label, messages in app.flashes %}
 						<div class="col-12 col-md-10 col-lg-8">
