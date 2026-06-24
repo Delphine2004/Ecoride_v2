@@ -42,4 +42,15 @@ class CarRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    public function hasCar(
+        User $user
+    ): bool {
+        return (bool) $this->createQueryBuilder('c')
+            ->select('COUNT(c.user)')
+            ->where('c.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }
