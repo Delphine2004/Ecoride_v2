@@ -25,7 +25,7 @@
 									</div>
 								</div>
 								<div class="col-12 col-md-6 order-md-1">
-									<div class="d-flex flex-column  align-items-md-center p-2 my-2">
+									<div class="d-flex flex-column align-items-center p-2 my-2">
 										<div class="avatar m-2">
 											<img src="{% if user.picture %} {{ asset('uploads/users/' ~ user.picture) }} {% else %} {{ asset('uploads/users/user-default.svg') }} {% endif %}" alt="avatar de {{ user.login }}">
 										</div>
