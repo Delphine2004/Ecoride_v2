@@ -28,12 +28,18 @@ final class CarController extends AbstractController
         private Security $security
     ) {}
 
-    #[Route(name: 'app_car_index', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_car_index', methods: ['GET'])]
     public function index(
         CarRepository $carRepository
     ): Response {
+        $user = $this->security->getUser();
+
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+
         return $this->render('car/index.html.twig', [
-            'cars' => $carRepository->findAll(),
+            'cars' => $carRepository->findCarsByDriver($user->getId()),
         ]);
     }
 
