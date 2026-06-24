@@ -182,6 +182,7 @@ final class UserController extends AbstractController
         return $this->render('user/edit.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
+            'showDeleteForm' => true,
         ]);
     }
 
@@ -206,6 +207,7 @@ final class UserController extends AbstractController
         return $this->render('user/edit.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
+            'showDeleteForm' => false,
         ]);
     }
 
@@ -240,6 +242,7 @@ final class UserController extends AbstractController
         return $this->render('user/edit.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
+            'showDeleteForm' => false,
         ]);
     }
 
@@ -294,6 +297,7 @@ final class UserController extends AbstractController
         return $this->render('user/edit.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
+            'showDeleteForm' => false,
         ]);
     }
 

@@ -27,11 +27,13 @@
 						</div>
 					</div>
 
-					<div class="col-12 col-md-10 col-lg-8">
-						<div class="text-center m-3">
-							{{ include('user/_delete_form.html.twig') }}
+					{% if showDeleteForm %}
+						<div class="col-12 col-md-10 col-lg-8">
+							<div class="text-center m-3">
+								{{ include('user/_delete_form.html.twig') }}
+							</div>
 						</div>
-					</div>
+					{% endif %}
 
 
 				</div>
