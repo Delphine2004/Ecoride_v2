@@ -10,17 +10,19 @@
 				<div class="row justify-content-center">
 
 					<div class="col-12 col-md-10 col-lg-8">
+						<div class="text-center m-3">
+							<a class="btn" href="{{ path('app_car_index', { id: app.user.id }) }}">Retour à la gestion voiture</a>
+						</div>
+					</div>
+
+					<div class="col-12 col-md-10 col-lg-8">
 						<div class="card shadow-sm justify-content-evenly p-4 my-5">
 							<h1>Ajouter une voiture</h1>
 							{{ include('car/_form.html.twig') }}
 						</div>
 					</div>
           
-					<div class="col-12 col-md-10 col-lg-8">
-						<div class="text-center m-3">
-							<a class="btn" href="{{ path('app_dashboard_client', { id: app.user.id }) }}">Retour sur le compte</a>
-						</div>
-					</div>
+
 
 
 				</div>
