@@ -29,7 +29,7 @@ class ClientFixtures extends Fixture
                 'login' => 'Batman89',
                 'email' => 'batman@batman.com',
                 'credit' => '10',
-                'picture' => null,
+                'picture' => 'user-1.png',
                 'licence' => '527934098',
                 'roles' => [
                     UserRole::PASSENGER,
