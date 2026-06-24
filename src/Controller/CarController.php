@@ -104,13 +104,21 @@ final class CarController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
+        if (!$carRepository->hasCar($user)) {
+            $this->addFlash(
+                'error',
+                'Vous ne pouvez pas supprimer toutes les voitures.'
+            );
+            return $this->redirectToRoute('app_car_index', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
+        }
+
         // Vérifier que la voiture n'est pas attaché à un trajet
         if ($car->getRides()) {
             $this->addFlash(
                 'error',
                 'Vous ne pouvez pas supprimer votre compte pendant un séjour en cours.'
             );
-            return $this->redirectToRoute('app_dashboard_client', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_car_index', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
         }
 
         $car->setBrand(CarBrand::NA);
@@ -127,6 +135,6 @@ final class CarController extends AbstractController
             'success',
             'Voiture supprimée avec succés.'
         );
-        return $this->redirectToRoute('app_dashboard_client', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_car_index', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
     }
 }
