@@ -15,6 +15,16 @@
 						</div>
 					</div>
 
+					{% for label, messages in app.flashes %}
+						<div class="col-12 col-md-10 col-lg-8">
+							{% for message in messages %}
+								<p class="fw-bold text-center m-3 alert alert-{{ label }}">
+									{{ message }}
+								</p>
+							{% endfor %}
+						</div>
+					{% endfor %}
+
 					<div class="col-12 col-md-10 col-lg-8">
 						<div class="card shadow-sm m-3">
 							<div class="card-header">
@@ -35,7 +45,6 @@
 							</div>
 						</div>
 					</div>
-
 
 				</div>
 
