@@ -1,8 +1,45 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Car index{% endblock %}
+{% block title %}Car index
+{% endblock %}
 
 {% block body %}
-    <h1>Car index - à faire</h1>
+	<main class="py-5">
+		<section class="container-fluid">
+			<div class="container">
+				<div class="row justify-content-center">
 
+					<div class="col-12 col-md-10 col-lg-8">
+						<div class="text-center m-3">
+							<a class="btn" href="{{ path('app_dashboard_client', { id: app.user.id }) }}">Retour sur le compte</a>
+						</div>
+					</div>
+
+					<div class="col-12 col-md-10 col-lg-8">
+						<div class="card shadow-sm m-3">
+							<div class="card-header">
+								<h1>Voiture(s)</h1>
+
+							</div>
+							<div class="card-body">
+								<div class="text-center">
+									<a class="btn my-2" href="{{ path('app_car_new') }}">Ajouter</a>
+								</div>
+
+								{% for car in cars %}
+									<p>{{ car.id }}
+										-
+										{{ car.model }}
+									</p>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+
+			</div>
+		</section>
+	</main>
 {% endblock %}
