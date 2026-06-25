@@ -25,7 +25,7 @@
 
 							<!-- Dates et heures -->
 							<div class="d-flex flex-column p-2">
-								<div class="d-flex flex-column flex-md-row gap-2">
+								<div class="d-flex flex-column flex-md-row justify-content-md-between">
 									<p>Depart de
 										{{ ride.departurePlace}}</p>
 									<p>le
@@ -33,7 +33,7 @@
 									<p>à XXhXX</p>
 								</div>
 
-								<div class="d-flex flex-column flex-md-row gap-2">
+								<div class="d-flex flex-column flex-md-row justify-content-md-between">
 									<p>Arrivée à
 										{{ ride.arrivalPlace}}</p>
 									<p>
@@ -43,9 +43,28 @@
 								</div>
 							</div>
 
+							<!-- Voiture -->
+							<div class="d-flex flex-column flex-md-row justify-content-md-between p-2">
+								<div class="d-flex flex-row gap-2">
+									<p>{{ ride.car.model}}</p>
+									<p>{{ ride.car.brand.value}}</p>
+								</div>
+								<div class="d-flex flex-row gap-2">
+									<p>{{ ride.car.color.value}}</p>
+									<p>{{ ride.car.power.value}}</p>
+								</div>
+								<div class="d-flex flex-row gap-2">
+									<p>{{ ride.car.registrationNumber}}</p>
+								</div>
+							</div>
+
+              <div class="flex">
+              <a class="btn" href="{{ path('app_ride_edit', {'id': ride.id}) }}">Modifier voiture</a>
+              </div>
+
 							<!--  -->
 							<div class="d-flex flex-column flex-md-row p-2">
-								<p>Effectuée le :
+								<p>Créé le :
 									{{ ride.createdAt ? ride.createdAt|date('Y-m-d H:i:s') : '' }}</p>
 							</div>
 
@@ -58,14 +77,15 @@
 						<div class="card justify-content-around h-100 shadow-sm p-4 mb-4">
 							<h2 class="my-2">Passager(s)
 							</h2>
-              {% for booking in ride.rideBookings %}
-							<div class="d-flex flex-column align-items-center">
-								<p>{{ booking.passenger.login }} Login</p>
-								<p>{{ booking.passenger.email }}</p>
-							</div>
-              {% else %}
-              <p class="text-center">Aucun passager</p>
-              {% endfor %}
+							{% for booking in ride.rideBookings %}
+								<div class="d-flex flex-column align-items-center">
+									<p>{{ booking.passenger.login }}
+										Login</p>
+									<p>{{ booking.passenger.email }}</p>
+								</div>
+							{% else %}
+								<p class="text-center">Aucun passager</p>
+							{% endfor %}
 						</div>
 					</div>
 
