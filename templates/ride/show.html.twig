@@ -49,17 +49,6 @@
 									{{ ride.createdAt ? ride.createdAt|date('Y-m-d H:i:s') : '' }}</p>
 							</div>
 
-							<!-- Boutons d'action - A FAIRE REMPLACER PAR UNE COMPOSANT BTN -->
-							<div class="d-flex flex-column flex-md-row justify-content-evently">
-
-								{% if ride.status == constant('App\\Enum\\RideStatus::CONFIRMED') and ride.departureDate|date('Y-m-d') < 'now'|date('Y-m-d') %}
-									<a class="btn m-2" href="">Annuler</a>
-								{% elseif ride.status == constant('App\\Enum\\RideStatus::CONFIRMED') and ride.departureDate|date('Y-m-d') == 'now'|date('Y-m-d') %}
-									<a class="btn m-2" href="">Demarrer</a>
-								{% elseif ride.status == constant('App\\Enum\\RideStatus::RUNNING') %}
-									<a class="btn m-2" href="">Arrêter</a>
-								{% endif %}
-							</div>
 						</div>
 					</div>
 

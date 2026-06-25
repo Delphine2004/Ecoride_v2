@@ -49,17 +49,6 @@
 									{{ booking.createdAt ? booking.createdAt|date('Y-m-d H:i:s') : '' }}</p>
 							</div>
 
-							<!-- Boutons d'action -->
-              <!-- A FAIRE REMPLACER PAR UNE COMPOSANT BTN -->
-							<div class="d-flex flex-column flex-md-row justify-content-evently">
-
-								{% if booking.status == constant('App\\Enum\\BookingStatus::CONFIRMED') and booking.ride.departureDate|date('Y-m-d') < 'now'|date('Y-m-d') %}
-									<a class="btn m-2" href="">Annuler</a>
-								{% elseif booking.status == constant('App\\Enum\\BookingStatus::PENDING') %}
-									<a class="btn m-2" href="">Signaler</a>
-									<a class="btn m-2" href="">Confirmer</a>
-								{% endif %}
-							</div>
 						</div>
 					</div>
 
