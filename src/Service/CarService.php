@@ -33,7 +33,7 @@ class CarService
         // Vérifier qu'il y a encore une voiture
         if (!$this->carRepository->hasOtherCar($user->getId(), $car->getId())) {
             throw new Exception(
-                'Vous ne pouvez pas supprimer toutes les voitures. Il doit en rester au moins une.'
+                'Vous devez avoir au moins une voiture. Ajoutez en une avant de supprimer celle-ci.'
             );
         }
 
