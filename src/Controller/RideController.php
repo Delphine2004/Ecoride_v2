@@ -50,6 +50,7 @@ final class RideController extends AbstractController
         $ride->setStatus(RideStatus::CONFIRMED);
         $form = $this->createForm(RideType::class, $ride, [
             'user' => $this->getUser(),
+            'mode' => 'create'
         ]);
         $form->handleRequest($request);
 
@@ -74,6 +75,33 @@ final class RideController extends AbstractController
     ): Response {
         return $this->render('ride/show.html.twig', [
             'ride' => $ride,
+        ]);
+    }
+
+    #[Route('/edit/{id}', name: 'app_ride_edit', methods: ['GET', 'POST'])]
+    public function edit(
+        Request $request,
+        Ride $ride,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $user = $this->security->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $form = $this->createForm(RideType::class, $ride, ['user' => $this->getUser(), 'mode' => 'update']);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Voiture modifiée.');
+            return $this->redirectToRoute('app_dashboard_client', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('ride/edit.html.twig', [
+            'ride' => $ride,
+            'form' => $form->createView()
         ]);
     }
 
