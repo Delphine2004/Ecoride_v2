@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Car;
-use App\Entity\User;
+
 use App\Enum\CarBrand;
+use App\Enum\RideStatus;
+
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -66,10 +68,9 @@ class CarRepository extends ServiceEntityRepository
             ->select('COUNT(r.id)')
             ->join('c.rides', 'r')
             ->where('c.id = :id')
-            ->andWhere('r.departureDate <= :now')
-            ->andWhere('r.arrivalDate >= :now')
+            ->andWhere('r.status IN (:statuses)')
             ->setParameter('id', $carId)
-            ->setParameter('now', $now)
+            ->setParameter('statuses', [RideStatus::PENDING, RideStatus::RUNNING])
             ->getQuery()
             ->getSingleScalarResult();
     }
