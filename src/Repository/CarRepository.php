@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Car;
 use App\Entity\User;
+use App\Enum\CarBrand;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -21,8 +22,10 @@ class CarRepository extends ServiceEntityRepository
         int $driverId
     ): array {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.owner = :driverId')
+            ->where('c.owner = :driverId')
+            ->andWhere('c.brand != :brand')
             ->setParameter('driverId', $driverId)
+            ->setParameter('brand', CarBrand::NA->value)
             ->orderBy('c.id', 'ASC')
             ->getQuery()
             ->getResult()
@@ -30,26 +33,43 @@ class CarRepository extends ServiceEntityRepository
     }
 
     public function isOwner(
-        User $user,
+        int $driverId,
         int $carId
     ): bool {
         return (bool) $this->createQueryBuilder('c')
-            ->select('COUNT(c.user)')
-            ->where('c.user = :user')
-            ->where('c.id = :carId')
-            ->setParameter('user', $user)
+            ->select('COUNT(c.id)')
+            ->where('c.owner = :driverId')
+            ->andWhere('c.id = :carId')
+            ->setParameter('driverId', $driverId)
             ->setParameter('carId', $carId)
             ->getQuery()
             ->getSingleScalarResult();
     }
 
-    public function hasCar(
-        User $user
-    ): bool {
+    public function hasOtherCar(int $driverId, int $carId): bool
+    {
         return (bool) $this->createQueryBuilder('c')
-            ->select('COUNT(c.user)')
-            ->where('c.user = :user')
-            ->setParameter('user', $user)
+            ->select('COUNT(c.id)')
+            ->where('c.owner = :driverId')
+            ->andWhere('c.id != :carId')
+            ->setParameter('driverId', $driverId)
+            ->setParameter('carId', $carId)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function hasActiveRide(int $carId): bool
+    {
+        $now = new \DateTimeImmutable();
+
+        return (bool) $this->createQueryBuilder('c')
+            ->select('COUNT(r.id)')
+            ->join('c.rides', 'r')
+            ->where('c.id = :id')
+            ->andWhere('r.departureDate <= :now')
+            ->andWhere('r.arrivalDate >= :now')
+            ->setParameter('id', $carId)
+            ->setParameter('now', $now)
             ->getQuery()
             ->getSingleScalarResult();
     }
