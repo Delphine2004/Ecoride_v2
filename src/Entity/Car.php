@@ -86,7 +86,7 @@ class Car
     private Collection $rides;
 
     #[ORM\ManyToOne(inversedBy: 'cars')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?User $owner = null;
 
 
