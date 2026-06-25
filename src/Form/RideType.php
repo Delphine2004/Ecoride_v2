@@ -23,40 +23,59 @@ class RideType extends AbstractType
         FormBuilderInterface $builder,
         array $options
     ): void {
+
+        $mode = $options['mode'];
         $user = $options['user'];
 
-        $builder
-            ->add('departureDate', DateType::class, [
-                'widget' => 'single_text',
-                'input' => 'datetime_immutable',
-                'label' => 'Date de départ',
-                'required' => true,
-            ])
-            ->add('departurePlace', TextType::class, [
-                'label' => 'Adresse de départ',
-                'required' => true,
-            ])
-            ->add('arrivalDate', DateType::class, [
-                'widget' => 'single_text',
-                'input' => 'datetime_immutable',
-                'label' => 'Date d\'arrivée',
-                'required' => true,
-            ])
-            ->add('arrivalPlace', TextType::class, [
-                'label' => 'Adresse d\'arrivée',
-                'required' => true,
-            ])
-            ->add('price', MoneyType::class, [
-                'label' => 'Prix',
-                'currency'    => 'EUR',
-                'scale'       => 2,
-                'required'    => true,
-            ])
-            ->add('availableSeats', IntegerType::class, [
-                'label' => 'Nombre de place',
-                'required' => true,
-            ])
-            ->add('car', EntityType::class, [
+        if ($mode === 'create') {
+            $builder
+                ->add('departureDate', DateType::class, [
+                    'widget' => 'single_text',
+                    'input' => 'datetime_immutable',
+                    'label' => 'Date de départ',
+                    'required' => true,
+                ])
+                ->add('departurePlace', TextType::class, [
+                    'label' => 'Adresse de départ',
+                    'required' => true,
+                ])
+                ->add('arrivalDate', DateType::class, [
+                    'widget' => 'single_text',
+                    'input' => 'datetime_immutable',
+                    'label' => 'Date d\'arrivée',
+                    'required' => true,
+                ])
+                ->add('arrivalPlace', TextType::class, [
+                    'label' => 'Adresse d\'arrivée',
+                    'required' => true,
+                ])
+                ->add('price', MoneyType::class, [
+                    'label' => 'Prix',
+                    'currency'    => 'EUR',
+                    'scale'       => 2,
+                    'required'    => true,
+                ])
+                ->add('availableSeats', IntegerType::class, [
+                    'label' => 'Nombre de place',
+                    'required' => true,
+                ])
+                ->add('car', EntityType::class, [
+                    'class' => Car::class,
+                    'choice_label' => 'model',
+                    'placeholder' => 'Choisir',
+                    'label' => 'Voiture',
+                    'required' => true,
+                    'query_builder' => function (CarRepository $carRepository) use ($user) {
+                        return $carRepository->createQueryBuilder('c')
+                            ->where('c.owner = :user')
+                            ->setParameter('user', $user);
+                    },
+                ])
+            ;
+        }
+
+        if ($mode === 'update') {
+            $builder->add('car', EntityType::class, [
                 'class' => Car::class,
                 'choice_label' => 'model',
                 'placeholder' => 'Choisir',
@@ -67,14 +86,15 @@ class RideType extends AbstractType
                         ->where('c.owner = :user')
                         ->setParameter('user', $user);
                 },
-            ])
-        ;
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Ride::class,
+            'mode' => null,
             'user' => null,
             'csrf_protection' => true,
         ]);
