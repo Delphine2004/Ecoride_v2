@@ -37,10 +37,7 @@
 								</div>
 
 								{% for car in cars %}
-									<p>{{ car.id }}
-										-
-										{{ car.model }}
-									</p>
+									<twig:CarCard car="{{ car }}"/>
 								{% endfor %}
 							</div>
 						</div>
