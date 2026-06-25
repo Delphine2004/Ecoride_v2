@@ -28,21 +28,6 @@ final class CarController extends AbstractController
         private Security $security
     ) {}
 
-    #[Route('/{id}', name: 'app_car_index', methods: ['GET'])]
-    public function index(
-        CarRepository $carRepository
-    ): Response {
-        $user = $this->security->getUser();
-
-        if (!$user instanceof User) {
-            throw $this->createAccessDeniedException();
-        }
-
-        return $this->render('car/index.html.twig', [
-            'cars' => $carRepository->findCarsByDriver($user->getId()),
-        ]);
-    }
-
     #[Route('/new', name: 'app_car_new', methods: ['GET', 'POST'])]
     public function new(
         Request $request,
@@ -62,12 +47,27 @@ final class CarController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Voiture ajouté avec succés.');
-            return $this->redirectToRoute('app_dashboard_client', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_car_index', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('car/new.html.twig', [
             'car' => $car,
             'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/{id}', name: 'app_car_index', methods: ['GET'])]
+    public function index(
+        CarRepository $carRepository
+    ): Response {
+        $user = $this->security->getUser();
+
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+
+        return $this->render('car/index.html.twig', [
+            'cars' => $carRepository->findCarsByDriver($user->getId()),
         ]);
     }
 }
