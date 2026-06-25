@@ -1,7 +1,7 @@
 {{ form_start(form, {'attr': {'novalidate':  true}}) }}
 <div class="row g-3 justify-content-around my-3">
-  
-  	{% if form.departureDate is defined %}
+
+	{% if form.departureDate is defined %}
 		<div class="col-12 col-md-6 mb-3">
 			{{ form_label(form.departureDate) }}
 			{{ form_widget(form.departureDate, {attr: {class: 'form-control'}}) }}
@@ -25,7 +25,7 @@
 		</div>
 	{% endif %}
 
-  	{% if form.arrivalPlace is defined %}
+	{% if form.arrivalPlace is defined %}
 		<div class="col-12 col-md-6 mb-3">
 			{{ form_label(form.arrivalPlace) }}
 			{{ form_widget(form.arrivalPlace, {attr: {class: 'form-control'}}) }}
@@ -41,7 +41,7 @@
 		</div>
 	{% endif %}
 
-  	{% if form.availableSeats is defined %}
+	{% if form.availableSeats is defined %}
 		<div class="col-12 col-md-6 mb-3">
 			{{ form_label(form.availableSeats) }}
 			{{ form_widget(form.availableSeats, {attr: {class: 'form-control'}}) }}
@@ -49,7 +49,7 @@
 		</div>
 	{% endif %}
 
-  	{% if form.car is defined %}
+	{% if form.car is defined %}
 		<div class="col-12 col-md-6 mb-3">
 			{{ form_label(form.car) }}
 			{{ form_widget(form.car, {attr: {class: 'form-control'}}) }}
@@ -57,7 +57,7 @@
 		</div>
 	{% endif %}
 
-  </div>
+</div>
 <div class="row g-3 justify-content-around my-3">
 	<div class="col-12 col-md-4 mb-3">
 		<button class="btn w-100">{{ button_label|default('Enregistrer') }}</button>
