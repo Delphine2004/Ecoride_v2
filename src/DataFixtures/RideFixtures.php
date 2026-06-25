@@ -35,7 +35,7 @@ class RideFixtures extends Fixture implements DependentFixtureInterface
                 'status' => RideStatus::CONFIRMED,
                 'createdAt' => $today->modify('-8 days'),
                 'driver' => $this->getReference('client_1', User::class),
-                'car' => $this->getReference('car_4', Car::class),
+                'car' => $this->getReference('car_2', Car::class),
             ],
             // Trajet à vérifier
             [
