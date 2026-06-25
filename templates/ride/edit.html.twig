@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modification trajet
+{% endblock %}
+
+{% block body %}
+	<main class="py-5">
+		<section class="container-fluid">
+			<div class="container">
+				<div class="row justify-content-center">
+
+					<div class="col-12 col-md-10 col-lg-8">
+						<div class="text-center m-3">
+							<a class="btn" href="{{ path('app_dashboard_client', { id: app.user.id }) }}">Retour sur le compte</a>
+						</div>
+					</div>
+
+					<div class="col-12 col-md-10 col-lg-8">
+						<div class="card shadow-sm my-5">
+							<div class="card-header py-3">
+								<h1>Modification de la voiture du trajet</h1>
+							</div>
+
+							<div class="card-body">
+								{{ include('ride/_form.html.twig', {'button_label': 'Modifier'}) }}
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</section>
+	</main>
+{% endblock %}
