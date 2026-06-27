@@ -22,7 +22,6 @@ class SearchRideType extends AbstractType
         $builder
             ->add('departureDate', DateType::class, [
                 'widget' => 'single_text',
-                'input' => 'datetime_immutable',
                 'label' => 'Date de départ',
                 'required' => true,
             ])
@@ -41,7 +40,8 @@ class SearchRideType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => SearchRideDTO::class,
-            'mode' => null
+            'mode' => null,
+            'csrf_protection' => false,
         ]);
     }
 }
