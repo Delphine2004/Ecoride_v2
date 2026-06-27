@@ -70,6 +70,17 @@ h3 {
   }
 }
 
+footer {
+  min-height: 310px;
+  background-color: #3a7d44;
+  color: #e1e7c7;
+}
+@media (min-width: 768px) {
+  footer {
+    min-height: 190px;
+  }
+}
+
 .btn {
   background-color: #3a7d44;
   border: 2px solid #254d32;
