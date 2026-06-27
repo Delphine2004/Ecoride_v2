@@ -1,6 +1,6 @@
 <div
 	{{ attributes }}>
-	<!-- barre de recherche -->
+	<!-- Barre de recherche -->
 	<section class="container-fluid py-5">
 		<div class="container card p-3">
 			{{ form_start(form) }}
@@ -49,16 +49,13 @@
 					{% else %}
 						{% for ride in this.results %}
 							<div class="col-12">
-								A FAIRE - COMPOSANT
-								{{ ride.departurePlace }}
-								→
-								{{ ride.arrivalPlace }}</div>
-						{% endfor %}
+								<twig:RideSearchResult/>
+							{% endfor %}
+						{% endif %}
+
 					{% endif %}
-
-				{% endif %}
+				</div>
 			</div>
-		</div>
-	</section>
+		</section>
 
-</div>
+	</div>
