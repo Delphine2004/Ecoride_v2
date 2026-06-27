@@ -64,6 +64,7 @@ final class SearchRide extends AbstractController
         );
 
         $this->hasSearched = true;
+        $this->showDescription = false;
     }
 
     // reconstruction des résultats à partir de l'id
