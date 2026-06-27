@@ -75,6 +75,20 @@ footer {
   background-color: #3a7d44;
   color: #e1e7c7;
 }
+footer i {
+  font-size: 2rem;
+}
+footer a,
+footer i {
+  color: #e1e7c7;
+}
+footer a:hover,
+footer i:hover {
+  color: #181d27;
+}
+footer ul {
+  margin: 0;
+}
 @media (min-width: 768px) {
   footer {
     min-height: 190px;
