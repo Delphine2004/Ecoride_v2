@@ -5,6 +5,8 @@ namespace App\Twig\Components;
 use App\Entity\Ride;
 use App\Repository\RideRepository;
 use App\Form\SearchRideType;
+use App\DTO\SearchRideDTO;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
@@ -35,7 +37,10 @@ final class SearchRide extends AbstractController
 
     protected function instantiateForm(): FormInterface
     {
-        return $this->createForm(SearchRideType::class);
+        return $this->createForm(
+            SearchRideType::class,
+            new SearchRideDTO()
+        );
     }
 
     #[LiveAction]
