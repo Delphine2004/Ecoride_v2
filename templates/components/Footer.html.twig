@@ -1,3 +1,36 @@
-<footer{{ attributes }}>
-    <!-- component HTML -->
+<footer{{attributes}}>
+	<footer>
+		<div class="container p-5">
+			<div class="row justify-content-evenly">
+				<div class="col-12 col-md-6 text-center">
+					<h3>Suivez-nous</h3>
+					<div class="d-flex flex-row justify-content-center gap-4 mb-2">
+						<a href="#">
+							<i class="fa-brands fa-facebook"></i>
+						</a>
+						<a href="#">
+							<i class="fa-brands fa-instagram"></i>
+						</a>
+					</div>
+				</div>
+
+				<div class="col-12 col-md-6 text-center">
+					<h3>Autres informations</h3>
+					<ul>
+						<li><a href="#">FAQ</a></li>
+						<li><a href="#">Mentions légales</a></li>
+						<li><a href="#">CGV</a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="text-center my-4">
+				<p>
+					&copy;
+					<?= date('Y') ?>
+					Delphine Fumex. Tous droits réservés.
+				</p>
+			</div>
+		</div>
+	</footer>
+
 </footer>
