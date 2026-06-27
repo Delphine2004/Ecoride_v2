@@ -1,5 +1,12 @@
 @use "../utils/colors";
 
+img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
 .avatar {
     height: 120px;
     width: 120px;
@@ -10,29 +17,25 @@
         height: 200px;
         width: 200px;
     }
-
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center;
-    }
 }
 
 .img-advantage {
-    height: 150px;
-    width: 150px;
+    height: 250px;
+    width: 250px;
     overflow: hidden;
 
     @media (min-width: 768px) {
         height: 280px;
         width: 280px;
     }
+}
 
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center;
+.logo-home {
+    height: 80px;
+    width: auto;
+    overflow: hidden;
+
+    @media (min-width: 768px) {
+        height: 100px;
     }
 }
