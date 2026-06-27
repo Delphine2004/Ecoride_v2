@@ -1,4 +1,4 @@
-<div
+<main
 	{{ attributes }}>
 	<!-- Barre de recherche -->
 	<section class="container-fluid py-5">
@@ -48,14 +48,13 @@
 						</div>
 					{% else %}
 						{% for ride in this.results %}
-							<div class="col-12">
-								<twig:RideSearchResult/>
-							{% endfor %}
-						{% endif %}
-
+							<twig:RideSearchResult/>
+						{% endfor %}
 					{% endif %}
-				</div>
-			</div>
-		</section>
 
-	</div>
+				{% endif %}
+			</div>
+		</div>
+	</section>
+
+</main>
