@@ -1,61 +1,64 @@
-<div {{ attributes }}>
-	{{ form_start(form) }}
-	<div class="row align-items-end justify-content-around my-3">
-		<div class="col-12 col-md-2 mb-3">
-			{{ form_label(form.departureDate) }}
-			{{ form_widget(form.departureDate, {
-        attr: {
-            class: 'form-control'
-        }
-    }) }}
-			{{ form_errors(form.departureDate) }}</div>
-		<div class="col-12 col-md-4 mb-3">
-			{{ form_label(form.departurePlace) }}
-			{{ form_widget(form.departurePlace, {
-        attr: {
-            class: 'form-control'
-        }
-    }) }}
-			{{ form_errors(form.departurePlace) }}</div>
-		<div class="col-12 col-md-4 mb-3">
-			{{ form_label(form.arrivalPlace) }}
-			{{ form_widget(form.arrivalPlace, {
-        attr: {
-            class: 'form-control'
-        }
-    }) }}
-			{{ form_errors(form.arrivalPlace) }}</div>
-	</div>
-	<div class="row align-items-end justify-content-around my-3">
-		<div class="col-12 col-md-4 mb-3">
-			<button class="btn w-100" type="button" data-action="live#action" data-live-action-param="search">
-				Rechercher
-			</button>
-		</div>
-	</div>
-	{{ form_end(form) }}
-
-	<div class="row my-3">
-
-		{% if this.showDescription and not this.hasSearched %}
-			<twig:DescriptionsHome/>
-		{% endif %}
-
-		{% if this.hasSearched %}
-			{% if this.results is empty %}
-				<div class="col-12">
-					<p>Aucun résultat</p>
+<div
+	{{ attributes }}>
+	<!-- barre de recherche -->
+	<section class="container-fluid py-5">
+		<div class="container card p-3">
+			{{ form_start(form) }}
+			<div class="row align-items-end justify-content-around my-3">
+				<div class="col-12 col-md-4 mb-3">
+					{{ form_label(form.departureDate) }}
+					{{ form_widget(form.departureDate, {attr: {class: 'form-control'}}) }}
+					{{ form_errors(form.departureDate) }}
 				</div>
-			{% else %}
-				{% for ride in this.results %}
-					<div class="col-12">
-A FAIRE - COMPOSANT
-						{{ ride.departurePlace }}
-						→
-						{{ ride.arrivalPlace }}</div>
-				{% endfor %}
+				<div class="col-12 col-md-4 mb-3">
+					{{ form_label(form.departurePlace) }}
+					{{ form_widget(form.departurePlace, {attr: {class: 'form-control'}}) }}
+					{{ form_errors(form.departurePlace) }}
+				</div>
+				<div class="col-12 col-md-4 mb-3">
+					{{ form_label(form.arrivalPlace) }}
+					{{ form_widget(form.arrivalPlace, {attr: {class: 'form-control'}}) }}
+					{{ form_errors(form.arrivalPlace) }}
+				</div>
+			</div>
+			<div class="row align-items-end justify-content-around my-3">
+				<div class="col-12 col-md-4 mb-3">
+					<button class="btn w-100" type="button" data-action="live#action" data-live-action-param="search">
+						Rechercher
+					</button>
+				</div>
+			</div>
+			{{ form_end(form) }}
+		</div>
+	</section>
+
+	<!-- Description ou Résultats -->
+	<section class="container-fluid pb-5">
+		<div class="container">
+
+			{% if this.showDescription and not this.hasSearched %}
+				<twig:DescriptionsHome/>
 			{% endif %}
 
-		{% endif %}
-	</div>
+			<div class="row my-3">
+				{% if this.hasSearched %}
+					{% if this.results is empty %}
+						<div class="col-12">
+							<p>Aucun résultat</p>
+						</div>
+					{% else %}
+						{% for ride in this.results %}
+							<div class="col-12">
+								A FAIRE - COMPOSANT
+								{{ ride.departurePlace }}
+								→
+								{{ ride.arrivalPlace }}</div>
+						{% endfor %}
+					{% endif %}
+
+				{% endif %}
+			</div>
+		</div>
+	</section>
+
 </div>
