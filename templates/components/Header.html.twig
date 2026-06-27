@@ -2,7 +2,8 @@
 
 	<nav class="navbar navbar-expand-lg">
 		<div class="container-fluid">
-			<a class="navbar-brand" href="#">Ecoride V2</a>
+			<a class="navbar-brand" href="{{ path('app_home') }}">
+				<img src="{{ asset('img/logo-ecoridev2-light.png') }}" alt="Logo Ecoride"></a>
 			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
@@ -17,12 +18,12 @@
 							<a class="nav-link" href="{{ path('app_dashboard_user') }}">Tableau de bord</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_user_show', { id: app.user.id }) }}">Mon compte staff</a>
+							<a class="nav-link" href="{{ path('app_user_show', { id: app.user.id }) }}">Mon compte</a>
 						</li>
 					{% endif %}
 					{% if is_granted('ROLE_PASSENGER') and not is_granted('ROLE_EMPLOYE')%}
 						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_dashboard_client', { id: app.user.id }) }}">Mon compte client</a>
+							<a class="nav-link" href="{{ path('app_dashboard_client', { id: app.user.id }) }}">Mon compte</a>
 						</li>
 					{% endif %}
 
