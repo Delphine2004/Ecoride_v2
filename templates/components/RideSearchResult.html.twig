@@ -1,0 +1,10 @@
+<div {{attributes}}>
+	<!-- component HTML -->
+	<p>celui qui je viens de faire</p>
+
+	<div class="d-flex flex-row flex-wrap gap-2">
+		<p class="text-start text-md-center mb-0">{{ ride.departureDate ? ride.departureDate|date('d/m/Y H:i') : ''}}</p>
+		<p class="text-start text-md-center mb-0">{{ ride.departurePlace}}</p>
+		<p class="text-start text-md-center mb-0">{{ ride.arrivalPlace}}</p>
+	</div>
+</div>
