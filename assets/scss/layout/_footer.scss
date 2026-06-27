@@ -6,6 +6,24 @@ footer {
     background-color: colors.$fern;
     color: colors.$vanilla-custard;
 
+    i {
+        font-size: 2rem;
+    }
+
+    a,
+    i {
+        color: colors.$vanilla-custard;
+    }
+
+    a:hover,
+    i:hover {
+        color: colors.$shadow-grey;
+    }
+
+    ul {
+        margin: 0;
+    }
+
     @media (min-width: 768px) {
         min-height: variables.$footer-height-desktop;
     }
