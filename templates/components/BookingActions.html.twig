@@ -1,37 +1,46 @@
 <div{{attributes}}>
 
-		{% if booking.status == constant('App\\Enum\\BookingStatus::CONFIRMED') and booking.ride.departureDate|date('Y-m-d') == 'now'|date('Y-m-d')%}
-			<div class="d-flex flex-column flex-md-row">
-				<p class="text-start text-md-center mb-0">En attente ...</p>
-			</div>
-		{% elseif booking.status == constant('App\\Enum\\BookingStatus::CONFIRMED') %}
-			<div class="d-flex flex-column flex-md-row">
-				<button class="btn" {{ live_action('cancel') }}>
-					Annuler
-				</button>
-			</div>
-		{% elseif booking.status == constant('App\\Enum\\BookingStatus::RUNNING') %}
-			<div class="d-flex flex-column flex-md-row">
-				<p class="text-start text-md-center mb-0">Le trajet a demarré</p>
-			</div>
-		{% elseif booking.status == constant('App\\Enum\\BookingStatus::PENDING') %}
-			<div class="d-flex flex-column flex-md-row">
-				<button class="btn" {{ live_action('finalize') }}>
-					Tout est OK
-				</button>
-				<button class="btn" {{ live_action('report') }}>
-					Signaler
-				</button>
-			</div>
-		{% elseif booking.status == constant('App\\Enum\\BookingStatus::REPORTED')  %}
-			<div class="d-flex flex-column flex-md-row">
-				<button class="btn" {{ live_action('finalize') }}>
-					Finaliser
-				</button>
-				<button class="btn" {{ live_action('refund') }}>
-					Rembourser
-				</button>
-			</div>
-		{% endif %}
+	{% if booking.status == constant('App\\Enum\\BookingStatus::CONFIRMED') and booking.ride.departureDate|date('Y-m-d') == 'now'|date('Y-m-d') and (
+        booking.passenger == app.user
+        or is_granted('ROLE_EMPLOYEE')
+    )%}
+		<div class="d-flex flex-column flex-md-row">
+			<p class="text-start text-md-center mb-0">En attente ...</p>
+		</div>
+	{% elseif booking.status == constant('App\\Enum\\BookingStatus::CONFIRMED') and (
+        booking.passenger == app.user
+        or is_granted('ROLE_EMPLOYEE')
+    ) %}
+		<div class="d-flex flex-column flex-md-row">
+			<button class="btn" {{ live_action('cancel') }}>
+				Annuler
+			</button>
+		</div>
+	{% elseif booking.status == constant('App\\Enum\\BookingStatus::RUNNING') and (
+        booking.passenger == app.user
+        or is_granted('ROLE_EMPLOYEE')
+    ) %}
+		<div class="d-flex flex-column flex-md-row">
+			<p class="text-start text-md-center mb-0">Le trajet a demarré</p>
+		</div>
+	{% elseif booking.status == constant('App\\Enum\\BookingStatus::PENDING') and booking.passenger == app.user %}
+		<div class="d-flex flex-column flex-md-row">
+			<button class="btn" {{ live_action('finalize') }}>
+				Tout est OK
+			</button>
+			<button class="btn" {{ live_action('report') }}>
+				Signaler
+			</button>
+		</div>
+	{% elseif booking.status == constant('App\\Enum\\BookingStatus::REPORTED') and is_granted('ROLE_EMPLOYEE') %}
+		<div class="d-flex flex-column flex-md-row">
+			<button class="btn" {{ live_action('finalize') }}>
+				Finaliser
+			</button>
+			<button class="btn" {{ live_action('refund') }}>
+				Rembourser
+			</button>
+		</div>
+	{% endif %}
 
 </div>
