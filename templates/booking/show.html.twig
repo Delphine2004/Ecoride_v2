@@ -63,7 +63,9 @@
 								<p>Réservé le :
 									{{ booking.createdAt ? booking.createdAt|date('Y-m-d H:i:s') : '' }}</p>
 							</div>
-
+<div class="d-flex flex-column flex-md-row p-2">
+<twig:BookingActions booking="{{ booking }}"/>
+</div>
 						</div>
 					</div>
 
