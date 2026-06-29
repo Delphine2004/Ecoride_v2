@@ -83,10 +83,10 @@
 								<h2>Actions en attente</h2>
 							</div>
 							<div class="card-body">
-								<h3>Réservations</h3>
+								<h3>Réservation(s)</h3>
 
 								{% for booking in actionToDoBookings %}
-									<twig:BookingActions booking="{{ booking }}"/>
+									<twig:BookingCard booking="{{ booking }}"/>
 								{% else %}
 									<p class="text-center">Aucune réservation</p>
 								{% endfor %}
@@ -96,10 +96,10 @@
 
 							{% if is_granted('ROLE_DRIVER')%}
 								<div class="card-body">
-									<h3>Trajets</h3>
+									<h3>Trajet(s)</h3>
 
 									{% for ride in actionToDoRides %}
-										<twig:RideActions ride="{{ ride }}"/>
+										<twig:RideCard ride="{{ ride }}"/>
 									{% else %}
 										<p class="text-center">Aucun trajet</p>
 									{% endfor %}
@@ -119,7 +119,7 @@
 								<h3>Réservation(s)</h3>
 
 								{% for booking in upcomingBookings %}
-									<twig:BookingActions booking="{{ booking }}"/>
+									<twig:BookingCard booking="{{ booking }}"/>
 								{% else %}
 									<p class="text-center">Aucune réservation</p>
 								{% endfor %}
@@ -130,7 +130,7 @@
 								<div class="card-body">
 									<h3>Trajet(s)</h3>
 									{% for ride in upcomingRides %}
-										<twig:RideActions ride="{{ ride }}"/>
+										<twig:RideCard ride="{{ ride }}"/>
 									{% else %}
 										<p class="text-center">Aucun trajet</p>
 									{% endfor %}
