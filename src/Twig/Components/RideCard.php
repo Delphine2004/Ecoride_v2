@@ -15,4 +15,7 @@ final class RideCard
 
     #[LiveProp]
     public Ride $ride;
+
+    #[LiveProp]
+    public ?string $message = null;
 }

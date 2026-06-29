@@ -15,4 +15,7 @@ final class BookingCard
 
     #[LiveProp]
     public Booking $booking;
+
+    #[LiveProp]
+    public ?string $message = null;
 }
