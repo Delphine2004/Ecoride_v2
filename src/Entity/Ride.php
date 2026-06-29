@@ -7,6 +7,7 @@ use App\Repository\RideRepository;
 
 use App\Utils\RegexPatterns;
 use DateTimeImmutable;
+use DomainException;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -295,5 +296,37 @@ class Ride
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    //-------Mise à jour du nombre de place ------
+
+    // Vérifie que le trajet a encore des places disponibles.
+    public function hasAvailableSeats(): bool
+    {
+        return $this->availableSeats > 0;
+    }
+
+
+    public function reserveSeat(): void
+    {
+        if ($this->availableSeats <= 0) {
+            throw new DomainException("Il n'y a plus de place disponible.");
+        }
+        $this->availableSeats--;
+    }
+
+    public function releaseSeat(): void
+    {
+        $this->availableSeats++;
+    }
+
+
+    // ------ Autres méthodes
+
+    public function getDuration(): string
+    {
+        $interval = $this->arrivalDate->diff($this->departureDate);
+
+        return $interval->h . 'h ' . $interval->i . 'min';
     }
 }
