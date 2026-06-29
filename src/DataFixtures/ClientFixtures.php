@@ -110,6 +110,7 @@ class ClientFixtures extends Fixture
             $client = new User();
             $client->setFirstName($data['firstName']);
             $client->setLastName($data['lastName']);
+            $client->setLogin($data['login']);
             $client->setEmail($data['email']);
             $client->setRoles($data['roles']);
             $client->setCredit($data['credit']);
