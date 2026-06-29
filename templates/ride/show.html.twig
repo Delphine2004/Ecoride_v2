@@ -30,7 +30,7 @@
 										{{ ride.departurePlace}}</p>
 									<p>le
 										{{ ride.departureDate ? ride.departureDate|date('d/m/Y') : ''}}</p>
-									<p>à XXhXX</p>
+									<p>à {{ ride.departureDate ? ride.departureDate|date('H:i') : ''}}</p>
 								</div>
 
 								<div class="d-flex flex-column flex-md-row justify-content-md-between">
@@ -39,7 +39,7 @@
 									<p>
 										le
 										{{ ride.departureDate ? ride.departureDate|date('d/m/Y') : ''}}</p>
-									<p>à XXhXX</p>
+									<p>à {{ ride.departureDate ? ride.departureDate|date('H:i') : ''}}</p>
 								</div>
 							</div>
 
@@ -65,7 +65,7 @@
 							<!--  -->
 							<div class="d-flex flex-column flex-md-row p-2">
 								<p>Créé le :
-									{{ ride.createdAt ? ride.createdAt|date('Y-m-d H:i:s') : '' }}</p>
+									{{ ride.createdAt ? ride.createdAt|date('Y-m-d') : '' }} à {{ ride.createdAt ? ride.createdAt|date('H:i:s') : '' }}</p>
 							</div>
 
 							<div class="d-flex flex-column flex-md-row p-2">
