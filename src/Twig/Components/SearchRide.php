@@ -55,6 +55,7 @@ final class SearchRide extends AbstractController
         // Normalisation
         $departurePlace = mb_strtoupper(trim($departurePlace));
         $arrivalPlace = mb_strtoupper(trim($arrivalPlace));
+        $departureDate = \DateTimeImmutable::createFromMutable($departureDate);
 
         $rides = $this->rideRepository->findAvailableRides(
             $departureDate,
