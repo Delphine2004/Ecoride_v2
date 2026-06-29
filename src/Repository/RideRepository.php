@@ -117,6 +117,8 @@ class RideRepository extends ServiceEntityRepository
         string $arrivalPlace
     ): array {
 
+        // A FAIRE : rajouter availableseat != de 0
+
         $start = $departureDate->setTime(0, 0, 0);
         $end   = $departureDate->setTime(23, 59, 59);
 
@@ -126,6 +128,7 @@ class RideRepository extends ServiceEntityRepository
             ->andWhere('r.departureDate BETWEEN :start AND :end')
             ->andWhere('r.departurePlace = :departurePlace')
             ->andWhere('r.arrivalPlace = :arrivalPlace')
+            ->andWhere('r.availableSeats != 0')
             ->andWhere('r.status = :status')
             ->setParameter('start', $start)
             ->setParameter('end', $end)
