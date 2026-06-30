@@ -227,6 +227,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function spendCredit(int $amount): void
+    {
+        if ($this->credit < $amount) {
+            throw new \LogicException('Crédits insuffisants');
+        }
+
+        $this->credit -= $amount;
+    }
+
     public function getRoles(): array
     {
         $roles = $this->roles ?? [];
