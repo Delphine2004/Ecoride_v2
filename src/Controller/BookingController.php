@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Booking;
 use App\Entity\User;
+use App\Entity\Ride;
 use App\Form\BookingType;
 use App\Enum\BookingStatus;
 use App\Enum\UserRole;
+use App\Service\RideService;
 use App\Repository\BookingRepository;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,7 +26,8 @@ final class BookingController extends AbstractController
 {
 
     public function __construct(
-        private Security $security
+        private Security $security,
+        private RideService $rideService
     ) {}
 
     #[Route(name: 'app_booking_index', methods: ['GET'])]
@@ -36,34 +39,28 @@ final class BookingController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_booking_new', methods: ['GET', 'POST'])]
+    #[Route('/new/{id}', name: 'app_booking_new', methods: ['GET', 'POST'])]
     public function new(
-        Request $request,
-        EntityManagerInterface $entityManager
+        Ride $ride
     ): Response {
         $user = $this->security->getUser();
         if (!$user instanceof User) {
             throw $this->createAccessDeniedException();
         }
 
-        $booking = new Booking();
-        $booking->setStatus(BookingStatus::CONFIRMED);
-        $booking->setPassenger($this->getUser());
-        $form = $this->createForm(BookingType::class, $booking);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($booking);
-            $entityManager->flush();
+        try {
+            $this->rideService->book($ride);
 
             $this->addFlash('success', 'Réservation confirmée.');
-            return $this->redirectToRoute('app_dashboard_client', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
-        }
+        } catch (\LogicException $e) {
+            $this->addFlash(
+                'error',
+                $e->getMessage()
+            );
 
-        return $this->render('booking/new.html.twig', [
-            'booking' => $booking,
-            'form' => $form->createView(),
-        ]);
+            return $this->redirectToRoute('app_home');
+        }
+        return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/{id}', name: 'app_booking_show', methods: ['GET'])]
@@ -97,10 +94,10 @@ final class BookingController extends AbstractController
 
         if ($this->isGranted('ROLE_EMPLOYE')) {
             $this->addFlash('success', 'Annulation confirmée.');
-            return $this->redirectToRoute('app_dashboard_user', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_dashboard_user', [], Response::HTTP_SEE_OTHER);
         } else {
             $this->addFlash('success', 'Annulation confirmée.');
-            return $this->redirectToRoute('app_dashboard_client', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
         }
     }
 }
