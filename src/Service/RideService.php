@@ -3,15 +3,51 @@
 namespace App\Service;
 
 use App\Entity\Ride;
+use App\Entity\Booking;
+use App\Entity\User;
 use App\Enum\BookingStatus;
 use App\Enum\RideStatus;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class RideService
+
+class RideService extends AbstractController
 {
     public function __construct(
         private EntityManagerInterface $entityManagerInterface,
+        private Security $security
     ) {}
+
+    public function book(Ride $ride): void
+    {
+
+        $user = $this->security->getUser();
+
+        if (!$user instanceof User) {
+            throw new \LogicException('Merci de vous connecter');
+        }
+
+        $ridePrice = $ride->getPrice();
+
+        if ($user->getCredit() < $ridePrice) {
+            throw new \LogicException('Crédits insuffisants');
+        }
+
+        $ride->reserveSeat();
+
+        $user->spendCredit($ridePrice);
+
+        $booking = new Booking();
+        $booking->setStatus(BookingStatus::CONFIRMED);
+        $booking->setRide($ride);
+        $booking->setPassenger($user);
+
+
+        $this->entityManagerInterface->persist($booking);
+
+        $this->entityManagerInterface->flush();
+    }
 
     public function cancel(Ride $ride): void
     {
@@ -55,13 +91,4 @@ class RideService
 
         $this->entityManagerInterface->flush();
     }
-
-    /*
-    // à faire
-
-    public function book(): Ride {
-         $ride->setStatus(RideStatus::CONFIRMED);
-          $this->entityManagerInterface->flush();
-    }
-    */
 }
