@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
@@ -34,8 +35,11 @@ final class UserController extends AbstractController
 
     private UserPasswordHasherInterface $hasher;
 
-    public function __construct(UserPasswordHasherInterface $hasher, private string $uploadsUsersDirectory)
-    {
+    public function __construct(
+        UserPasswordHasherInterface $hasher,
+        private string $uploadsUsersDirectory,
+        private Security $security
+    ) {
         $this->hasher = $hasher;
     }
 
@@ -63,14 +67,18 @@ final class UserController extends AbstractController
     }
 
     #[IsGranted(UserRole::PASSENGER->value)]
-    #[Route('/client/{id}', name: 'app_dashboard_client', methods: ['GET'])]
+    #[Route('/client', name: 'app_dashboard_client', methods: ['GET'])]
     public function dashboardClient(
-        User $user,
         RideRepository $rideRepository,
         BookingRepository $bookingRepository
     ): Response {
 
-        $userId  = $user->getId();
+        $user = $this->security->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $userId = $user->getId();
 
         $criteriaUpcomingBooking = new SearchBookingDTO();
         $criteriaUpcomingBooking->passengerId = $userId;
@@ -173,7 +181,7 @@ final class UserController extends AbstractController
 
             $this->addFlash('success', 'Annulation confirmée.');
             if ($clientUpdate) {
-                return $this->redirectToRoute('app_dashboard_client', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
+                return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
             } else {
                 return $this->redirectToRoute('app_user_show', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
             }
@@ -201,7 +209,7 @@ final class UserController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Modifié avec succés.');
-            return $this->redirectToRoute('app_dashboard_client', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('user/edit.html.twig', [
@@ -236,7 +244,7 @@ final class UserController extends AbstractController
 
             $entityManager->flush();
             $this->addFlash('success', 'Crédit ajoutés avec succés.');
-            return $this->redirectToRoute('app_dashboard_client', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('user/edit.html.twig', [
@@ -291,7 +299,7 @@ final class UserController extends AbstractController
             }
 
             $this->addFlash('success', 'Modifié avec succés.');
-            return $this->redirectToRoute('app_dashboard_client', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('user/edit.html.twig', [

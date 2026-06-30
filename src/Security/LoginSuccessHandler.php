@@ -33,9 +33,7 @@ class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface
         }
 
         return new RedirectResponse(
-            $this->router->generate('app_dashboard_client', [
-                'id' => $user->getId()
-            ])
+            $this->router->generate('app_dashboard_client')
         );
     }
 }

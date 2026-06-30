@@ -60,7 +60,7 @@ final class RideController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Trajet ajouté avec succés.');
-            return $this->redirectToRoute('app_dashboard_client', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('ride/new.html.twig', [
@@ -96,7 +96,7 @@ final class RideController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Voiture modifiée.');
-            return $this->redirectToRoute('app_dashboard_client', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('ride/edit.html.twig', [
@@ -126,7 +126,7 @@ final class RideController extends AbstractController
         $entityManager->flush();
 
         $this->addFlash('success', 'Départ confirmé.');
-        return $this->redirectToRoute('app_dashboard_client', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/{id}/stop', name: 'app_ride_stop', methods: ['POST'])]
@@ -150,7 +150,7 @@ final class RideController extends AbstractController
         $entityManager->flush();
 
         $this->addFlash('success', 'Arrêt confirmé.');
-        return $this->redirectToRoute('app_dashboard_client', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/{id}/cancel', name: 'app_ride_cancel', methods: ['POST'])]
@@ -175,9 +175,9 @@ final class RideController extends AbstractController
 
         $this->addFlash('success', 'Annulation confirmée.');
         if ($this->isGranted('ROLE_EMPLOYE')) {
-            return $this->redirectToRoute('app_dashboard_user', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_dashboard_user', [], Response::HTTP_SEE_OTHER);
         } else {
-            return $this->redirectToRoute('app_dashboard_client', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
         }
     }
 }
