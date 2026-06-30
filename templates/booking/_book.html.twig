@@ -1,0 +1,12 @@
+<form
+    method="post"
+    action="{{ path('app_booking_new', { id: ride.id }) }}"
+    onsubmit="return confirm('Confirmez vous la réservation?');"
+>
+    <input
+        type="hidden"
+        name="_token"
+        value="{{ csrf_token('book' ~ ride.id) }}"
+    />
+    <button class="btn w-100">Réserver</button>
+</form>
