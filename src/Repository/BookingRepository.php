@@ -111,7 +111,7 @@ class BookingRepository extends ServiceEntityRepository
             ->leftJoin('b.ride', 'r')->addSelect('r')
             ->leftJoin('b.passenger', 'u')->addSelect('u')
             ->andWhere('u.id = :passengerId')
-            ->andWhere('r.status IN (:statuses)')
+            ->andWhere('b.status IN (:statuses)')
             ->andWhere('r.departureDate >= :today')
             ->setParameter('passengerId', $criteria->getPassengerId())
             ->setParameter('statuses', $criteria->getStatuses())
