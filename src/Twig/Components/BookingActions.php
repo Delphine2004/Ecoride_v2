@@ -15,6 +15,8 @@ final class BookingActions
 {
     use DefaultActionTrait;
 
+    public bool $message = false;
+
     #[LiveProp]
     public Booking $booking;
 
@@ -28,11 +30,6 @@ final class BookingActions
         $this->bookingService->cancel($this->booking);
     }
 
-    #[LiveAction]
-    public function book(): void
-    {
-        $this->bookingService->book($this->booking);
-    }
 
     #[LiveAction]
     public function report(): void

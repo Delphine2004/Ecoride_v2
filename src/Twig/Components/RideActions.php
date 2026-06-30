@@ -15,6 +15,8 @@ final class RideActions
 {
     use DefaultActionTrait;
 
+    public bool $message = false;
+
     #[LiveProp]
     public Ride $ride;
 
