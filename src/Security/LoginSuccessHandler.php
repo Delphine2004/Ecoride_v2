@@ -3,6 +3,7 @@
 namespace App\Security;
 
 use App\Enum\UserRole;
+use App\Entity\User;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,7 +20,7 @@ class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface
         $roles = $token->getRoleNames();
         $user = $token->getUser();
 
-        if (!$user instanceof \App\Entity\User) {
+        if (!$user instanceof User) {
             throw new \LogicException('User is not an instance of App\Entity\User');
         }
 
