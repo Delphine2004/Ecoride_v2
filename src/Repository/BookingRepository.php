@@ -103,19 +103,48 @@ class BookingRepository extends ServiceEntityRepository
     }
 
     public function findActionsBookingByClient(
-        SearchBookingDTO $criteria
+        int $passengerId
     ): array {
         $today = new DateTimeImmutable('today');
+        $tomorrow = $today->modify('+1 day');
 
         return $this->createQueryBuilder('b')
             ->leftJoin('b.ride', 'r')->addSelect('r')
             ->leftJoin('b.passenger', 'u')->addSelect('u')
             ->andWhere('u.id = :passengerId')
-            ->andWhere('b.status IN (:statuses)')
-            ->andWhere('r.departureDate >= :today')
-            ->setParameter('passengerId', $criteria->getPassengerId())
-            ->setParameter('statuses', $criteria->getStatuses())
+            ->andWhere(
+                '(r.status IN (:alwaysVisibleStatuses))
+        OR
+        (
+            r.status = :confirmed
+            AND r.departureDate >= :today
+            AND r.departureDate < :tomorrow
+        )'
+            )
+            ->setParameter('passengerId', $passengerId)
+            ->setParameter('alwaysVisibleStatuses', [BookingStatus::PENDING->value, BookingStatus::RUNNING->value])
+            ->setParameter('confirmed', BookingStatus::CONFIRMED->value)
             ->setParameter('today', $today)
+            ->setParameter('tomorrow', $tomorrow)
+            ->orderBy('b.id', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findUpcomingBookingByClient(
+        int $passengerId
+    ): array {
+        $tomorrow = new DateTimeImmutable('tomorrow');
+
+        return $this->createQueryBuilder('b')
+            ->leftJoin('b.ride', 'r')->addSelect('r')
+            ->leftJoin('b.passenger', 'u')->addSelect('u')
+            ->andWhere('u.id = :passengerId')
+            ->andWhere('b.status = :status')
+            ->andWhere('r.departureDate > :tomorrow')
+            ->setParameter('passengerId', $passengerId)
+            ->setParameter('status', BookingStatus::CONFIRMED->value)
+            ->setParameter('tomorrow', $tomorrow)
             ->orderBy('b.id', 'DESC')
             ->getQuery()
             ->getResult();
