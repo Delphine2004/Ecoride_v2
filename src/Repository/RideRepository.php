@@ -159,10 +159,10 @@ class RideRepository extends ServiceEntityRepository
             )
             ->setParameter('driverId', $driverId)
             ->setParameter('alwaysVisibleStatuses', [
-                RideStatus::PENDING,
-                RideStatus::RUNNING,
+                RideStatus::PENDING->value,
+                RideStatus::RUNNING->value,
             ])
-            ->setParameter('confirmed', RideStatus::CONFIRMED)
+            ->setParameter('confirmed', RideStatus::CONFIRMED->value)
             ->setParameter('today', $today)
             ->setParameter('tomorrow', $tomorrow)
             ->orderBy('r.id', 'DESC')
@@ -181,7 +181,7 @@ class RideRepository extends ServiceEntityRepository
             ->andWhere('r.status = :status')
             ->andWhere('r.departureDate > :tomorrow')
             ->setParameter('driverId', $driverId)
-            ->setParameter('status', RideStatus::CONFIRMED)
+            ->setParameter('status', RideStatus::CONFIRMED->value)
             ->setParameter('tomorrow', $tomorrow)
             ->orderBy('r.id', 'DESC')
             ->getQuery()
