@@ -236,6 +236,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->credit -= $amount;
     }
 
+    public function refundCredit(int $amount): void
+    {
+        $this->credit += $amount;
+    }
+
     public function getRoles(): array
     {
         $roles = $this->roles ?? [];
