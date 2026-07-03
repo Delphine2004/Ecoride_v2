@@ -56,11 +56,16 @@ final class UserController extends AbstractController
     public function dashboardUser(
         BookingRepository $bookingRepository
     ): Response {
+        $user = $this->security->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
 
         $criteria = new SearchBookingDTO();
         $criteria->statuses = [BookingStatus::REPORTED];
 
         return $this->render('user/dashboard_user.html.twig', [
+            'user' => $user,
             'bookings' => $bookingRepository->findBookingsByField($criteria)
         ]);
     }
