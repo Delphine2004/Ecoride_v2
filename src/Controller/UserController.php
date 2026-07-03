@@ -21,7 +21,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -80,20 +79,11 @@ final class UserController extends AbstractController
 
         $userId = $user->getId();
 
-        $criteriaUpcomingBooking = new SearchBookingDTO();
-        $criteriaUpcomingBooking->passengerId = $userId;
-        $criteriaUpcomingBooking->statuses = [BookingStatus::CONFIRMED];
-
-        $criteriaActionToDoBooking = new SearchBookingDTO();
-        $criteriaActionToDoBooking->passengerId = $userId;
-        $criteriaActionToDoBooking->statuses = [BookingStatus::CONFIRMED, BookingStatus::PENDING, BookingStatus::RUNNING];
-
-
         return $this->render('user/dashboard_client.html.twig', [
             'user' => $user,
-            'actionToDoBookings' => $bookingRepository->findActionsBookingByClient($criteriaActionToDoBooking),
+            'actionToDoBookings' => $bookingRepository->findActionsBookingByClient($userId),
             'actionToDoRides' => $rideRepository->findActionsRideByClient($userId),
-            'upcomingBookings' => $bookingRepository->findBookingsByField($criteriaUpcomingBooking),
+            'upcomingBookings' => $bookingRepository->findUpcomingBookingByClient($userId),
             'upcomingRides' => $rideRepository->findUpcomingRideByClient($userId),
         ]);
     }
