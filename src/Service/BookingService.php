@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Booking;
+use App\Entity\User;
 use App\Enum\BookingStatus;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -14,16 +15,15 @@ class BookingService
     ) {}
 
 
-    public function cancel(Booking $booking): void
+    public function cancel(Booking $booking, User $user): void
     {
         $booking->setStatus(BookingStatus::CANCELLED);
-        $this->entityManagerInterface->flush();
-    }
 
+        $ride = $booking->getRide();
 
-    public function book(Booking $booking): void
-    {
-        $booking->setStatus(BookingStatus::CONFIRMED);
+        $ride->releaseSeat();
+        $user->refundCredit($ride->getPrice());
+
         $this->entityManagerInterface->flush();
     }
 
@@ -36,12 +36,14 @@ class BookingService
     public function finalize(Booking $booking): void
     {
         $booking->setStatus(BookingStatus::FINALIZED);
+        // A FAIRE : 
         $this->entityManagerInterface->flush();
     }
 
     public function refund(Booking $booking): void
     {
         $booking->setStatus(BookingStatus::REFUNDED);
+        // A FAIRE : 
         $this->entityManagerInterface->flush();
     }
 }
