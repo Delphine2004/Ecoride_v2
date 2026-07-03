@@ -54,10 +54,12 @@ final class BookingController extends AbstractController
 
     #[Route('/{id}', name: 'app_booking_show', methods: ['GET'])]
     public function show(
-        Booking $booking
+        Booking $booking,
+        User $user
     ): Response {
         return $this->render('booking/show.html.twig', [
             'booking' => $booking,
+            'user' => $user
         ]);
     }
 }
