@@ -25,7 +25,7 @@
 								<h2>Réservations</h2>
 
 								{% for booking in bookings %}
-									<twig:BookingActions booking="{{ booking }}"/>
+									<twig:BookingCard :booking="booking" :user="user"/>
 								{% else %}
 									<p class="text-center">Aucune réservation</p>
 								{% endfor %}
