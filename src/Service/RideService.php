@@ -7,26 +7,19 @@ use App\Entity\Booking;
 use App\Entity\User;
 use App\Enum\BookingStatus;
 use App\Enum\RideStatus;
+use App\Service\BookingService;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
-class RideService extends AbstractController
+class RideService
 {
     public function __construct(
         private EntityManagerInterface $entityManagerInterface,
-        private Security $security
+        private BookingService $bookingService
     ) {}
 
-    public function book(Ride $ride): void
+    public function book(Ride $ride, User $user): void
     {
-
-        $user = $this->security->getUser();
-
-        if (!$user instanceof User) {
-            throw new \LogicException('Merci de vous connecter');
-        }
 
         $ridePrice = $ride->getPrice();
 
@@ -49,12 +42,13 @@ class RideService extends AbstractController
         $this->entityManagerInterface->flush();
     }
 
-    public function cancel(Ride $ride): void
+    public function cancel(Ride $ride, User $user): void
     {
+
         $ride->setStatus(RideStatus::CANCELLED);
 
         foreach ($ride->getRideBookings() as $booking) {
-            $booking->setStatus(BookingStatus::CANCELLED);
+            $this->bookingService->cancel($booking, $user);
         }
 
         $this->entityManagerInterface->flush();
@@ -62,10 +56,13 @@ class RideService extends AbstractController
 
     public function start(Ride $ride): void
     {
+
         $ride->setStatus(RideStatus::RUNNING);
 
         foreach ($ride->getRideBookings() as $booking) {
-            $booking->setStatus(BookingStatus::RUNNING);
+            if ($booking->getStatus() !== BookingStatus::CANCELLED) {
+                $booking->setStatus(BookingStatus::RUNNING);
+            }
         }
 
         $this->entityManagerInterface->flush();
@@ -84,7 +81,7 @@ class RideService extends AbstractController
 
     public function finalize(Ride $ride): void
     {
-        // Manque la logique
+        // A FAIRE - Manque la logique - vérification que toutes les réservations attachées sont finalisées
 
         $ride->setStatus(RideStatus::COMPLETED);
 
