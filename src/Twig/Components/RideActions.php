@@ -3,6 +3,7 @@
 namespace App\Twig\Components;
 
 use App\Entity\Ride;
+use App\Entity\User;
 use App\Service\RideService;
 
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
@@ -15,10 +16,14 @@ final class RideActions
 {
     use DefaultActionTrait;
 
-    public bool $message = false;
+    #[LiveProp]
+    public ?string $message = null;
 
     #[LiveProp]
     public Ride $ride;
+
+    #[LiveProp]
+    public User $user;
 
     public function __construct(
         private RideService $rideService
@@ -27,7 +32,7 @@ final class RideActions
     #[LiveAction]
     public function cancel(): void
     {
-        $this->rideService->cancel($this->ride);
+        $this->rideService->cancel($this->ride, $this->user);
     }
 
     #[LiveAction]

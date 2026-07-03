@@ -3,6 +3,7 @@
 namespace App\Twig\Components;
 
 use App\Entity\Booking;
+use App\Entity\User;
 use App\Service\BookingService;
 
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
@@ -15,10 +16,14 @@ final class BookingActions
 {
     use DefaultActionTrait;
 
-    public bool $message = false;
+    #[LiveProp]
+    public ?string $message = null;
 
     #[LiveProp]
     public Booking $booking;
+
+    #[LiveProp]
+    public User $user;
 
     public function __construct(
         private BookingService $bookingService
@@ -27,7 +32,7 @@ final class BookingActions
     #[LiveAction]
     public function cancel(): void
     {
-        $this->bookingService->cancel($this->booking);
+        $this->bookingService->cancel($this->booking, $this->user);
     }
 
 

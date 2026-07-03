@@ -3,6 +3,7 @@
 namespace App\Twig\Components;
 
 use App\Entity\Booking;
+use App\Entity\User;
 
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
@@ -12,6 +13,7 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
 final class BookingCard
 {
     use DefaultActionTrait;
+    public ?User $user;
 
     #[LiveProp]
     public Booking $booking;

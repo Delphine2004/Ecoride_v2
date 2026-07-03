@@ -31,6 +31,9 @@ final class SearchRide extends AbstractController
     #[LiveProp]
     public bool $showDescription = true;
 
+    #[LiveProp]
+    public ?string $message = null;
+
     public function __construct(
         private RideRepository $rideRepository,
     ) {}
