@@ -23,10 +23,6 @@ use Symfony\Bundle\SecurityBundle\Security;
 final class RideController extends AbstractController
 {
 
-    public function __construct(
-        private Security $security
-    ) {}
-
     #[Route(name: 'app_ride_index', methods: ['GET'])]
     public function index(
         RideRepository $rideRepository
@@ -39,30 +35,30 @@ final class RideController extends AbstractController
     #[Route('/new', name: 'app_ride_new', methods: ['GET', 'POST'])]
     public function new(
         Request $request,
+        User $user,
         EntityManagerInterface $entityManager
     ): Response {
-        $user = $this->security->getUser();
-        if (!$user instanceof User) {
-            throw $this->createAccessDeniedException();
-        }
 
         $ride = new Ride();
         $ride->setStatus(RideStatus::CONFIRMED);
         $form = $this->createForm(RideType::class, $ride, [
-            'user' => $this->getUser(),
+            'user' => $user,
             'mode' => 'create'
         ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $entityManager->persist($ride);
+                $entityManager->flush();
 
-            $entityManager->persist($ride);
-            $entityManager->flush();
-
-            $this->addFlash('success', 'Trajet ajouté avec succés.');
+                $this->addFlash('success', 'Trajet ajouté avec succés.');
+            } catch (\Exception $e) {
+                $this->addFlash('error', $e->getMessage());
+                return $this->redirectToRoute('app_home');
+            }
             return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
         }
-
         return $this->render('ride/new.html.twig', [
             'ride' => $ride,
             'form' => $form->createView(),
@@ -84,10 +80,6 @@ final class RideController extends AbstractController
         Ride $ride,
         EntityManagerInterface $entityManager
     ): Response {
-        $user = $this->security->getUser();
-        if (!$user instanceof User) {
-            throw $this->createAccessDeniedException();
-        }
 
         $form = $this->createForm(RideType::class, $ride, ['user' => $this->getUser(), 'mode' => 'update']);
         $form->handleRequest($request);
@@ -103,81 +95,5 @@ final class RideController extends AbstractController
             'ride' => $ride,
             'form' => $form->createView()
         ]);
-    }
-
-    #[Route('/{id}/start', name: 'app_ride_start', methods: ['POST'])]
-    public function start(
-        Request $request,
-        Ride $ride,
-        EntityManagerInterface $entityManager
-    ): Response {
-
-        if (!$this->isCsrfTokenValid('start' . $ride->getId(), $request->request->get('_token'))) {
-            throw $this->createAccessDeniedException('Token CSRF invalide.');
-        }
-
-        $user = $this->security->getUser();
-        if (!$user instanceof User) {
-            throw $this->createAccessDeniedException();
-        }
-
-        $ride->setStatus(RideStatus::RUNNING);
-
-        $entityManager->flush();
-
-        $this->addFlash('success', 'Départ confirmé.');
-        return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
-    }
-
-    #[Route('/{id}/stop', name: 'app_ride_stop', methods: ['POST'])]
-    public function stop(
-        Request $request,
-        Ride $ride,
-        EntityManagerInterface $entityManager
-    ): Response {
-
-        if (!$this->isCsrfTokenValid('stop' . $ride->getId(), $request->request->get('_token'))) {
-            throw $this->createAccessDeniedException('Token CSRF invalide.');
-        }
-
-        $user = $this->security->getUser();
-        if (!$user instanceof User) {
-            throw $this->createAccessDeniedException();
-        }
-
-        $ride->setStatus(RideStatus::PENDING);
-
-        $entityManager->flush();
-
-        $this->addFlash('success', 'Arrêt confirmé.');
-        return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
-    }
-
-    #[Route('/{id}/cancel', name: 'app_ride_cancel', methods: ['POST'])]
-    public function cancel(
-        Request $request,
-        Ride $ride,
-        EntityManagerInterface $entityManager
-    ): Response {
-
-        if (!$this->isCsrfTokenValid('cancel' . $ride->getId(), $request->request->get('_token'))) {
-            throw $this->createAccessDeniedException('Token CSRF invalide.');
-        }
-
-        $user = $this->security->getUser();
-        if (!$user instanceof User) {
-            throw $this->createAccessDeniedException();
-        }
-
-        $ride->setStatus(RideStatus::CANCELLED);
-
-        $entityManager->flush();
-
-        $this->addFlash('success', 'Annulation confirmée.');
-        if ($this->isGranted('ROLE_EMPLOYE')) {
-            return $this->redirectToRoute('app_dashboard_user', [], Response::HTTP_SEE_OTHER);
-        } else {
-            return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
-        }
     }
 }
