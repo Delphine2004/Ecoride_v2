@@ -4,16 +4,73 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Tableau de bord</h1>
+	<main class="py-5">
+		<section class="container-fluid">
+			<div class="container">
+				<div class="row justify-content-center">
 
-  	<div>
-		<h2>Réservations à verifier</h2>
-		<ul>
-			{% for booking in bookings %}
-				<li><twig:BookingActions booking="{{ booking }}"/></li>
-			{% else %}
-				<li>Aucune réservation</li>
-			{% endfor %}
-		</ul>
-	</div>
+					<div class="col-12 col-md-10 col-lg-8">
+						<div class="card shadow-sm m-3">
+							<h1>Tableau de bord</h1>
+						</div>
+
+						<div class="card shadow-sm m-3">
+
+							<div class="row flex-column flex-md-row justify-content-around align-items-md-center flex-wrap m-2">
+								<div class="col-12 col-md-5">
+									<a class="btn w-100 my-4" href="{{ path('app_ride_index') }}">Trajets</a>
+								</div>
+								<div class="col-12 col-md-5">
+									<a class="btn w-100 my-4" href="{{ path('app_booking_index') }}">Réservations</a>
+								</div>
+								<div class="col-12 col-md-5">
+									<a class="btn w-100 my-4" href="{{ path('app_user_index') }}">Clients</a>
+								</div>
+								<div class="col-12 col-md-5">
+									<a class="btn w-100 my-4" href="#">Commentaires</a>
+								</div>
+
+								{% if is_granted('ROLE_ADMIN') %}
+									<div class="col-12 col-md-5">
+										<a class="btn w-100 my-4" href="#">Paramétres</a>
+									</div>
+								{% endif %}
+
+							</div>
+
+						</div>
+					</div>
+
+					{% for label, messages in app.flashes %}
+						<div class="col-12 col-md-10 col-lg-8">
+							{% for message in messages %}
+								<p class="fw-bold text-center m-3 alert alert-{{ label }}">
+									{{ message }}
+								</p>
+							{% endfor %}
+						</div>
+					{% endfor %}
+          
+					<div class="col-12 col-md-10 col-lg-8">
+						<div class="card shadow-sm m-3">
+							<div class="card-header">
+								<h2>Réservations à verifier</h2>
+							</div>
+							<div class="card-body">
+
+								{% for booking in bookings %}
+									<twig:BookingCard :booking="booking" :user="user"/>
+								{% else %}
+									<p class="text-center">Aucune réservation</p>
+								{% endfor %}
+
+							</div>
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+		</section>
+	</main>
 {% endblock %}
