@@ -19,12 +19,11 @@
         {% for booking in bookings %}
             <tr>
                 <td>{{ booking.id }}</td>
-                <td>{{ booking.status }}</td>
+                <td>{{ booking.status.value }}</td>
                 <td>{{ booking.createdAt ? booking.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ booking.updatedAt ? booking.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
                     <a href="{{ path('app_booking_show', {'id': booking.id}) }}">show</a>
-                    <a href="{{ path('app_booking_edit', {'id': booking.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}
@@ -35,5 +34,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_booking_new') }}">Create new</a>
+   
 {% endblock %}

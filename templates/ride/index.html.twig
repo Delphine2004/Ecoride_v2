@@ -32,7 +32,7 @@
                 <td>{{ ride.arrivalPlace }}</td>
                 <td>{{ ride.price }}</td>
                 <td>{{ ride.availableSeats }}</td>
-                <td>{{ ride.status }}</td>
+                <td>{{ ride.status.value }}</td>
                 <td>{{ ride.commission }}</td>
                 <td>{{ ride.createdAt ? ride.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ ride.updatedAt ? ride.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
