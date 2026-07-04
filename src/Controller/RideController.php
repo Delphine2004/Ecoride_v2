@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Form\RideType;
 use App\Enum\UserRole;
 use App\Enum\RideStatus;
+use App\Form\SearchRideType;
 use App\Repository\RideRepository;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,10 +25,26 @@ final class RideController extends AbstractController
 
     #[Route(name: 'app_ride_index', methods: ['GET'])]
     public function index(
-        RideRepository $rideRepository
+        RideRepository $rideRepository,
+        Request $request,
     ): Response {
+
+        $form = $this->createForm(SearchRideType::class);
+        $form->handleRequest($request);
+
+        $rides = [];
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
+            $rides = $rideRepository->findRidesByFields(
+                $data
+            );
+        }
+
         return $this->render('ride/index.html.twig', [
-            'rides' => $rideRepository->findAll(),
+            'form' => $form->createView(),
+            'rides' => $rides
         ]);
     }
 
