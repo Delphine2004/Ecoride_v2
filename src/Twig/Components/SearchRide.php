@@ -42,7 +42,8 @@ final class SearchRide extends AbstractController
     {
         return $this->createForm(
             SearchRideType::class,
-            new SearchRideDTO()
+            new SearchRideDTO(),
+            ['mode' => 'searchByClient']
         );
     }
 
