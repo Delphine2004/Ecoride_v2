@@ -6,11 +6,13 @@ use App\Entity\Booking;
 use App\Entity\User;
 use App\Entity\Ride;
 use App\Enum\UserRole;
+use App\Form\SearchBookingType;
 use App\Service\RideService;
 use App\Repository\BookingRepository;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -24,12 +26,31 @@ final class BookingController extends AbstractController
         private RideService $rideService
     ) {}
 
-    #[Route(name: 'app_booking_index', methods: ['GET'])]
+    #[Route(name: 'app_booking_index', methods: ['GET', 'POST'])]
     public function index(
-        BookingRepository $bookingRepository
+        Request $request,
+        BookingRepository $bookingRepository,
     ): Response {
+
+        $user = $this->getUser();
+
+        $form = $this->createForm(SearchBookingType::class);
+        $form->handleRequest($request);
+
+        $bookings = [];
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
+            $bookings = $bookingRepository->findBookingsByFields(
+                $data
+            );
+        }
+
         return $this->render('booking/index.html.twig', [
-            'bookings' => $bookingRepository->findAll(),
+            'user' => $user,
+            'form' => $form->createView(),
+            'bookings' => $bookings
         ]);
     }
 
