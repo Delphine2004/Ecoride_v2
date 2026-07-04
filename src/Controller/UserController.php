@@ -57,16 +57,13 @@ final class UserController extends AbstractController
         BookingRepository $bookingRepository
     ): Response {
         $user = $this->security->getUser();
-        if (!$user instanceof User) {
-            throw $this->createAccessDeniedException();
-        }
 
         $criteria = new SearchBookingDTO();
-        $criteria->statuses = [BookingStatus::REPORTED];
+        $criteria->status = BookingStatus::REPORTED;
 
         return $this->render('user/dashboard_user.html.twig', [
             'user' => $user,
-            'bookings' => $bookingRepository->findBookingsByField($criteria)
+            'bookings' => $bookingRepository->findBookingsByFields($criteria)
         ]);
     }
 
@@ -313,18 +310,10 @@ final class UserController extends AbstractController
     ): Response {
         $userId  = $user->getId();
 
-        $criteriaBooking = new SearchBookingDTO();
-        $criteriaBooking->passengerId = $userId;
-        $criteriaBooking->statuses = [BookingStatus::CANCELLED, BookingStatus::FINALIZED, BookingStatus::REFUNDED];
-
-        $criteriaRides = new SearchRideDTO();
-        $criteriaRides->driverId = $userId;
-        $criteriaRides->statuses = [RideStatus::CANCELLED, RideStatus::COMPLETED];
-
         return $this->render('user/history.html.twig', [
             'user' => $user,
-            'bookings' => $bookingRepository->findBookingsByField($criteriaBooking),
-            'rides' => $rideRepository->findRidesByField($criteriaRides)
+            'bookings' => $bookingRepository->findHistoryBookingByClient($userId),
+            'rides' => $rideRepository->findHistoryRideClient($userId)
         ]);
     }
 
@@ -376,7 +365,7 @@ final class UserController extends AbstractController
             ];
             $searchBookingDto = new SearchBookingDTO($datas);
 
-            $bookings = $bookingRepository->findBookingsByField($searchBookingDto);
+            $bookings = $bookingRepository->findBookingsByFields($searchBookingDto);
 
             foreach ($bookings as $booking) {
                 $booking->setStatus(BookingStatus::CANCELLED);
