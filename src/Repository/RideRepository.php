@@ -24,7 +24,7 @@ class RideRepository extends ServiceEntityRepository
     /**
      * @return Ride[] Returns an array of Ride objects
      */
-    public function findRidesByField(
+    public function findRidesByFields(
         ?SearchRideDTO $criteria,
         int $limit = 10,
         string $orderBy = 'DESC'
@@ -53,9 +53,9 @@ class RideRepository extends ServiceEntityRepository
                 ->setParameter('arrivalPlace', $criteria->getArrivalPlace());
         }
 
-        if ($criteria->getStatuses()) {
-            $qb->andWhere('r.status IN (:statuses)')
-                ->setParameter('statuses', $criteria->getStatuses());
+        if ($criteria->getStatus()) {
+            $qb->andWhere('r.status = :statuses')
+                ->setParameter('status', $criteria->getStatus());
         }
 
         if ($criteria->getDepartureDate()) {
@@ -183,6 +183,21 @@ class RideRepository extends ServiceEntityRepository
             ->setParameter('driverId', $driverId)
             ->setParameter('status', RideStatus::CONFIRMED->value)
             ->setParameter('tomorrow', $tomorrow)
+            ->orderBy('r.id', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findHistoryRideByClient(
+        int $driverId
+    ): array {
+
+        return $this->createQueryBuilder('b')
+            ->leftJoin('b.ride', 'r')->addSelect('r')
+            ->leftJoin('r.driver', 'u')->addSelect('u')
+            ->andWhere('u.id = :driverId')
+            ->setParameter('passengerId', $driverId)
+            ->setParameter('statuses', [RideStatus::CANCELLED->value, RideStatus::COMPLETED->value])
             ->orderBy('r.id', 'DESC')
             ->getQuery()
             ->getResult();

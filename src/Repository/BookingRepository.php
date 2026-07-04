@@ -25,7 +25,7 @@ class BookingRepository extends ServiceEntityRepository
     /**
      * @return Booking[] Returns an array of Booking objects
      */
-    public function findBookingsByField(
+    public function findBookingsByFields(
         ?SearchBookingDTO $criteria,
         int $limit = 10,
         string $orderBy = 'DESC'
@@ -54,9 +54,9 @@ class BookingRepository extends ServiceEntityRepository
                 ->setParameter('email', '%' . $criteria->getEmail() . '%');
         }
 
-        if ($criteria->getStatuses()) {
-            $qb->andWhere('b.status IN (:statuses)')
-                ->setParameter('statuses', $criteria->getStatuses());
+        if ($criteria->getStatus()) {
+            $qb->andWhere('b.status = :status')
+                ->setParameter('status', $criteria->getStatus());
         }
 
         if ($criteria->getCreatedAt()) {
@@ -86,8 +86,7 @@ class BookingRepository extends ServiceEntityRepository
             ->orderBy('b.id', $orderBy)
             ->setMaxResults($limit)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
     public function hasCurrentReservation(User $user): bool
@@ -145,6 +144,22 @@ class BookingRepository extends ServiceEntityRepository
             ->setParameter('passengerId', $passengerId)
             ->setParameter('status', BookingStatus::CONFIRMED->value)
             ->setParameter('tomorrow', $tomorrow)
+            ->orderBy('b.id', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findHistoryBookingByClient(
+        int $passengerId
+    ): array {
+
+        return $this->createQueryBuilder('b')
+            ->leftJoin('b.ride', 'r')->addSelect('r')
+            ->leftJoin('b.passenger', 'u')->addSelect('u')
+            ->andWhere('u.id = :passengerId')
+            ->andWhere('b.statuses IN (:statuses)')
+            ->setParameter('passengerId', $passengerId)
+            ->setParameter('statuses', [BookingStatus::CANCELLED->value, BookingStatus::FINALIZED->value, BookingStatus::REFUNDED->value])
             ->orderBy('b.id', 'DESC')
             ->getQuery()
             ->getResult();
