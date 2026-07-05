@@ -8,6 +8,7 @@ use App\Form\RideType;
 use App\Enum\UserRole;
 use App\Enum\RideStatus;
 use App\Form\SearchRideType;
+use App\DTO\SearchRideDTO;
 use App\Repository\RideRepository;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,13 +24,14 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class RideController extends AbstractController
 {
 
-    #[Route(name: 'app_ride_index', methods: ['GET'])]
+    #[Route(name: 'app_ride_index', methods: ['GET', 'POST'])]
     public function index(
         RideRepository $rideRepository,
         Request $request,
     ): Response {
+        $dto = new SearchRideDTO();
 
-        $form = $this->createForm(SearchRideType::class);
+        $form = $this->createForm(SearchRideType::class, $dto, ['mode' => 'searchByStaff']);
         $form->handleRequest($request);
 
         $rides = [];
