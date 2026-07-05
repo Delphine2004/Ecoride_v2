@@ -1,38 +1,40 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Booking index{% endblock %}
+{% block title %}Réservation
+{% endblock %}
 
 {% block body %}
-    <h1>Booking index</h1>
+	<main class="py-5">
+		<section class="container-fluid">
+			<div class="container">
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Status</th>
-                <th>CreatedAt</th>
-                <th>UpdatedAt</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for booking in bookings %}
-            <tr>
-                <td>{{ booking.id }}</td>
-                <td>{{ booking.status.value }}</td>
-                <td>{{ booking.createdAt ? booking.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ booking.updatedAt ? booking.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_booking_show', {'id': booking.id}) }}">show</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+				<div class="row justify-content-center">
+					<div class="col-12 col-md-10 col-lg-8">
+						<h1>Recherche</h1>
+						{{ include("booking/_search_booking.html.twig") }}
+					</div>
+				</div>
+			</div>
+		</section>
 
-   
+		<section class="container-fluid">
+			<div class="container">
+
+				<div class="row justify-content-center align-items-center my-4">
+					<div class="col-12 col-md-10 col-lg-8">
+						{% for booking in bookings %}
+							<twig:BookingCard :booking="booking" :user="user"/>
+						{% else %}
+							<p class="text-center m-2">
+								Aucune réservation ne correspond à la recherche.
+							</p>
+						{% endfor %}
+					</div>
+				</div>
+
+			</div>
+		</section>
+
+
+	</main>
 {% endblock %}

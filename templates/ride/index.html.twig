@@ -1,53 +1,38 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ride index{% endblock %}
+{% block title %}Trajet
+{% endblock %}
 
 {% block body %}
-    <h1>Ride index</h1>
+	<main class="py-5">
+		<section class="container-fluid">
+			<div class="container">
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>DepartureDate</th>
-                <th>DeparturePlace</th>
-                <th>ArrivalDate</th>
-                <th>ArrivalPlace</th>
-                <th>Price</th>
-                <th>AvailableSeats</th>
-                <th>Status</th>
-                <th>Commission</th>
-                <th>CreatedAt</th>
-                <th>UpdatedAt</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for ride in rides %}
-            <tr>
-                <td>{{ ride.id }}</td>
-                <td>{{ ride.departureDate ? ride.departureDate|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ ride.departurePlace }}</td>
-                <td>{{ ride.arrivalDate ? ride.arrivalDate|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ ride.arrivalPlace }}</td>
-                <td>{{ ride.price }}</td>
-                <td>{{ ride.availableSeats }}</td>
-                <td>{{ ride.status.value }}</td>
-                <td>{{ ride.commission }}</td>
-                <td>{{ ride.createdAt ? ride.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ ride.updatedAt ? ride.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_ride_show', {'id': ride.id}) }}">show</a>
-                    <a href="{{ path('app_ride_edit', {'id': ride.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="12">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+				<div class="row justify-content-center">
+					<div class="col-12 col-md-10 col-lg-8">
+						<h1>Recherche</h1>
+						{{ include("ride/_search_ride.html.twig") }}
+					</div>
+				</div>
+			</div>
+		</section>
 
-    <a href="{{ path('app_ride_new') }}">Create new</a>
+		<section class="container-fluid">
+			<div class="container">
+
+				<div class="row justify-content-center align-items-center my-4">
+					<div class="col-12 col-md-10 col-lg-8">
+						{% for ride in rides %}
+							<twig:RideCard ride="{{ ride }}"/>
+						{% else %}
+							<p class="text-center m-2">
+								Aucun trajet ne correspond à la recherche.
+							</p>
+						{% endfor %}
+					</div>
+				</div>
+
+			</div>
+		</section>
+	</main>
 {% endblock %}
