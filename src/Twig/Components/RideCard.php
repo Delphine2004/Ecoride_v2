@@ -3,19 +3,19 @@
 namespace App\Twig\Components;
 
 use App\Entity\Ride;
+use App\Entity\User;
 
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
-use Symfony\UX\LiveComponent\Attribute\LiveProp;
 
 #[AsTwigComponent]
 final class RideCard
 {
     use DefaultActionTrait;
 
-    #[LiveProp]
+    public ?User $user;
+
     public Ride $ride;
 
-    #[LiveProp]
     public ?string $message = null;
 }

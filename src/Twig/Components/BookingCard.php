@@ -7,17 +7,15 @@ use App\Entity\User;
 
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
-use Symfony\UX\LiveComponent\Attribute\LiveProp;
 
 #[AsTwigComponent]
 final class BookingCard
 {
     use DefaultActionTrait;
+
     public ?User $user;
 
-    #[LiveProp]
     public Booking $booking;
 
-    #[LiveProp]
     public ?string $message = null;
 }
