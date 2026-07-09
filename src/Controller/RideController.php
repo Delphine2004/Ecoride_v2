@@ -29,6 +29,8 @@ final class RideController extends AbstractController
         RideRepository $rideRepository,
         Request $request,
     ): Response {
+
+        $user = $this->getUser();
         $dto = new SearchRideDTO();
 
         $form = $this->createForm(SearchRideType::class, $dto, ['mode' => 'searchByStaff']);
@@ -43,8 +45,8 @@ final class RideController extends AbstractController
                 $data
             );
         }
-
         return $this->render('ride/index.html.twig', [
+            'user' => $user,
             'form' => $form->createView(),
             'rides' => $rides
         ]);
