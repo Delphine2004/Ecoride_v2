@@ -54,7 +54,7 @@ class RideRepository extends ServiceEntityRepository
         }
 
         if ($criteria->getStatus()) {
-            $qb->andWhere('r.status = :statuses')
+            $qb->andWhere('r.status = :status')
                 ->setParameter('status', $criteria->getStatus());
         }
 
