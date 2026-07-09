@@ -24,7 +24,7 @@
 			<a href="{{ path('app_ride_show', {'id': ride.id}) }}">Plus de détails</a>
 		</div>
 
-		<twig:RideActions ride="{{ ride }}"/>
+		<twig:RideActions :ride="ride" :user="user" />
 
 	</div>
 </div>

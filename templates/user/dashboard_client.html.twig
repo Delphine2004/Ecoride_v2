@@ -99,7 +99,7 @@
 									<h3>Trajet(s)</h3>
 
 									{% for ride in actionToDoRides %}
-										<twig:RideCard ride="{{ ride }}"/>
+										<twig:RideCard :ride="ride" :user="user"/>
 									{% else %}
 										<p class="text-center">Aucun trajet</p>
 									{% endfor %}
@@ -130,7 +130,7 @@
 								<div class="card-body">
 									<h3>Trajet(s)</h3>
 									{% for ride in upcomingRides %}
-										<twig:RideCard ride="{{ ride }}"/>
+										<twig:RideCard :ride="ride" :user="user"/>
 									{% else %}
 										<p class="text-center">Aucun trajet</p>
 									{% endfor %}
