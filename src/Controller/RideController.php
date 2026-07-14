@@ -7,9 +7,6 @@ use App\Entity\User;
 use App\Form\RideType;
 use App\Enum\UserRole;
 use App\Enum\RideStatus;
-use App\Form\SearchRideType;
-use App\DTO\SearchRideDTO;
-use App\Repository\RideRepository;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Bundle\SecurityBundle\Security;
 
 
 #[IsGranted(UserRole::DRIVER->value)]
@@ -24,40 +22,30 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class RideController extends AbstractController
 {
 
-    #[Route(name: 'app_ride_index', methods: ['GET', 'POST'])]
-    public function index(
-        RideRepository $rideRepository,
-        Request $request,
-    ): Response {
+    public function __construct(
+        private Security $security
+    ) {}
 
-        $user = $this->getUser();
-        $dto = new SearchRideDTO();
+    #[Route(name: 'app_ride_index', methods: ['GET'])]
+    public function index(): Response
+    {
+        $user = $this->security->getUser();
 
-        $form = $this->createForm(SearchRideType::class, $dto, ['mode' => 'searchByStaff']);
-        $form->handleRequest($request);
-
-        $rides = [];
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-
-            $rides = $rideRepository->findRidesByFields(
-                $data
-            );
-        }
         return $this->render('ride/index.html.twig', [
-            'user' => $user,
-            'form' => $form->createView(),
-            'rides' => $rides
+            'user' => $user
         ]);
     }
 
     #[Route('/new', name: 'app_ride_new', methods: ['GET', 'POST'])]
     public function new(
         Request $request,
-        User $user,
         EntityManagerInterface $entityManager
     ): Response {
+
+        $user = $this->security->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
 
         $ride = new Ride();
         $ride->setStatus(RideStatus::CONFIRMED);
@@ -85,7 +73,7 @@ final class RideController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_ride_show', methods: ['GET'])]
+    #[Route('/show/{id}', name: 'app_ride_show', methods: ['GET'])]
     public function show(
         Ride $ride
     ): Response {
