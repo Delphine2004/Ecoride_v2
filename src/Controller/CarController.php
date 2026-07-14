@@ -21,12 +21,20 @@ use Symfony\Bundle\SecurityBundle\Security;
 final class CarController extends AbstractController
 {
 
+    public function __construct(
+        private Security $security
+    ) {}
+
     #[Route('/new', name: 'app_car_new', methods: ['GET', 'POST'])]
     public function new(
         Request $request,
-        User $user,
         EntityManagerInterface $entityManager
     ): Response {
+
+        $user = $this->security->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
 
         $car = new Car();
         $form = $this->createForm(CarType::class, $car);
