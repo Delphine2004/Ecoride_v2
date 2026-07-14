@@ -38,7 +38,7 @@
 									<h2>Trajets</h2>
 
 									{% for ride in rides %}
-										<twig:RideActions :ride="ride" :user="user"/>
+										<twig:RideActions :ride="ride"/>
 									{% else %}
 										<p class="text-center">Aucune réservation</p>
 									{% endfor %}
