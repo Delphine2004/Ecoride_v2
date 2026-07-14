@@ -44,8 +44,9 @@ final class UserController extends AbstractController
 
     #[IsGranted(UserRole::EMPLOYEE->value)]
     #[Route('/user/search', name: 'app_user_index', methods: ['GET'])]
-    public function index(UserRepository $userRepository): Response
-    {
+    public function index(
+        UserRepository $userRepository
+    ): Response {
         return $this->render('user/index.html.twig', [
             'users' => $userRepository->findAll(),
         ]);
