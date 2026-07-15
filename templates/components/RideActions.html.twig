@@ -1,7 +1,7 @@
 <div{{attributes}}>
 
 	{% if ride.status == constant('App\\Enum\\RideStatus::CONFIRMED') and ride.departureDate|date('Y-m-d') == 'now'|date('Y-m-d') and (
-        ride.driver == app.user
+        ride.driver == this.user
         or is_granted('ROLE_EMPLOYEE')
     )%}
 		<div class="d-flex flex-column flex-md-row">
@@ -9,14 +9,14 @@
 				Démarrer
 			</button>
 		</div>
-	{% elseif ride.status == constant('App\\Enum\\RideStatus::CONFIRMED') and ride.departureDate|date('Y-m-d') > 'now'|date('Y-m-d') and ride.driver != app.user %}
+	{% elseif ride.status == constant('App\\Enum\\RideStatus::CONFIRMED') and ride.departureDate|date('Y-m-d') > 'now'|date('Y-m-d') and ride.driver != this.user %}
 		<div class="d-flex flex-column flex-md-row">
 			<button class="btn" {{ live_action('book') }}>
 				Réserver
 			</button>
 		</div>
 	{% elseif ride.status == constant('App\\Enum\\RideStatus::CONFIRMED') and (
-        ride.driver == app.user
+        ride.driver == this.user
         or is_granted('ROLE_EMPLOYEE')
     )%}
 		<div class="d-flex flex-column flex-md-row">
@@ -25,7 +25,7 @@
 			</button>
 		</div>
 	{% elseif ride.status == constant('App\\Enum\\RideStatus::RUNNING') and (
-        ride.driver == app.user
+        ride.driver == this.user
         or is_granted('ROLE_EMPLOYEE')
     )%}
 		<div class="d-flex flex-column flex-md-row">
@@ -34,7 +34,7 @@
 			</button>
 		</div>
 	{% elseif ride.status == constant('App\\Enum\\RideStatus::PENDING') and (
-        ride.driver == app.user
+        ride.driver == this.user
         or is_granted('ROLE_EMPLOYEE')
     )%}
 		<div class="d-flex flex-column flex-md-row">

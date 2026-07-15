@@ -1,14 +1,14 @@
 <div{{attributes}}>
 
 	{% if booking.status == constant('App\\Enum\\BookingStatus::CONFIRMED') and booking.ride.departureDate|date('Y-m-d') == 'now'|date('Y-m-d') and (
-        booking.passenger == app.user
+        booking.passenger == this.user
         or is_granted('ROLE_EMPLOYEE')
     )%}
 		<div class="d-flex flex-column flex-md-row">
 			<p class="text-start text-md-center mb-0">En attente ...</p>
 		</div>
 	{% elseif booking.status == constant('App\\Enum\\BookingStatus::CONFIRMED') and (
-        booking.passenger == app.user
+        booking.passenger == this.user
         or is_granted('ROLE_EMPLOYEE')
     ) %}
 		<div class="d-flex flex-column flex-md-row">
@@ -17,13 +17,13 @@
 			</button>
 		</div>
 	{% elseif booking.status == constant('App\\Enum\\BookingStatus::RUNNING') and (
-        booking.passenger == app.user
+        booking.passenger == this.user
         or is_granted('ROLE_EMPLOYEE')
     ) %}
 		<div class="d-flex flex-column flex-md-row">
 			<p class="text-start text-md-center mb-0">Le trajet a demarré</p>
 		</div>
-	{% elseif booking.status == constant('App\\Enum\\BookingStatus::PENDING') and booking.passenger == app.user %}
+	{% elseif booking.status == constant('App\\Enum\\BookingStatus::PENDING') and booking.passenger == this.user %}
 		<div class="d-flex flex-column flex-md-row">
 			<button class="btn" {{ live_action('finalize') }}>
 				Tout est OK
