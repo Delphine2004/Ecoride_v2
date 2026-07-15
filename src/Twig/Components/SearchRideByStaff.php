@@ -56,7 +56,7 @@ final class SearchRideByStaff extends AbstractController
             $dataDTO
         );
 
-        // Stockage des id des Ride
+        // Stockage des id des Rides
         $this->rideIds = array_map(
             static fn(Ride $ride) => $ride->getId(),
             $rides
