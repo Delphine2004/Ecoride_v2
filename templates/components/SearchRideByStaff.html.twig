@@ -87,7 +87,7 @@
 			<div class="row justify-content-center align-items-center my-4">
 				<div class="col-12 col-md-10 col-lg-8">
 					{% for ride in this.results %}
-						<twig:RideCard :ride="ride" :user="this.user"/>
+						<twig:RideCard :ride="ride"/>
 					{% else %}
 						<p class="text-center m-2">
 							Aucun trajet ne correspond à la recherche.

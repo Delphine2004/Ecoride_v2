@@ -3,7 +3,6 @@
 namespace App\Twig\Components;
 
 use App\Entity\Ride;
-use App\Entity\User;
 
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
@@ -12,8 +11,6 @@ use Symfony\UX\LiveComponent\DefaultActionTrait;
 final class RideCard
 {
     use DefaultActionTrait;
-
-    public ?User $user;
 
     public Ride $ride;
 

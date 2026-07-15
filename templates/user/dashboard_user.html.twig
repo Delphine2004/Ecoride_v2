@@ -59,7 +59,7 @@
 							<div class="card-body">
 
 								{% for booking in bookings %}
-									<twig:BookingCard :booking="booking" :user="user"/>
+									<twig:BookingCard :booking="booking"/>
 								{% else %}
 									<p class="text-center">Aucune réservation</p>
 								{% endfor %}

@@ -10,29 +10,31 @@ use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
+use Symfony\Bundle\SecurityBundle\Security;
 
 #[AsLiveComponent]
 final class RideActions
 {
     use DefaultActionTrait;
 
-    #[LiveProp]
-    public ?string $message = null;
+    public function __construct(
+        private Security $security,
+        private RideService $rideService
+    ) {}
 
     #[LiveProp]
     public Ride $ride;
 
-    #[LiveProp]
-    public User $user;
+    public function getUser(): ?User
+    {
+        return $this->security->getUser();
+    }
 
-    public function __construct(
-        private RideService $rideService
-    ) {}
 
     #[LiveAction]
     public function cancel(): void
     {
-        $this->rideService->cancel($this->ride, $this->user);
+        $this->rideService->cancel($this->ride, $this->getUser());
     }
 
     #[LiveAction]

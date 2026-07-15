@@ -86,7 +86,7 @@
 								<h3>Réservation(s)</h3>
 
 								{% for booking in actionToDoBookings %}
-									<twig:BookingCard :booking="booking" :user="user"/>
+									<twig:BookingCard :booking="booking"/>
 								{% else %}
 									<p class="text-center">Aucune réservation</p>
 								{% endfor %}
@@ -119,7 +119,7 @@
 								<h3>Réservation(s)</h3>
 
 								{% for booking in upcomingBookings %}
-									<twig:BookingCard :booking="booking" :user="user"/>
+									<twig:BookingCard :booking="booking"/>
 								{% else %}
 									<p class="text-center">Aucune réservation</p>
 								{% endfor %}
