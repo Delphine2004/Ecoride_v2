@@ -48,13 +48,10 @@ final class SearchRideByStaff extends AbstractController
     public function search(): void
     {
         $this->submitForm();
-        $data = $this->getForm();
 
-        $dataDTO = new SearchRideDTO($data);
+        $data = $this->getForm()->getData();
 
-        $rides = $this->rideRepository->findRidesByFields(
-            $dataDTO
-        );
+        $rides = $this->rideRepository->findRidesByFields($data);
 
         // Stockage des id des Rides
         $this->rideIds = array_map(

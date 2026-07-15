@@ -46,13 +46,10 @@ final class SearchBookingByStaff extends AbstractController
     public function search(): void
     {
         $this->submitForm();
-        $data = $this->getForm();
 
-        $dataDTO = new SearchBookingDTO($data);
+        $data = $this->getForm()->getData();
 
-        $bookings = $this->bookingRepository->findBookingsByFields(
-            $dataDTO
-        );
+        $bookings = $this->bookingRepository->findBookingsByFields($data);
 
         // Stockage des id des Bookings
         $this->bookingIds = array_map(
