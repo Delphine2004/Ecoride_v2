@@ -32,11 +32,12 @@ class BookingRepository extends ServiceEntityRepository
     ): array {
 
         $qb = $this->createQueryBuilder('b')
-            ->leftJoin('b.passenger', 'u')->addSelect('u');
+            ->leftJoin('b.passenger', 'u')->addSelect('u')
+            ->leftJoin('b.ride', 'r')->addSelect('r');
 
         if ($criteria->getBookingId()) {
-            $qb->andWhere('b.id = :bookingId')
-                ->setParameter('bookingId', $criteria->getBookingId());
+            $qb->andWhere('b.id = :id')
+                ->setParameter('id', $criteria->getBookingId());
         }
 
         if ($criteria->getPassengerId()) {
