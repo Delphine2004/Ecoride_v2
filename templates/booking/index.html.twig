@@ -5,35 +5,10 @@
 
 {% block body %}
 	<main class="py-5">
-		<section class="container-fluid">
-			<div class="container">
 
-				<div class="row justify-content-center">
-					<div class="col-12 col-md-10 col-lg-8">
-						<h1>Recherche</h1>
-						{{ include("booking/_search_booking.html.twig") }}
-					</div>
-				</div>
-			</div>
-		</section>
-
-		<section class="container-fluid">
-			<div class="container">
-
-				<div class="row justify-content-center align-items-center my-4">
-					<div class="col-12 col-md-10 col-lg-8">
-						{% for booking in bookings %}
-							<twig:BookingCard :booking="booking" :user="user"/>
-						{% else %}
-							<p class="text-center m-2">
-								Aucune réservation ne correspond à la recherche.
-							</p>
-						{% endfor %}
-					</div>
-				</div>
-
-			</div>
-		</section>
+		{{ component('searchBookingByStaff', {
+    user: app.user
+}) }}
 
 
 	</main>
