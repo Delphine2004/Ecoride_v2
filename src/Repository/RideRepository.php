@@ -31,11 +31,12 @@ class RideRepository extends ServiceEntityRepository
     ): array {
 
         $qb = $this->createQueryBuilder('r')
-            ->leftJoin('r.driver', 'u')->addSelect('u');
+            ->leftJoin('r.driver', 'u')->addSelect('u')
+            ->leftJoin('r.car', 'c')->addSelect('c');
 
         if ($criteria->getRideId()) {
-            $qb->andWhere('r.id = :rideId')
-                ->setParameter('rideId', $criteria->getRideId());
+            $qb->andWhere('r.id = :id')
+                ->setParameter('id', $criteria->getRideId());
         }
 
         if ($criteria->getDriverId()) {
