@@ -6,15 +6,13 @@ use App\Entity\Booking;
 use App\Entity\User;
 use App\Entity\Ride;
 use App\Enum\UserRole;
-use App\Form\SearchBookingType;
 use App\Service\RideService;
-use App\Repository\BookingRepository;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Bundle\SecurityBundle\Security;
 
 
 #[IsGranted(UserRole::PASSENGER->value)]
@@ -23,42 +21,26 @@ final class BookingController extends AbstractController
 {
 
     public function __construct(
-        private RideService $rideService
+        private RideService $rideService,
+        private Security $security
     ) {}
 
-    #[Route(name: 'app_booking_index', methods: ['GET', 'POST'])]
-    public function index(
-        Request $request,
-        BookingRepository $bookingRepository,
-    ): Response {
-
-        $user = $this->getUser();
-
-        $form = $this->createForm(SearchBookingType::class);
-        $form->handleRequest($request);
-
-        $bookings = [];
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-
-            $bookings = $bookingRepository->findBookingsByFields(
-                $data
-            );
-        }
+    #[Route(name: 'app_booking_index', methods: ['GET'])]
+    public function index(): Response
+    {
+        $user = $this->security->getUser();
 
         return $this->render('booking/index.html.twig', [
-            'user' => $user,
-            'form' => $form->createView(),
-            'bookings' => $bookings
+            'user' => $user
         ]);
     }
 
-    #[Route('/new/{id}', name: 'app_booking_new', methods: ['GET', 'POST'])]
+    #[Route('/new', name: 'app_booking_new', methods: ['GET', 'POST'])]
     public function new(
-        Ride $ride,
-        User $user
+        Ride $ride
     ): Response {
+
+        $user = $this->security->getUser();
 
         try {
             $this->rideService->book($ride, $user);
@@ -73,7 +55,7 @@ final class BookingController extends AbstractController
         }
     }
 
-    #[Route('/{id}', name: 'app_booking_show', methods: ['GET'])]
+    #[Route('/show/{id}', name: 'app_booking_show', methods: ['GET'])]
     public function show(
         Booking $booking,
         User $user
