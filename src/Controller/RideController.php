@@ -78,7 +78,7 @@ final class RideController extends AbstractController
         Ride $ride
     ): Response {
         return $this->render('ride/show.html.twig', [
-            'ride' => $ride,
+            'ride' => $ride
         ]);
     }
 
