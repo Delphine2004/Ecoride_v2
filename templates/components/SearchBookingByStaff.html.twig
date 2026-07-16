@@ -4,7 +4,7 @@
 		<div class="container">
 			<div class="row justify-content-center">
 				<div class="col-12 col-md-10 col-lg-8">
-					<h1>Recherche</h1>
+					<h1>Recherche réservation</h1>
 					{{ form_start(form, {'attr': {'novalidate':  true}}) }}
 					<div class="row g-3 justify-content-around my-3">
 						<div class="col-md-4">
@@ -12,19 +12,53 @@
 							{{ form_widget(form.id, {attr: {class: 'form-control'}}) }}
 						</div>
 						<div class="col-md-4">
-							{{ form_label(form.status) }}
-							{{ form_widget(form.status, {attr: {class: 'form-select'}}) }}
+							{{ form_label(form.rideId) }}
+							{{ form_widget(form.rideId, {attr: {class: 'form-control'}}) }}
+						</div>
+						<div class="col-md-4">
+							{{ form_label(form.passengerId) }}
+							{{ form_widget(form.passengerId, {attr: {class: 'form-control'}}) }}
 						</div>
 					</div>
 
 					<div class="row g-3 justify-content-around my-3">
 						<div class="col-md-4">
+							{{ form_label(form.departureDate) }}
+							{{ form_widget(form.departureDate, {attr: {class: 'form-control'}}) }}
+						</div>
+						<div class="col-md-4">
+							{{ form_label(form.departurePlace) }}
+							{{ form_widget(form.departurePlace, { attr: {class: 'form-control'}}) }}
+						</div>
+						<div class="col-md-4">
+							{{ form_label(form.arrivalPlace) }}
+							{{ form_widget(form.arrivalPlace, {attr: {class: 'form-control'}}) }}
+						</div>
+					</div>
+
+					<div class="row g-3 justify-content-around my-3">
+						<div class="col-md-6">
+							{{ form_label(form.email) }}
+							{{ form_widget(form.email, {attr: {class: 'form-control'}}) }}
+						</div>
+						<div class="col-md-6">
 							{{ form_label(form.lastName) }}
 							{{ form_widget(form.lastName, { attr: {class: 'form-control'}}) }}
+						</div>
+					</div>
+
+					<div class="row g-3 justify-content-around my-3">
+						<div class="col-md-4">
+							{{ form_label(form.status) }}
+							{{ form_widget(form.status, {attr: {class: 'form-select'}}) }}
 						</div>
 						<div class="col-md-4">
 							{{ form_label(form.createdAt) }}
 							{{ form_widget(form.createdAt, {attr: {class: 'form-control'}}) }}
+						</div>
+						<div class="col-md-4">
+							{{ form_label(form.updatedAt) }}
+							{{ form_widget(form.updatedAt, { attr: {class: 'form-control'}}) }}
 						</div>
 					</div>
 
@@ -72,7 +106,7 @@
 						<twig:BookingCard :booking="booking"/>
 					{% else %}
 						<p class="text-center m-2">
-							Aucun trajet ne correspond à la recherche.
+							Aucune réservation ne correspond à la recherche.
 						</p>
 					{% endfor %}
 				</div>

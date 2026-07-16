@@ -5,45 +5,59 @@
 		<div class="container">
 			<div class="row justify-content-center">
 				<div class="col-12 col-md-10 col-lg-8">
-					<h1>Recherche</h1>
+					<h1>Recherche trajet</h1>
 					{{ form_start(form, {'attr': {'novalidate':  true}}) }}
 					<div class="row g-3 justify-content-around my-3">
-						<div class="col-md-4">
+						<div class="col-md-6">
 							{{ form_label(form.id) }}
 							{{ form_widget(form.id, {attr: {class: 'form-control'}}) }}
 						</div>
-
-						<div class="col-md-4">
+						<div class="col-md-6">
 							{{ form_label(form.status) }}
 							{{ form_widget(form.status, {attr: {class: 'form-select'}}) }}
 						</div>
 					</div>
 
 					<div class="row g-3 justify-content-around my-3">
-						<div class="col-md-4">
+						<div class="col-md-6">
+							{{ form_label(form.driverId) }}
+							{{ form_widget(form.driverId, {attr: {class: 'form-control'}}) }}
+						</div>
+						<div class="col-md-6">
+							{{ form_label(form.lastName) }}
+							{{ form_widget(form.lastName, {attr: {class: 'form-control'}}) }}
+						</div>
+					</div>
+
+					<div class="row g-3 justify-content-around my-3">
+						<div class="col-md-6">
 							{{ form_label(form.departureDate) }}
 							{{ form_widget(form.departureDate, {attr: {class: 'form-control'}}) }}
 						</div>
-						<div class="col-md-4">
+						<div class="col-md-6">
 							{{ form_label(form.arrivalDate) }}
 							{{ form_widget(form.arrivalDate, {attr: {class: 'form-control'}}) }}
 						</div>
 					</div>
 
 					<div class="row g-3 justify-content-around my-3">
-						<div class="col-md-4">
+						<div class="col-md-6">
 							{{ form_label(form.departurePlace) }}
 							{{ form_widget(form.departurePlace, {attr: {class: 'form-control'}}) }}
 						</div>
-						<div class="col-md-4">
+						<div class="col-md-6">
 							{{ form_label(form.arrivalPlace) }}
 							{{ form_widget(form.arrivalPlace, {attr: {class: 'form-control'}}) }}
 						</div>
 					</div>
 					<div class="row g-3 justify-content-around my-3">
-						<div class="col-md-4">
+						<div class="col-md-6">
 							{{ form_label(form.createdAt) }}
 							{{ form_widget(form.createdAt, {attr: {class: 'form-control'}}) }}
+						</div>
+						<div class="col-md-6">
+							{{ form_label(form.updatedAt) }}
+							{{ form_widget(form.updatedAt, {attr: {class: 'form-control'}}) }}
 						</div>
 					</div>
 					<div class="row justify-content-center my-3">

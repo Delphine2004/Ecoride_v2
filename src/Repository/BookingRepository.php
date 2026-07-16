@@ -35,9 +35,15 @@ class BookingRepository extends ServiceEntityRepository
             ->leftJoin('b.passenger', 'u')->addSelect('u')
             ->leftJoin('b.ride', 'r')->addSelect('r');
 
+        // Par les ids
         if ($criteria->getBookingId()) {
             $qb->andWhere('b.id = :id')
                 ->setParameter('id', $criteria->getBookingId());
+        }
+
+        if ($criteria->getRideId()) {
+            $qb->andWhere('r.id = :rideId')
+                ->setParameter('rideId', $criteria->getRideId());
         }
 
         if ($criteria->getPassengerId()) {
@@ -45,6 +51,7 @@ class BookingRepository extends ServiceEntityRepository
                 ->setParameter('passengerId', $criteria->getPassengerId());
         }
 
+        // Par les champs textes
         if ($criteria->getLastName()) {
             $qb->andWhere('u.lastName LIKE :lastName')
                 ->setParameter('lastName', '%' . $criteria->getLastName() . '%');
@@ -55,9 +62,31 @@ class BookingRepository extends ServiceEntityRepository
                 ->setParameter('email', '%' . $criteria->getEmail() . '%');
         }
 
+        if ($criteria->getDeparturePlace()) {
+            $qb->andWhere('r.departurePlace LIKE :departurePlace')
+                ->setParameter('departurePlace', '%' . $criteria->getDeparturePlace() . '%');
+        }
+
+        if ($criteria->getArrivalPlace()) {
+            $qb->andWhere('r.arrivalPlace LIKE :arrivalPlace')
+                ->setParameter('arrivalPlace', '%' . $criteria->getArrivalPlace() . '%');
+        }
+
         if ($criteria->getStatus()) {
             $qb->andWhere('b.status = :status')
                 ->setParameter('status', $criteria->getStatus());
+        }
+
+        // Par les champs date
+        if ($criteria->getDepartureDate()) {
+            $date = $criteria->getDepartureDate();
+
+            $start = (clone $date)->setTime(0, 0, 0);
+            $end   = (clone $date)->setTime(23, 59, 59);
+
+            $qb->andWhere('r.departureDate BETWEEN :departureDateStart AND :departureDateEnd')
+                ->setParameter('departureDateStart', $start)
+                ->setParameter('departureDateEnd', $end);
         }
 
         if ($criteria->getCreatedAt()) {

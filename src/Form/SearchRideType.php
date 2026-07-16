@@ -45,6 +45,14 @@ class SearchRideType extends AbstractType
                     'label' => 'Référence trajet',
                     'required' => false,
                 ])
+                ->add('driverId', TextType::class, [
+                    'label' => 'Référence conducteur',
+                    'required' => false,
+                ])
+                ->add('lastName', TextType::class, [
+                    'label' => 'Nom du conducteur',
+                    'required' => false,
+                ])
                 ->add('status', EnumType::class, [
                     'class' => RideStatus::class,
                     'label' => 'Statut',
@@ -74,6 +82,12 @@ class SearchRideType extends AbstractType
                     'widget' => 'single_text',
                     'input' => 'datetime_immutable',
                     'label' => 'Date de création',
+                    'required' => false,
+                ])
+                ->add('updatedAt', DateType::class, [
+                    'widget' => 'single_text',
+                    'input' => 'datetime_immutable',
+                    'label' => 'Date de modification',
                     'required' => false,
                 ]);
         }

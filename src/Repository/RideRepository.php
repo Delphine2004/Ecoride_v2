@@ -34,6 +34,7 @@ class RideRepository extends ServiceEntityRepository
             ->leftJoin('r.driver', 'u')->addSelect('u')
             ->leftJoin('r.car', 'c')->addSelect('c');
 
+        // Par les ids
         if ($criteria->getRideId()) {
             $qb->andWhere('r.id = :id')
                 ->setParameter('id', $criteria->getRideId());
@@ -44,14 +45,20 @@ class RideRepository extends ServiceEntityRepository
                 ->setParameter('driverId', $criteria->getDriverId());
         }
 
+        // Par les champs textes
+        if ($criteria->getLastName()) {
+            $qb->andWhere('u.lastName LIKE :lastName')
+                ->setParameter('lastName', '%' . $criteria->getLastName() . '%');
+        }
+
         if ($criteria->getDeparturePlace()) {
-            $qb->andWhere('r.departurePlace = :departurePlace')
-                ->setParameter('departurePlace', $criteria->getDeparturePlace());
+            $qb->andWhere('r.departurePlace LIKE :departurePlace')
+                ->setParameter('departurePlace', '%' . $criteria->getDeparturePlace() . '%');
         }
 
         if ($criteria->getArrivalPlace()) {
-            $qb->andWhere('r.arrivalPlace = :arrivalPlace')
-                ->setParameter('arrivalPlace', $criteria->getArrivalPlace());
+            $qb->andWhere('r.arrivalPlace LIKE :arrivalPlace')
+                ->setParameter('arrivalPlace', '%' . $criteria->getArrivalPlace() . '%');
         }
 
         if ($criteria->getStatus()) {
@@ -59,6 +66,7 @@ class RideRepository extends ServiceEntityRepository
                 ->setParameter('status', $criteria->getStatus());
         }
 
+        // Par les champs date
         if ($criteria->getDepartureDate()) {
             $date = $criteria->getDepartureDate();
 

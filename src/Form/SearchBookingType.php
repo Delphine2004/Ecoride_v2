@@ -25,6 +25,30 @@ class SearchBookingType extends AbstractType
                 'label' => 'Référence réservation',
                 'required' => false,
             ])
+            ->add('rideId', TextType::class, [
+                'label' => 'Référence trajet',
+                'required' => false,
+            ])
+            ->add('passengerId', TextType::class, [
+                'label' => 'Référence client',
+                'required' => false,
+            ])
+            ->add('lastName', TextType::class, [
+                'label' => 'Nom du passager',
+                'required' => false,
+            ])
+            ->add('email', TextType::class, [
+                'label' => 'Email du passager',
+                'required' => false,
+            ])
+            ->add('departurePlace', TextType::class, [
+                'label' => 'Départ',
+                'required' => false,
+            ])
+            ->add('arrivalPlace', TextType::class, [
+                'label' => 'Arrivée',
+                'required' => false,
+            ])
             ->add('status', EnumType::class, [
                 'class' => BookingStatus::class,
                 'label' => 'Statut',
@@ -32,14 +56,22 @@ class SearchBookingType extends AbstractType
                 'placeholder' => 'Choisir un statut',
                 'required' => false,
             ])
-            ->add('lastName', TextType::class, [
-                'label' => 'Nom du passager',
+            ->add('departureDate', DateType::class, [
+                'widget' => 'single_text',
+                'input' => 'datetime_immutable',
+                'label' => 'Date de départ',
                 'required' => false,
             ])
             ->add('createdAt', DateType::class, [
                 'widget' => 'single_text',
                 'input' => 'datetime_immutable',
                 'label' => 'Date de création',
+                'required' => false,
+            ])
+            ->add('updatedAt', DateType::class, [
+                'widget' => 'single_text',
+                'input' => 'datetime_immutable',
+                'label' => 'Date de modification',
                 'required' => false,
             ]);
     }
