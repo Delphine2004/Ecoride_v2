@@ -30,7 +30,8 @@
 										{{ booking.ride.departurePlace}}</p>
 									<p>le
 										{{ booking.ride.departureDate ? booking.ride.departureDate|date('d/m/Y') : ''}}</p>
-									<p>à XXhXX</p>
+									<p>à
+										{{ booking.ride.departureDate ? booking.ride.departureDate|date('H:i') : ''}}</p>
 								</div>
 
 								<div class="d-flex flex-column flex-md-row justify-content-md-between">
@@ -39,7 +40,8 @@
 									<p>
 										le
 										{{ booking.ride.departureDate ? booking.ride.departureDate|date('d/m/Y') : ''}}</p>
-									<p>à XXhXX</p>
+									<p>à
+										{{ booking.ride.departureDate ? booking.ride.departureDate|date('H:i') : ''}}</p>
 								</div>
 							</div>
 
@@ -58,11 +60,15 @@
 								</div>
 							</div>
 
-							<!--  -->
+							<!-- Info création -->
 							<div class="d-flex flex-column flex-md-row p-2">
 								<p>Réservé le :
-									{{ booking.createdAt ? booking.createdAt|date('Y-m-d') : '' }} à {{ booking.createdAt ? booking.createdAt|date('H:i:s') : '' }}</p>
+									{{ booking.createdAt ? booking.createdAt|date('Y-m-d') : '' }}
+									à
+									{{ booking.createdAt ? booking.createdAt|date('H:i:s') : '' }}</p>
 							</div>
+
+							<!-- Boutons d'action -->
 							<div class="d-flex flex-column flex-md-row p-2">
 								<twig:BookingActions :booking="booking"/>
 							</div>
@@ -80,6 +86,9 @@
 									Login</p>
 								<p>Note</p>
 								<a class="btn w-100" href="">Avis</a>
+								{% if is_granted('ROLE_EMPLOYEE') %}
+									<a class="btn w-100" href="{{ path('app_user_show', {'id': booking.ride.driver.id}) }}">Voir</a>
+								{% endif %}
 							</div>
 						</div>
 

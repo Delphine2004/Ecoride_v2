@@ -30,7 +30,8 @@
 										{{ ride.departurePlace}}</p>
 									<p>le
 										{{ ride.departureDate ? ride.departureDate|date('d/m/Y') : ''}}</p>
-									<p>à {{ ride.departureDate ? ride.departureDate|date('H:i') : ''}}</p>
+									<p>à
+										{{ ride.departureDate ? ride.departureDate|date('H:i') : ''}}</p>
 								</div>
 
 								<div class="d-flex flex-column flex-md-row justify-content-md-between">
@@ -39,7 +40,8 @@
 									<p>
 										le
 										{{ ride.departureDate ? ride.departureDate|date('d/m/Y') : ''}}</p>
-									<p>à {{ ride.departureDate ? ride.departureDate|date('H:i') : ''}}</p>
+									<p>à
+										{{ ride.departureDate ? ride.departureDate|date('H:i') : ''}}</p>
 								</div>
 							</div>
 
@@ -56,18 +58,22 @@
 								<div class="d-flex flex-row gap-2">
 									<p>{{ ride.car.registrationNumber}}</p>
 								</div>
+								{% if not is_granted('ROLE_EMPLOYEE') %}
+									<div class="flex">
+										<a class="btn" href="{{ path('app_ride_edit', {'id': ride.id}) }}">Modifier voiture</a>
+									</div>
+								{% endif %}
 							</div>
 
-							<div class="flex">
-								<a class="btn" href="{{ path('app_ride_edit', {'id': ride.id}) }}">Modifier voiture</a>
-							</div>
-
-							<!--  -->
+							<!-- Info création -->
 							<div class="d-flex flex-column flex-md-row p-2">
 								<p>Créé le :
-									{{ ride.createdAt ? ride.createdAt|date('Y-m-d') : '' }} à {{ ride.createdAt ? ride.createdAt|date('H:i:s') : '' }}</p>
+									{{ ride.createdAt ? ride.createdAt|date('Y-m-d') : '' }}
+									à
+									{{ ride.createdAt ? ride.createdAt|date('H:i:s') : '' }}</p>
 							</div>
 
+							<!-- Boutons d'action -->
 							<div class="d-flex flex-column flex-md-row p-2">
 								<twig:RideActions :ride="ride"/>
 							</div>
@@ -82,9 +88,11 @@
 							</h2>
 							{% for booking in ride.rideBookings %}
 								<div class="d-flex flex-column align-items-center">
-									<p>{{ booking.passenger.login }}
-										Login</p>
+									<p>{{ booking.passenger.login }}</p>
 									<p>{{ booking.passenger.email }}</p>
+									{% if is_granted('ROLE_EMPLOYEE') %}
+										<a class="btn w-100" href="{{ path('app_user_show', {'id': booking.passenger.id}) }}">Voir</a>
+									{% endif %}
 								</div>
 							{% else %}
 								<p class="text-center">Aucun passager</p>
