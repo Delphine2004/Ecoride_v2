@@ -105,7 +105,7 @@ class RideRepository extends ServiceEntityRepository
 
         return
             $qb
-            ->orderBy('r.id', $orderBy)
+            ->orderBy('r.departureDate', $orderBy)
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult()

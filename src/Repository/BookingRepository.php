@@ -84,7 +84,7 @@ class BookingRepository extends ServiceEntityRepository
 
         return
             $qb
-            ->orderBy('b.id', $orderBy)
+            ->orderBy('r.departureDate', $orderBy)
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
