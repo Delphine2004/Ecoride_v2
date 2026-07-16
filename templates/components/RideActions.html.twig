@@ -9,7 +9,9 @@
 				Démarrer
 			</button>
 		</div>
-	{% elseif ride.status == constant('App\\Enum\\RideStatus::CONFIRMED') and ride.departureDate|date('Y-m-d') > 'now'|date('Y-m-d') and ride.driver != this.user %}
+	{% elseif ride.status == constant('App\\Enum\\RideStatus::CONFIRMED') 
+  and ride.departureDate|date('Y-m-d') > 'now'|date('Y-m-d') 
+  and ride.driver != this.user and not is_granted('ROLE_EMPLOYEE') %}
 		<div class="d-flex flex-column flex-md-row">
 			<button class="btn" {{ live_action('book') }}>
 				Réserver
