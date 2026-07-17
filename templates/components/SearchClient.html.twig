@@ -1,0 +1,76 @@
+<div{{attributes}}>
+	<!-- Barre de recherche -->
+	<section class="container-fluid">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-12 col-md-10 col-lg-8">
+					<h1>Recherche client</h1>
+					{{ form_start(form, {'attr': {'novalidate':  true}}) }}
+
+					<div class="row g-3 justify-content-around my-3">
+						<div class="col-12 col-md-4">
+							{{ form_label(form.id) }}
+							{{ form_widget(form.id, {attr: {class: 'form-control'}}) }}
+						</div>
+						<div class="col-12 col-md-4">
+							{{ form_label(form.lastName) }}
+							{{ form_widget(form.lastName, {attr: {class: 'form-control'}}) }}
+						</div>
+						<div class="col-12 col-md-4">
+							{{ form_label(form.email) }}
+							{{ form_widget(form.email, {attr: {class: 'form-control'}}) }}
+						</div>
+					</div>
+
+					<div class="row justify-content-center my-3">
+						<div class="col-12 col-md-4 mb-3">
+							<button class="btn w-100" type="button" data-action="live#action" data-live-action-param="search">Rechercher</button>
+						</div>
+
+						<div class="col-12 mb-3">
+							{{ form_errors(form) }}
+						</div>
+
+						<div class="col-12 col-md-4 mb-3">
+							<div class="text-center">
+								<a href="{{ path('app_ride_index') }}">Réinitialiser</a>
+							</div>
+						</div>
+					</div>
+
+					{{ form_end(form) }}
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Messages -->
+	<section class="container-fluid py-5">
+		{% for label, messages in app.flashes %}
+			<div class="container">
+				{% for message in messages %}
+					<p class="fw-bold text-center m-3 alert alert-{{ label }}">
+						{{ message }}
+					</p>
+				{% endfor %}
+			</div>
+		{% endfor %}
+	</section>
+
+	<!-- Résultats -->
+	<section class="container-fluid">
+		<div class="container">
+			<div class="row justify-content-center align-items-center my-4">
+				<div class="col-12 col-md-10 col-lg-8">
+					{% for user in this.results %}
+						<twig:ClientCard :user="user"/>
+					{% else %}
+						<p class="text-center m-2">
+							Aucun client ne correspond à la recherche.
+						</p>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	</section>
+</div>
