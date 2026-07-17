@@ -6,7 +6,7 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Form\SearchClientType;
 use App\DTO\SearchClientDTO;
-use App\Enum\UserRole;
+use App\Enum\Type;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
@@ -51,7 +51,7 @@ final class SearchClient extends AbstractController
         $data = $this->getForm()->getData();
         $data->normalize();
 
-        $clients = $this->userRepository->findUserByFieldAndRole($data, UserRole::PASSENGER);
+        $clients = $this->userRepository->findUserByFieldAndRole($data, Type::CLIENT);
 
         // Stockage des id des Bookings
         $this->clientIds = array_map(
