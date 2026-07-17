@@ -3,13 +3,12 @@
 namespace App\Controller;
 
 use App\DTO\SearchBookingDTO;
-use App\DTO\SearchRideDTO;
 use App\Entity\User;
 use App\Entity\Car;
 
 use App\Enum\BookingStatus;
-use App\Enum\RideStatus;
 use App\Enum\UserRole;
+use App\Enum\Type;
 
 use App\Form\UserType;
 
@@ -40,16 +39,6 @@ final class UserController extends AbstractController
         private Security $security
     ) {
         $this->hasher = $hasher;
-    }
-
-    #[IsGranted(UserRole::EMPLOYEE->value)]
-    #[Route('/user/search', name: 'app_user_index', methods: ['GET'])]
-    public function index(
-        UserRepository $userRepository
-    ): Response {
-        return $this->render('user/index.html.twig', [
-            'users' => $userRepository->findAll(),
-        ]);
     }
 
     #[IsGranted(UserRole::EMPLOYEE->value)]
@@ -88,6 +77,32 @@ final class UserController extends AbstractController
             'actionToDoRides' => $rideRepository->findActionsRideByClient($userId),
             'upcomingBookings' => $bookingRepository->findUpcomingBookingByClient($userId),
             'upcomingRides' => $rideRepository->findUpcomingRideByClient($userId),
+        ]);
+    }
+
+    #[IsGranted(UserRole::EMPLOYEE->value)]
+    #[Route('/client/search', name: 'app_client_index', methods: ['GET'])]
+    public function indexClient(): Response
+    {
+
+        $user = $this->security->getUser();
+
+        return $this->render('user/indexClient.html.twig', [
+            'user' => $user
+        ]);
+    }
+
+    #[IsGranted(UserRole::ADMIN->value)]
+    #[Route('/user/search', name: 'app_user_index', methods: ['GET'])]
+    public function indexUser(
+        UserRepository $userRepository
+    ): Response {
+
+        $user = $this->security->getUser();
+
+        return $this->render('user/indexUser.html.twig', [
+            'users' => $userRepository->findUserByFieldAndRole(null, Type::STAFF),
+            'user' => $user
         ]);
     }
 
