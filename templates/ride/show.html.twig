@@ -80,8 +80,27 @@
 						</div>
 					</div>
 
-					<!-- Partie passagers -->
+					<!-- Partie conducteur -->
 					<div class="col-12 col-md-4">
+
+						<div class="card justify-content-around h-100 shadow-sm p-4 mb-4">
+							<h2 class="my-2">Conducteur
+							</h2>
+							<div class="d-flex flex-column align-items-center">
+								<p>{{ ride.driver.login }}
+									Login</p>
+								<p>Note</p>
+								<a class="btn w-100" href="">Avis</a>
+								{% if is_granted('ROLE_EMPLOYEE') %}
+									<a class="btn w-100" href="{{ path('app_user_show', {'id': ride.driver.id}) }}">Voir</a>
+								{% endif %}
+							</div>
+						</div>
+
+					</div>
+
+					<!-- Partie passagers -->
+					<div class="col-12">
 
 						<div class="card justify-content-around h-100 shadow-sm p-4 mb-4">
 							<h2 class="my-2">Passager(s)
