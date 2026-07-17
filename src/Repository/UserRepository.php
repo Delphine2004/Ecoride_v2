@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\User;
-use App\Enum\UserRole;
+use App\Enum\Type;
 use App\DTO\SearchClientDTO;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -19,9 +19,9 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
-    public function findByFieldAndRole(
+    public function findUserByFieldAndRole(
         ?SearchClientDTO $criteria,
-        UserRole $role,
+        Type $type,
         int $limit = 10,
         string $orderBy = 'DESC'
     ): array {
@@ -42,8 +42,8 @@ class UserRepository extends ServiceEntityRepository
                 ->setParameter('email', '%' . $criteria->getEmail() . '%');
         }
 
-        $qb->andWhere('u.roles = :role')
-            ->setParameter('role', $role->value);
+        $qb->andWhere('u.type = :type')
+            ->setParameter('type', $type->value);
 
         return $qb->orderBy('u.id', $orderBy)
 
