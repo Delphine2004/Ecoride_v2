@@ -48,6 +48,7 @@ final class SearchBookingByStaff extends AbstractController
         $this->submitForm();
 
         $data = $this->getForm()->getData();
+        $data->normalize();
 
         $bookings = $this->bookingRepository->findBookingsByFields($data);
 

@@ -6,6 +6,7 @@ use App\Entity\Ride;
 use App\Repository\RideRepository;
 use App\Form\SearchRideType;
 use App\DTO\SearchRideDTO;
+use App\Util\StringNormalizer;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
@@ -57,8 +58,8 @@ final class SearchRide extends AbstractController
         $arrivalPlace = $this->getForm()->get('arrivalPlace')->getData();
 
         // Normalisation
-        $departurePlace = mb_strtoupper(trim($departurePlace));
-        $arrivalPlace = mb_strtoupper(trim($arrivalPlace));
+        $departurePlace = StringNormalizer::normalize($departurePlace);
+        $arrivalPlace = StringNormalizer::normalize($arrivalPlace);
         $departureDate = \DateTimeImmutable::createFromMutable($departureDate);
 
         $rides = $this->rideRepository->findAvailableRides(

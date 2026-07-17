@@ -50,6 +50,7 @@ final class SearchRideByStaff extends AbstractController
         $this->submitForm();
 
         $data = $this->getForm()->getData();
+        $data->normalize();
 
         $rides = $this->rideRepository->findRidesByFields($data);
 
