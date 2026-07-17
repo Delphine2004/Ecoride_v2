@@ -2,6 +2,8 @@
 
 namespace App\DTO;
 
+use App\Util\StringNormalizer;
+
 class SearchClientDTO
 {
 
@@ -22,5 +24,11 @@ class SearchClientDTO
     public function getEmail(): ?string
     {
         return $this->email;
+    }
+
+    public function normalize(): void
+    {
+        $this->lastName = StringNormalizer::normalize($this->lastName);
+        $this->email = StringNormalizer::normalize($this->email);
     }
 }
