@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Clients
+{% endblock %}
+
+{% block body %}
+	<main class="py-5">
+		{{ component('searchClient', {
+    user: app.user
+}) }}
+	</main>
+{% endblock %}
