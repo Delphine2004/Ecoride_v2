@@ -24,7 +24,7 @@
 									<a class="btn w-100 my-4" href="{{ path('app_booking_index') }}">Réservations</a>
 								</div>
 								<div class="col-12 col-md-5">
-									<a class="btn w-100 my-4" href="{{ path('app_user_index') }}">Clients</a>
+									<a class="btn w-100 my-4" href="{{ path('app_client_index') }}">Clients</a>
 								</div>
 								<div class="col-12 col-md-5">
 									<a class="btn w-100 my-4" href="#">Commentaires</a>
@@ -32,7 +32,7 @@
 
 								{% if is_granted('ROLE_ADMIN') %}
 									<div class="col-12 col-md-5">
-										<a class="btn w-100 my-4" href="#">Paramétres</a>
+										<a class="btn w-100 my-4" href="{{ path('app_user_index') }}">Paramétres</a>
 									</div>
 								{% endif %}
 
