@@ -3,6 +3,8 @@
 namespace App\DTO;
 
 use App\Enum\RideStatus;
+use App\Util\StringNormalizer;
+
 use DateTimeImmutable;
 
 class SearchRideDTO
@@ -11,6 +13,7 @@ class SearchRideDTO
     public ?int $id = null;
     public ?int $driverId = null;
 
+    public ?string $lastName = null;
     public ?string $departurePlace = null;
     public ?string $arrivalPlace = null;
 
@@ -31,6 +34,11 @@ class SearchRideDTO
     public function getDriverId(): ?int
     {
         return $this->driverId;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
     }
 
     public function getStatus(): ?RideStatus
@@ -66,5 +74,13 @@ class SearchRideDTO
     public function getUpdatedAt(): ?DateTimeImmutable
     {
         return $this->updatedAt;
+    }
+
+
+    public function normalize(): void
+    {
+        $this->lastName = StringNormalizer::normalize($this->lastName);
+        $this->departurePlace = StringNormalizer::normalize($this->departurePlace);
+        $this->arrivalPlace = StringNormalizer::normalize($this->arrivalPlace);
     }
 }
