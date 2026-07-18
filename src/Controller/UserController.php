@@ -11,6 +11,7 @@ use App\Enum\UserRole;
 use App\Enum\Type;
 
 use App\Form\UserType;
+use App\DTO\SearchClientDTO;
 
 use App\Repository\UserRepository;
 use App\Repository\BookingRepository;
@@ -100,8 +101,9 @@ final class UserController extends AbstractController
 
         $user = $this->security->getUser();
 
+        $data = new SearchClientDTO();
         return $this->render('user/indexUser.html.twig', [
-            'users' => $userRepository->findUserByFieldAndRole(null, Type::STAFF),
+            'users' => $userRepository->findUserByFieldAndRole($data, Type::STAFF),
             'user' => $user
         ]);
     }
