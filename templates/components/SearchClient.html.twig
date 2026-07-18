@@ -33,7 +33,7 @@
 
 						<div class="col-12 col-md-4 mb-3">
 							<div class="text-center">
-								<a href="{{ path('app_ride_index') }}">Réinitialiser</a>
+								<a href="{{ path('app_client_index') }}">Réinitialiser</a>
 							</div>
 						</div>
 					</div>
@@ -63,7 +63,7 @@
 			<div class="row justify-content-center align-items-center my-4">
 				<div class="col-12 col-md-10 col-lg-8">
 					{% for user in this.results %}
-						<twig:userCard :user="user"/>
+						<twig:UserCard :user="user"/>
 					{% else %}
 						<p class="text-center m-2">
 							Aucun client ne correspond à la recherche.
