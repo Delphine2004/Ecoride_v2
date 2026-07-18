@@ -16,7 +16,6 @@ use Symfony\UX\LiveComponent\DefaultActionTrait;
 use Symfony\Component\Form\FormInterface;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 
-
 #[AsLiveComponent('searchClient')]
 final class SearchClient extends AbstractController
 {
