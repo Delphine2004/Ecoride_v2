@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-
+use App\Enum\Type;
 use App\Utils\RegexPatterns;
 use DateTimeImmutable;
 
@@ -62,6 +62,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotNull(message: "Veuillez sélectionner un rôle.")]
     #[ORM\Column(type: 'json')]
     private array $roles = [];
+
+    #[ORM\Column(length: 255, enumType: Type::class, nullable: true)]
+    private ?Type $type = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $picture = null;
@@ -203,6 +206,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getRoles(): array
+    {
+        $roles = $this->roles ?? [];
+
+        $roles[] = 'ROLE_USER'; // rôle requis par symfony
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function addRole(string $role): self
+    {
+        if (!in_array($role, $this->roles, true)) {
+            $this->roles[] = $role;
+        }
+        return $this;
+    }
+
+    public function getType(): ?Type
+    {
+        return $this->type;
+    }
+
+    public function setType(?Type $type): static
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
     public function getPicture(): ?string
     {
         return $this->picture;
@@ -239,30 +278,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function refundCredit(int $amount): void
     {
         $this->credit += $amount;
-    }
-
-    public function getRoles(): array
-    {
-        $roles = $this->roles ?? [];
-
-        $roles[] = 'ROLE_USER'; // rôle requis par symfony
-
-        return array_unique($roles);
-    }
-
-    public function setRoles(array $roles): static
-    {
-        $this->roles = $roles;
-
-        return $this;
-    }
-
-    public function addRole(string $role): self
-    {
-        if (!in_array($role, $this->roles, true)) {
-            $this->roles[] = $role;
-        }
-        return $this;
     }
 
     public function getLicence(): ?string

@@ -4,6 +4,8 @@ namespace App\DataFixtures;
 
 use App\Entity\User;
 use App\Enum\UserRole;
+use App\Enum\Type;
+
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -113,6 +115,7 @@ class ClientFixtures extends Fixture
             $client->setLogin($data['login']);
             $client->setEmail($data['email']);
             $client->setRoles($data['roles']);
+            $client->setType(Type::CLIENT);
             $client->setCredit($data['credit']);
             $client->setLicence($data['licence']);
             $client->setPicture($data['picture']);

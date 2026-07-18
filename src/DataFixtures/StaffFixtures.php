@@ -4,6 +4,8 @@ namespace App\DataFixtures;
 
 use App\Entity\User;
 use App\Enum\UserRole;
+use App\Enum\Type;
+
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -23,6 +25,8 @@ class StaffFixtures extends Fixture
         $staff->setEmail('staff@ecoride.fr');
         $staff->setLogin('front-office');
         $staff->setRoles([UserRole::EMPLOYEE]);
+        $staff->setType(Type::STAFF);
+
         $hashedPassword = $this->hasher->hashPassword($staff, 'Azertyuiop12*');
         $staff->setPassword($hashedPassword, true);
 
