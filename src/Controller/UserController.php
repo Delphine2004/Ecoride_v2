@@ -2,17 +2,14 @@
 
 namespace App\Controller;
 
-use App\DTO\SearchBookingDTO;
 use App\Entity\User;
 use App\Entity\Car;
-
 use App\Enum\BookingStatus;
 use App\Enum\UserRole;
 use App\Enum\Type;
-
 use App\Form\UserType;
 use App\DTO\SearchClientDTO;
-
+use App\DTO\SearchBookingDTO;
 use App\Repository\UserRepository;
 use App\Repository\BookingRepository;
 use App\Repository\RideRepository;
@@ -116,6 +113,7 @@ final class UserController extends AbstractController
     ): Response {
         $user = new User();
         $user->setRoles([UserRole::EMPLOYEE]);
+        $user->setType(Type::STAFF);
         $form = $this->createForm(UserType::class, $user, ['mode' => 'createUser']);
         $form->handleRequest($request);
 
