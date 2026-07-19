@@ -13,24 +13,32 @@
 					</div>
 					<!-- Info -->
 					<div class="col-12">
-						<p>{{ user.firstName }}
-							{{ user.lastName }}</p>
-						<p>{{ user.login }}</p>
-						<p>{{ user.email }}</p>
-						<p>{{ user.credit }}
-							crédit</p>
-					</div>
-
-					<!-- Modification et Historique -->
-					<div
-						class="col-12">
-						<!-- modification -->
-						<a class="btn" href="{{ path('app_user_edit', {'id': user.id}) }}">Modifier</a>
-
-						<!-- afficher uniquement pour les clients -->
-						{% if user.type == constant('App\\Enum\\Type::CLIENT') %}
-							<a class="btn" href="{{ path('app_user_history', {'id': user.id}) }}">Historique</a>
-						{% endif %}
+						<div class="card justify-content-around h-100 shadow-sm p-4 mb-4">
+							<div class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3">
+								<p>Référence :
+									{{ user.id }}</p>
+							</div>
+							<div class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3">
+								{% if user.type == constant('App\\Enum\\Type::CLIENT') %}
+									<p>{{ user.firstName }}
+										{{ user.lastName }}</p>
+								{% endif %}
+								<p>{{ user.login }}</p>
+							</div>
+							<div class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3">
+								<p>{{ user.email }}</p>
+							</div>
+							{% if user.type == constant('App\\Enum\\Type::CLIENT') %}
+								<div class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3">
+									<p>{{ user.credit }}
+										crédit</p>
+								</div>
+							{% endif %}
+							<!-- modification -->
+							<div class="text-center m-3">
+								<a class="btn" href="{{ path('app_user_edit', {'id': user.id}) }}">Modifier</a>
+							</div>
+						</div>
 					</div>
 
 					<!-- Retour -->
