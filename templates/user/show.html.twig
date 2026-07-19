@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User
+{% endblock %}
+
+{% block body %}
+	<main class="py-5">
+		<section class="container-fluid">
+			<div class="container">
+				<div class="row justify-content-center">
+					<div class="col-12">
+						<h1>Information utilisateur</h1>
+					</div>
+					<!-- Info -->
+					<div class="col-12">
+						<p>{{ user.firstName }}
+							{{ user.lastName }}</p>
+						<p>{{ user.login }}</p>
+						<p>{{ user.email }}</p>
+						<p>{{ user.credit }}
+							crédit</p>
+					</div>
+
+					<!-- Modification et Historique -->
+					<div
+						class="col-12">
+						<!-- modification -->
+						<a class="btn" href="{{ path('app_user_edit', {'id': user.id}) }}">Modifier</a>
+
+						<!-- afficher uniquement pour les clients -->
+						{% if user.type == constant('App\\Enum\\Type::CLIENT') %}
+							<a class="btn" href="{{ path('app_user_history', {'id': user.id}) }}">Historique</a>
+						{% endif %}
+					</div>
+
+					<!-- Retour -->
+					<div class="col-12">
+						<div class="text-center m-3">
+							<a class="btn" href="{{ path('app_dashboard_user') }}">Retour</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
+{% endblock %}
