@@ -136,24 +136,7 @@ final class UserController extends AbstractController
     public function show(
         User $user
     ): Response {
-        $userConnected = $this->security->getUser();
-
-        // Si l'utilisateur consulte son profil
-        if ($userConnected === $user) {
-            return $this->render('user/showUser.html.twig', [
-                'user' => $user,
-            ]);
-        }
-
-        // Si l'utilisateur consulte un profil client
-        if (in_array('ROLE_PASSENGER', $user->getRoles(), true)) {
-            return $this->render('user/showClient.html.twig', [
-                'user' => $user,
-            ]);
-        }
-
-        // Sinon (profil d'un employé)
-        return $this->render('user/showUser.html.twig', [
+        return $this->render('user/show.html.twig', [
             'user' => $user,
         ]);
     }
@@ -177,12 +160,6 @@ final class UserController extends AbstractController
         $userByAdminUpdate = in_array(UserRole::EMPLOYEE->value, $user->getRoles()) && $this->isGranted(UserRole::ADMIN->value);
         $clientByStaffUpdate = in_array(UserRole::PASSENGER->value, $user->getRoles()) && $this->isGranted(UserRole::EMPLOYEE->value);
 
-        /*
-        dd([
-            'roles' => $this->getUser()->getRoles(),
-            'allowed' => in_array(UserRole::PASSENGER->value, $user->getRoles())
-                && $this->isGranted(UserRole::PASSENGER->value),
-        ]);*/
 
         $mode = '';
 
