@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Enum\Type;
+use App\Enum\UserRole;
 use App\Form\UserType;
 
 use App\Security\EmailVerifier;
@@ -32,17 +33,19 @@ class RegistrationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var string $plainPassword */
-            $plainPassword = $form->get('plainPassword')->getData();
+            $plainPassword = $form->get('password')->getData();
 
             // Encoder le mdp
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
-
+            $user->setRoles([UserRole::PASSENGER->value]);
             $user->setType(Type::CLIENT);
+            $user->setCredit(0);
 
             $entityManager->persist($user);
             $entityManager->flush();
 
             // generate a signed url and email it to the user
+            /*
             $this->emailVerifier->sendEmailConfirmation(
                 'app_verify_email',
                 $user,
@@ -52,7 +55,7 @@ class RegistrationController extends AbstractController
                     ->subject('Confirmez votre email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
             );
-
+            */
             // do anything else you need here, like send an email
 
             return $security->login($user, 'form_login', 'main');
