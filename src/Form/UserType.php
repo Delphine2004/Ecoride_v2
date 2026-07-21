@@ -87,6 +87,10 @@ class UserType extends AbstractType
                     'label' => 'Nom',
                     'required' => true,
                 ])
+                ->add('login', TextType::class, [
+                    'label' => 'Nom utilisateur',
+                    'required' => true,
+                ])
                 ->add('email', EmailType::class, [
                     'label' => 'Adresse e-mail',
                     'required' => true,
