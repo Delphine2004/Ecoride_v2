@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réinitialisation du mot de passe{% endblock %}
+
+{% block body %}
+	<main class="py-5">
+		<section id="login" class="container-fluid my-5">
+			<div class="container">
+
+				<div class="row justify-content-center">
+					<div class="col-12 col-md-10 col-lg-8">
+
+						{% for flash_error in app.flashes('reset_password_error') %}
+							<div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+						{% endfor %}
+
+						<div class="card card-form shadow-sm p-4 my-4">
+							<h1>Réinitialisation du mot de passe</h1>
+							<div class="text-center m-3">
+								<p>Entrez votre adresse email pour recevoir un lien de réinitialisation.</p>
+							</div>
+							{{ form_start(requestForm) }}
+							<div class="m-3">
+								{{ form_label(requestForm.email) }}
+								{{ form_widget(requestForm.email, {
+                  attr: {class: 'form-control' } }) }}
+								{{ form_errors(requestForm.email) }}
+							</div>
+							<div class="text-center m-3">
+								<button class="btn">Recevoir l'email</button>
+							</div>
+							{{ form_end(requestForm) }}
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+		</section>
+	</main>
+{% endblock %}

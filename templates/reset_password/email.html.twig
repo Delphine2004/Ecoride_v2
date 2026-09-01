@@ -1,0 +1,11 @@
+<h1 style="padding: 20px; color: #181d27ff; font-family: sans-serif">Bonjour</h1>
+
+<p style="padding: 20px; color: #254d32ff; font-family: sans-serif; padding: 16px">Pour réinitiliser votre mot de passe, veuillez cliquer sur le lien suivant.
+	<br>
+
+	<a style="font-weight:bold" href="{{ url('app_reset_password', {token: resetToken.token}) }}">{{ url('app_reset_password', {token: resetToken.token}) }}</a>
+	<br>
+	Ce lien est valide
+	{{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.</p>
+
+<p style="padding: 20px; color: #254d32ff; font-family: sans-serif; padding: 16px">L'équipe d'Ecoride V2'.</p>
