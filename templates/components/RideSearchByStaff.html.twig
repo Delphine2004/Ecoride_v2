@@ -7,6 +7,7 @@
 				<div class="col-12 col-md-10 col-lg-8">
 					<h1>Recherche trajet</h1>
 					{{ form_start(form, {'attr': {'novalidate':  true}}) }}
+					<!-- ID et Statut -->
 					<div class="row g-3 justify-content-around my-3">
 						<div class="col-md-6">
 							{{ form_label(form.id) }}
@@ -18,6 +19,7 @@
 						</div>
 					</div>
 
+					<!-- Driver info -->
 					<div class="row g-3 justify-content-around my-3">
 						<div class="col-md-6">
 							{{ form_label(form.driverId) }}
@@ -29,6 +31,7 @@
 						</div>
 					</div>
 
+					<!-- Dates trajet-->
 					<div class="row g-3 justify-content-around my-3">
 						<div class="col-md-6">
 							{{ form_label(form.departureDate) }}
@@ -40,6 +43,7 @@
 						</div>
 					</div>
 
+					<!-- Villes -->
 					<div class="row g-3 justify-content-around my-3">
 						<div class="col-md-6">
 							{{ form_label(form.departurePlace) }}
@@ -50,6 +54,8 @@
 							{{ form_widget(form.arrivalPlace, {attr: {class: 'form-control'}}) }}
 						</div>
 					</div>
+
+					<!-- Autres dates -->
 					<div class="row g-3 justify-content-around my-3">
 						<div class="col-md-6">
 							{{ form_label(form.createdAt) }}
@@ -60,6 +66,8 @@
 							{{ form_widget(form.updatedAt, {attr: {class: 'form-control'}}) }}
 						</div>
 					</div>
+
+          <!-- Bouton de recherche -->
 					<div class="row justify-content-center my-3">
 						<div class="col-12 col-md-4 mb-3">
 							<button class="btn w-100" type="button" data-action="live#action" data-live-action-param="search">Rechercher</button>

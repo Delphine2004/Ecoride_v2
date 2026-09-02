@@ -16,8 +16,8 @@ use Symfony\UX\LiveComponent\DefaultActionTrait;
 use Symfony\Component\Form\FormInterface;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 
-#[AsLiveComponent('searchBookingByStaff')]
-final class SearchBookingByStaff extends AbstractController
+#[AsLiveComponent('BookingSearch')]
+final class BookingSearch extends AbstractController
 {
     use DefaultActionTrait;
     use ComponentWithFormTrait;

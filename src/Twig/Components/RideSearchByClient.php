@@ -16,8 +16,8 @@ use Symfony\UX\LiveComponent\DefaultActionTrait;
 use Symfony\Component\Form\FormInterface;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 
-#[AsLiveComponent('search_ride')]
-final class SearchRide extends AbstractController
+#[AsLiveComponent('RideSearchByClient')]
+final class SearchRideByClient extends AbstractController
 {
     use DefaultActionTrait;
     use ComponentWithFormTrait;

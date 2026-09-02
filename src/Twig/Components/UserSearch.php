@@ -2,11 +2,11 @@
 
 namespace App\Twig\Components;
 
-use App\Entity\Ride;
 use App\Entity\User;
-use App\Repository\RideRepository;
-use App\Form\SearchRideType;
-use App\DTO\SearchRideDTO;
+use App\Repository\UserRepository;
+use App\Form\SearchClientType;
+use App\DTO\SearchClientDTO;
+use App\Enum\Type;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
@@ -16,8 +16,8 @@ use Symfony\UX\LiveComponent\DefaultActionTrait;
 use Symfony\Component\Form\FormInterface;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 
-#[AsLiveComponent('searchRideByStaff')]
-final class SearchRideByStaff extends AbstractController
+#[AsLiveComponent('UserSearch')]
+final class UserSearch extends AbstractController
 {
     use DefaultActionTrait;
     use ComponentWithFormTrait;
@@ -25,24 +25,22 @@ final class SearchRideByStaff extends AbstractController
     public ?User $user = null;
 
     #[LiveProp]
-    public array $rideIds = [];
+    public array $clientIds = [];
 
     #[LiveProp]
     public ?string $message = null;
 
     public function __construct(
-        private RideRepository $rideRepository,
+        private UserRepository $userRepository,
     ) {}
 
     protected function instantiateForm(): FormInterface
     {
         return $this->createForm(
-            SearchRideType::class,
-            new SearchRideDTO(),
-            ['mode' => 'searchByStaff']
+            SearchclientType::class,
+            new SearchclientDTO()
         );
     }
-
 
     #[LiveAction]
     public function search(): void
@@ -52,24 +50,24 @@ final class SearchRideByStaff extends AbstractController
         $data = $this->getForm()->getData();
         $data->normalize();
 
-        $rides = $this->rideRepository->findRidesByFields($data);
+        $clients = $this->userRepository->findUserByFieldAndRole($data, Type::CLIENT);
 
-        // Stockage des id des Rides
-        $this->rideIds = array_map(
-            static fn(Ride $ride) => $ride->getId(),
-            $rides
+        // Stockage des id des Bookings
+        $this->clientIds = array_map(
+            static fn(User $client) => $client->getId(),
+            $clients
         );
     }
 
     // reconstruction des résultats à partir de l'id
     public function getResults(): array
     {
-        if (empty($this->rideIds)) {
+        if (empty($this->clientIds)) {
             return [];
         }
 
-        return $this->rideRepository->findBy([
-            'id' => $this->rideIds
+        return $this->userRepository->findBy([
+            'id' => $this->clientIds
         ]);
     }
 }
