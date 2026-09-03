@@ -3,7 +3,7 @@
 namespace App\DTO;
 
 use App\Enum\BookingStatus;
-use App\Util\StringNormalizer;
+use App\Utils\Normalizer;
 
 use DateTimeImmutable;
 
@@ -83,9 +83,10 @@ class SearchBookingDTO
 
     public function normalize(): void
     {
-        $this->lastName = StringNormalizer::normalize($this->lastName);
-        $this->email = StringNormalizer::normalize($this->email);
-        $this->departurePlace = StringNormalizer::normalize($this->departurePlace);
-        $this->arrivalPlace = StringNormalizer::normalize($this->arrivalPlace);
+        $this->lastName = Normalizer::normalizeString($this->lastName);
+        $this->email = Normalizer::normalizeString($this->email);
+        $this->departurePlace = Normalizer::normalizeString($this->departurePlace);
+        $this->arrivalPlace = Normalizer::normalizeString($this->arrivalPlace);
+        $this->departureDate = Normalizer::normalizeDate($this->departureDate);
     }
 }

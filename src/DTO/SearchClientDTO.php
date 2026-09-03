@@ -2,7 +2,7 @@
 
 namespace App\DTO;
 
-use App\Util\StringNormalizer;
+use App\Utils\Normalizer;
 
 class SearchClientDTO
 {
@@ -28,7 +28,7 @@ class SearchClientDTO
 
     public function normalize(): void
     {
-        $this->lastName = StringNormalizer::normalize($this->lastName);
-        $this->email = StringNormalizer::normalize($this->email);
+        $this->lastName = Normalizer::normalizeString($this->lastName);
+        $this->email = Normalizer::normalizeString($this->email);
     }
 }

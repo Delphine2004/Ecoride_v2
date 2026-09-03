@@ -3,7 +3,7 @@
 namespace App\DTO;
 
 use App\Enum\RideStatus;
-use App\Util\StringNormalizer;
+use App\Utils\Normalizer;
 
 use DateTimeImmutable;
 
@@ -79,8 +79,10 @@ class SearchRideDTO
 
     public function normalize(): void
     {
-        $this->lastName = StringNormalizer::normalize($this->lastName);
-        $this->departurePlace = StringNormalizer::normalize($this->departurePlace);
-        $this->arrivalPlace = StringNormalizer::normalize($this->arrivalPlace);
+        $this->lastName = Normalizer::normalizeString($this->lastName);
+        $this->departurePlace = Normalizer::normalizeString($this->departurePlace);
+        $this->arrivalPlace = Normalizer::normalizeString($this->arrivalPlace);
+        $this->departureDate = Normalizer::normalizeDate($this->departureDate);
+        $this->arrivalDate = Normalizer::normalizeDate($this->arrivalDate);
     }
 }
