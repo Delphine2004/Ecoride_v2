@@ -25,9 +25,32 @@ final class RideActions
     #[LiveProp]
     public Ride $ride;
 
+    #[LiveProp]
+    public ?string $message = null;
+
     public function getUser(): ?User
     {
         return $this->security->getUser();
+    }
+
+    #[LiveAction]
+    public function book(): void
+    {
+
+
+        $user = $this->getUser();
+
+        if (!$user instanceof User) {
+            $this->message = 'Vous devez être connecté pour réserver un trajet.';
+            return;
+        }
+
+        try {
+            $this->rideService->book($this->ride, $user);
+            $this->message = 'Réservation confirmée.';
+        } catch (\LogicException $e) {
+            $this->message = $e->getMessage();
+        }
     }
 
 
