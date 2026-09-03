@@ -25,6 +25,8 @@ final class BookingActions
     #[LiveProp]
     public Booking $booking;
 
+    #[LiveProp]
+    public ?string $message = null;
 
     public function getUser(): ?User
     {
