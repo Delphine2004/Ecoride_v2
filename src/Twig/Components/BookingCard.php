@@ -13,4 +13,6 @@ final class BookingCard
     use DefaultActionTrait;
 
     public Booking $booking;
+
+    public ?string $message = null;
 }

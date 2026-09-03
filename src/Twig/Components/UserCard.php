@@ -13,4 +13,6 @@ final class UserCard
     use DefaultActionTrait;
 
     public User $user;
+
+    public ?string $message = null;
 }

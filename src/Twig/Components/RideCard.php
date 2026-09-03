@@ -13,4 +13,6 @@ final class RideCard
     use DefaultActionTrait;
 
     public Ride $ride;
+
+    public ?string $message = null;
 }
