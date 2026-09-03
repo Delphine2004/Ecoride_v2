@@ -3,10 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Booking;
-use App\Entity\User;
-use App\Entity\Ride;
 use App\Enum\UserRole;
-use App\Service\RideService;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +18,6 @@ final class BookingController extends AbstractController
 {
 
     public function __construct(
-        private RideService $rideService,
         private Security $security
     ) {}
 
