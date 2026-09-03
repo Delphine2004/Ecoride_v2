@@ -12,9 +12,15 @@
 		</div>
 		<div class="d-flex flex-row flex-md-column justify-content-between flex-wrap gap-2">
 			<p>{{ ride.duration}}</p>
-			<a href="{{ path('app_ride_show', {'id': ride.id}) }}">Plus de détails</a>
+			{% if is_granted('ROLE_EMPLOYEE') or is_granted('ROLE_PASSENGER')  %}
+				<a href="{{ path('app_ride_show', {'id': ride.id}) }}" target="_blank">Plus de détails</a>
+			{% endif %}
 		</div>
-		<twig:RideActions :ride="ride" />
+		<div class="d-flex flex-row flex-md-column justify-content-between flex-wrap gap-2">
+			<p>Proposé par {{ ride.driver.Login}}</p>
+      <p>{{ ride.car.brand.value}} - {{ ride.car.model}} - {{ ride.car.power.value}}</p>
+		</div>
+		<twig:RideActions :ride="ride"/>
 
 	</div>
 </div>
