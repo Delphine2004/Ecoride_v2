@@ -126,8 +126,6 @@ class RideRepository extends ServiceEntityRepository
         string $arrivalPlace
     ): array {
 
-        // A FAIRE : rajouter availableseat != de 0
-
         $start = $departureDate->setTime(0, 0, 0);
         $end   = $departureDate->setTime(23, 59, 59);
 
