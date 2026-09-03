@@ -36,7 +36,6 @@ final class CarCard extends AbstractController
     #[LiveAction]
     public function delete(): void
     {
-
         $user = $this->getUser();
 
         if (!$user instanceof User) {
@@ -44,18 +43,10 @@ final class CarCard extends AbstractController
         }
 
         try {
-
-            $this->carService->delete(
-                $this->car,
-                $user
-            );
-
+            $this->carService->delete($this->car, $user);
             $this->deleted = true;
-
-            $this->message =
-                'Voiture supprimée avec succès.';
+            $this->message = 'Voiture supprimée avec succès.';
         } catch (\Exception $e) {
-
             $this->message = $e->getMessage();
         }
     }
