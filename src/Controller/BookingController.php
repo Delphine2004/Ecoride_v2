@@ -35,26 +35,6 @@ final class BookingController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_booking_new', methods: ['GET', 'POST'])]
-    public function new(
-        Ride $ride
-    ): Response {
-
-        $user = $this->security->getUser();
-
-        try {
-            $this->rideService->book($ride, $user);
-            $this->addFlash('success', 'Réservation confirmée.');
-            return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
-        } catch (\LogicException $e) {
-            $this->addFlash(
-                'error',
-                $e->getMessage()
-            );
-            return $this->redirectToRoute('app_home');
-        }
-    }
-
     #[Route('/show/{id}', name: 'app_booking_show', methods: ['GET'])]
     public function show(
         Booking $booking
