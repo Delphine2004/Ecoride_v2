@@ -13,7 +13,7 @@
   and ride.departureDate|date('Y-m-d') > 'now'|date('Y-m-d') 
   and ride.driver != this.user and not is_granted('ROLE_EMPLOYEE') %}
 		<div class="d-flex flex-column flex-md-row">
-			<button class="btn" {{ live_action('book') }}>
+			<button class="btn" {{ live_action('book', { ride: ride.id } ) }}>
 				Réserver
 			</button>
 		</div>
@@ -43,6 +43,10 @@
 			<p class="text-start text-md-center mb-0">...</p>
 		</div>
 	{% endif %}
-
-
+  
+	{% if message %}
+		<div class="alert alert-danger">
+			{{ message }}
+		</div>
+	{% endif %}
 </div>
