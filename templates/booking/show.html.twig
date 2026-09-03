@@ -87,24 +87,11 @@
 								<p>Note</p>
 								<a class="btn w-100" href="">Avis</a>
 								{% if is_granted('ROLE_EMPLOYEE') %}
-									<a class="btn w-100" href="{{ path('app_user_show', {'id': booking.ride.driver.id}) }}">Voir</a>
+									<a class="btn w-100" href="{{ path('app_user_show', {'id': booking.ride.driver.id}) }}" target="_blank">Voir</a>
 								{% endif %}
 							</div>
 						</div>
 
-					</div>
-
-					<!-- Retour -->
-					<div class="col-12">
-						{% if is_granted('ROLE_EMPLOYE') %}
-							<div class="text-center m-3">
-								<a class="btn" href="{{ path('app_booking_index') }}">Retour aux réservations</a>
-							</div>
-						{% else %}
-							<div class="text-center m-3">
-								<a class="btn" href="{{ path('app_dashboard_client') }}">Retour sur le compte</a>
-							</div>
-						{% endif %}
 					</div>
 
 				</div>

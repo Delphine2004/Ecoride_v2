@@ -14,8 +14,7 @@
 
 					<!-- Partie trajet -->
 					<div class="col-12 col-md-8">
-						<div
-							class="card justify-content-around h-100 flex-column shadow-sm p-4 mb-4">
+						<div class="card justify-content-around h-100 flex-column shadow-sm p-4 mb-4">
 
 							<!-- ref + statut réservation -->
 							<div class="d-flex flex-column flex-md-row justify-content-between align-items-center p-2">
@@ -26,22 +25,15 @@
 							<!-- Dates et heures -->
 							<div class="d-flex flex-column p-2">
 								<div class="d-flex flex-column flex-md-row justify-content-md-between">
-									<p>Depart de
-										{{ ride.departurePlace}}</p>
-									<p>le
-										{{ ride.departureDate ? ride.departureDate|date('d/m/Y') : ''}}</p>
-									<p>à
-										{{ ride.departureDate ? ride.departureDate|date('H:i') : ''}}</p>
+									<p>Depart de {{ ride.departurePlace}}</p>
+									<p>le {{ ride.departureDate ? ride.departureDate|date('d/m/Y') : ''}}</p>
+									<p>à {{ ride.departureDate ? ride.departureDate|date('H:i') : ''}}</p>
 								</div>
 
 								<div class="d-flex flex-column flex-md-row justify-content-md-between">
-									<p>Arrivée à
-										{{ ride.arrivalPlace}}</p>
-									<p>
-										le
-										{{ ride.departureDate ? ride.departureDate|date('d/m/Y') : ''}}</p>
-									<p>à
-										{{ ride.departureDate ? ride.departureDate|date('H:i') : ''}}</p>
+									<p>Arrivée à {{ ride.arrivalPlace}}</p>
+									<p>le {{ ride.departureDate ? ride.departureDate|date('d/m/Y') : ''}}</p>
+									<p>à {{ ride.departureDate ? ride.departureDate|date('H:i') : ''}}</p>
 								</div>
 							</div>
 
@@ -67,10 +59,7 @@
 
 							<!-- Info création -->
 							<div class="d-flex flex-column flex-md-row p-2">
-								<p>Créé le :
-									{{ ride.createdAt ? ride.createdAt|date('Y-m-d') : '' }}
-									à
-									{{ ride.createdAt ? ride.createdAt|date('H:i:s') : '' }}</p>
+								<p>Créé le : {{ ride.createdAt ? ride.createdAt|date('Y-m-d') : '' }} à {{ ride.createdAt ? ride.createdAt|date('H:i:s') : '' }}</p>
 							</div>
 
 							<!-- Boutons d'action -->
@@ -92,7 +81,7 @@
 								<p>Note</p>
 								<a class="btn w-100" href="">Avis</a>
 								{% if is_granted('ROLE_EMPLOYEE') %}
-									<a class="btn w-100" href="{{ path('app_user_show', {'id': ride.driver.id}) }}">Voir</a>
+									<a class="btn w-100" href="{{ path('app_user_show', {'id': ride.driver.id}) }}"target="_blank">Voir</a>
 								{% endif %}
 							</div>
 						</div>
@@ -110,7 +99,7 @@
 									<p>{{ booking.passenger.login }}</p>
 									<p>{{ booking.passenger.email }}</p>
 									{% if is_granted('ROLE_EMPLOYEE') %}
-										<a class="btn w-100" href="{{ path('app_user_show', {'id': booking.passenger.id}) }}">Voir</a>
+										<a class="btn w-100" href="{{ path('app_user_show', {'id': booking.passenger.id}) }}" target="_blank">Voir</a>
 									{% endif %}
 								</div>
 							{% else %}
@@ -118,20 +107,6 @@
 							{% endfor %}
 						</div>
 					</div>
-
-					<!-- Retour -->
-					<div class="col-12">
-						{% if is_granted('ROLE_EMPLOYE') %}
-							<div class="text-center m-3">
-								<a class="btn" href="{{ path('app_ride_index') }}">Retour aux trajets</a>
-							</div>
-						{% else %}
-							<div class="text-center m-3">
-								<a class="btn" href="{{ path('app_dashboard_client') }}">Retour sur le compte</a>
-							</div>
-						{% endif %}
-					</div>
-
 
 				</div>
 			</div>
