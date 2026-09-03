@@ -29,7 +29,7 @@ security:
         - { path: ^/client, roles: ROLE_PASSENGER }
         - { path: ^/booking, roles: ROLE_PASSENGER }
         - { path: ^/car, roles: ROLE_DRIVER }
-        - { path: ^/ride, roles: ROLE_DRIVER }
+        - { path: ^/ride, roles: ROLE_PASSENGER }
 
 
 when@test:

@@ -17,7 +17,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\SecurityBundle\Security;
 
 
-#[IsGranted(UserRole::DRIVER->value)]
 #[Route('/ride')]
 final class RideController extends AbstractController
 {
@@ -26,6 +25,7 @@ final class RideController extends AbstractController
         private Security $security
     ) {}
 
+    #[IsGranted(UserRole::DRIVER->value)]
     #[Route(name: 'app_ride_index', methods: ['GET'])]
     public function index(): Response
     {
@@ -36,6 +36,7 @@ final class RideController extends AbstractController
         ]);
     }
 
+    #[IsGranted(UserRole::DRIVER->value)]
     #[Route('/new', name: 'app_ride_new', methods: ['GET', 'POST'])]
     public function new(
         Request $request,
@@ -73,6 +74,7 @@ final class RideController extends AbstractController
         ]);
     }
 
+    #[IsGranted(UserRole::PASSENGER->value)]
     #[Route('/show/{id}', name: 'app_ride_show', methods: ['GET'])]
     public function show(
         Ride $ride
@@ -82,6 +84,7 @@ final class RideController extends AbstractController
         ]);
     }
 
+    #[IsGranted(UserRole::DRIVER->value)]
     #[Route('/edit/{id}', name: 'app_ride_edit', methods: ['GET', 'POST'])]
     public function edit(
         Request $request,
