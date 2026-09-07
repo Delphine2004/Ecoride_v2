@@ -101,19 +101,6 @@
 		</div>
 	</section>
 
-	<!-- Messages -->
-	<section class="container-fluid py-5">
-		{% for label, messages in app.flashes %}
-			<div class="container">
-				{% for message in messages %}
-					<p class="fw-bold text-center m-3 alert alert-{{ label }}">
-						{{ message }}
-					</p>
-				{% endfor %}
-			</div>
-		{% endfor %}
-	</section>
-
 	<!-- Description ou Résultats -->
 	<section class="container-fluid pb-5">
 		<div class="container">
