@@ -10,13 +10,13 @@
 			<button class="btn" {{ live_action('cancel') }}>Annuler</button>
 
 		{% elseif booking.status == constant('App\\Enum\\BookingStatus::PENDING') and booking.passenger == this.user %}
-			<div class="d-flex flex-column flex-md-row">
+			<div class="d-flex flex-column flex-md-row gap-2">
 				<button class="btn" {{ live_action('finalize') }}>Tout est OK</button>
 				<button class="btn" {{ live_action('report') }}>Signaler</button>
 			</div>
 
 		{% elseif booking.status == constant('App\\Enum\\BookingStatus::REPORTED') and is_granted('ROLE_EMPLOYEE') %}
-			<div class="d-flex flex-column flex-md-row">
+			<div class="d-flex flex-column flex-md-row gap-2">
 				<button class="btn" {{ live_action('finalize') }}>Finaliser</button>
 				<button class="btn" {{ live_action('refund') }}>Rembourser</button>
 			</div>
