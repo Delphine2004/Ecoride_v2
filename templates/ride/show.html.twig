@@ -32,9 +32,9 @@
 									<p class="mb-0">Arrivée à
 										{{ ride.arrivalPlace}}</p>
 									<p class="mb-0">le
-										{{ ride.departureDate ? ride.departureDate|date('d/m/Y') : ''}}
+										{{ ride.arrivalDate ? ride.arrivalDate|date('d/m/Y') : ''}}
 										à
-										{{ ride.departureDate ? ride.departureDate|date('H:i') : ''}}</p>
+										{{ ride.arrivalDate ? ride.arrivalDate|date('H:i') : ''}}</p>
 								</div>
 
 								{% if is_granted('IS_AUTHENTICATED_FULLY') and (ride.driver == app.user or is_granted('ROLE_EMPLOYEE')) %}
@@ -69,7 +69,6 @@
 							<div class="d-flex flex-column align-items-center">
 								<p class="mb-0">{{ ride.driver.login }}</p>
 								<p class="mb-0">Note</p>
-
 							</div>
 							<div class="d-flex flex-column flex-md-row align-items-center gap-2">
 								<a class="btn w-100" href="">Avis</a>
@@ -77,7 +76,6 @@
 									<a class="btn w-100" href="{{ path('app_user_show', {'id': ride.driver.id}) }}" target="_blank">Voir</a>
 								{% endif %}
 							</div>
-
 						</div>
 					</div>
 
