@@ -96,6 +96,17 @@
 						Rechercher
 					</button>
 				</div>
+
+						<div class="col-12 mb-3">
+							{{ form_errors(form) }}
+						</div>
+
+						<div class="col-12 col-md-4 mb-3">
+							<div class="text-center">
+								<a href="{{ path('app_ride_index') }}">Réinitialiser</a>
+							</div>
+						</div>
+
 			</div>
 			{{ form_end(form) }}
 		</div>
