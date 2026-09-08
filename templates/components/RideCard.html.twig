@@ -1,25 +1,22 @@
 <div{{attributes}}>
-	<div class="card flex-column flex-md-row justify-content-between align-items-center w-100 gap-3 p-3 m-2">
-		<div class="d-flex flex-row flex-md-column justify-content-between flex-wrap gap-2">
-			<p class="text-start text-md-center mb-0">Le
-				{{ ride.departureDate ? ride.departureDate|date('d/m/Y') : ''}}</p>
-			<p class="text-start text-md-center mb-0">à
-				{{ ride.departureDate ? ride.departureDate|date('H:i') : ''}}</p>
-		</div>
-		<div class="d-flex flex-row flex-md-column justify-content-between flex-wrap gap-2">
-			<p class="text-start text-md-center mb-0">{{ ride.departurePlace}}</p>
-			<p class="text-start text-md-center mb-0">{{ ride.arrivalPlace}}</p>
-		</div>
-		<div class="d-flex flex-row flex-md-column justify-content-between flex-wrap gap-2">
-			<p>{{ ride.duration}}</p>
+	<div class="card flex-column flex-md-row justify-content-between align-items-center w-100 gap-3 p-3 my-2">
+		
+    <div class="d-flex flex-column justify-content-between flex-wrap gap-2">
+			<p class="text-center text-md-start mb-0">Le {{ ride.departureDate ? ride.departureDate|date('d/m/Y') : ''}} à {{ ride.departureDate ? ride.departureDate|date('H:i') : ''}}</p>
+		  <p class="text-center text-md-start mb-0">{{ ride.departurePlace}} - {{ ride.arrivalPlace}}</p>
+    </div>
+
+		<div class="d-flex flex-column justify-content-between flex-wrap gap-2">
+			<p class="text-center text-md-start mb-0">{{ ride.duration}}</p>
 			{% if is_granted('ROLE_EMPLOYEE') or is_granted('ROLE_PASSENGER')  %}
 				<a href="{{ path('app_ride_show', {'id': ride.id}) }}" target="_blank">Plus de détails</a>
 			{% endif %}
 		</div>
-		<div class="d-flex flex-row flex-md-column justify-content-between flex-wrap gap-2">
-			<p>Proposé par {{ ride.driver.Login}}</p>
-      <p>{{ ride.car.brand.value}} - {{ ride.car.model}} - {{ ride.car.power.value}}</p>
+		<div class="d-flex flex-row justify-content-between flex-wrap gap-2">
+			<p class="text-center text-md-start mb-0">{{ ride.driver.Login}}</p>
+      <p class="text-center text-md-start mb-0">{{ ride.car.power.value}}</p>
 		</div>
+
 		<twig:RideActions :ride="ride"/>
 
 	</div>
