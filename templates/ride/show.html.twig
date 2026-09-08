@@ -11,27 +11,27 @@
 					class="row justify-content-center">
 
 					<!-- Partie trajet -->
-					<div class="col-12 col-md-8 mb-4">
+					<div class="col-12 mb-4">
 						<div class="card justify-content-around h-100 flex-column shadow-sm p-4 mb-4">
 
-							<h1>Récapitulatif trajet</h1>
+							<h1 class="mb-2">Récapitulatif trajet</h1>
 
 							<div
 								class="d-flex flex-column p-2">
 								<!-- Dates et heures -->
 								<div class="d-flex flex-column flex-md-row justify-content-md-between align-items-center mb-2">
-									<p>Depart de
+									<p class="mb-0">Depart de
 										{{ ride.departurePlace}}</p>
-									<p>le
+									<p class="mb-0">le
 										{{ ride.departureDate ? ride.departureDate|date('d/m/Y') : ''}}
 										à
 										{{ ride.departureDate ? ride.departureDate|date('H:i') : ''}}</p>
 								</div>
 
 								<div class="d-flex flex-column flex-md-row justify-content-md-between align-items-center mb-2">
-									<p>Arrivée à
+									<p class="mb-0">Arrivée à
 										{{ ride.arrivalPlace}}</p>
-									<p>le
+									<p class="mb-0">le
 										{{ ride.departureDate ? ride.departureDate|date('d/m/Y') : ''}}
 										à
 										{{ ride.departureDate ? ride.departureDate|date('H:i') : ''}}</p>
@@ -40,35 +40,35 @@
 								{% if is_granted('IS_AUTHENTICATED_FULLY') and (ride.driver == app.user or is_granted('ROLE_EMPLOYEE')) %}
 									<!-- ref + statut réservation -->
 									<div class="d-flex flex-column flex-md-row justify-content-between align-items-center p-2">
-										<p class="my-2">Trajet #{{ ride.id }}</p>
-										<p class="my-2">{{ ride.status.value }}</p>
+										<p class="mb-0">Trajet #{{ ride.id }}</p>
+										<p class="mb-0">{{ ride.status.value }}</p>
 									</div>
 
 									<!-- Info création -->
 									<div class="d-flex flex-column flex-md-row p-2">
-										<p>Créé le :
+										<p class="mb-0">Créé le :
 											{{ ride.createdAt ? ride.createdAt|date('Y-m-d') : '' }}
 											à
 											{{ ride.createdAt ? ride.createdAt|date('H:i:s') : '' }}</p>
 									</div>
-								</div>
 
-								<!-- Boutons d'action -->
-								<div class="d-flex flex-column flex-md-row justify-content-center p-2">
-									<twig:RideActions :ride="ride"/>
-								</div>
-							{% endif %}
+									<!-- Boutons d'action -->
+									<div class="d-flex flex-column flex-md-row justify-content-center p-2">
+										<twig:RideActions :ride="ride"/>
+									</div>
+								{% endif %}
+							</div>
 						</div>
 					</div>
 
 					<!-- Partie conducteur -->
-					<div class="col-12 col-md-4 mb-4">
+					<div class="col-12 col-md-6 mb-4">
 						<div class="card justify-content-around h-100 shadow-sm p-4 mb-4">
-							<h2 class="my-2">Conducteur
+							<h2 class="mb-2">Conducteur
 							</h2>
 							<div class="d-flex flex-column align-items-center">
-								<p>{{ ride.driver.login }}</p>
-								<p>Note</p>
+								<p class="mb-0">{{ ride.driver.login }}</p>
+								<p class="mb-0">Note</p>
 
 							</div>
 							<div class="d-flex flex-column flex-md-row align-items-center gap-2">
@@ -81,43 +81,22 @@
 						</div>
 					</div>
 
-					<!-- Partie passagers -->
-					<div class="col-12 col-md-8 mb-4">
-						<div class="card justify-content-around h-100 shadow-sm p-4 mb-4">
-							<h2 class="my-2">Passager(s)
-							</h2>
-							{% for booking in ride.rideBookings %}
-								<div class="card d-flex flex-column flex-md-row justify-content-between mb-2 p-3">
-									<div class="d-flex flex-column flex-md-row align-items-center gap-2">
-										<p>{{ booking.passenger.login }}</p>
-										<p>{{ booking.passenger.email }}</p>
-									</div>
-									{% if is_granted('ROLE_EMPLOYEE') %}
-										<div class="d-flex">
-											<a class="btn w-100" href="{{ path('app_user_show', {'id': booking.passenger.id}) }}" target="_blank">Voir</a>
-										</div>
-									{% endif %}
-								</div>
-							{% else %}
-								<p class="text-center">Aucun passager</p>
-							{% endfor %}
-						</div>
-					</div>
-
 					<!-- Voiture -->
-					<div class="col-12 col-md-4 mb-4">
+					<div class="col-12 col-md-6 mb-4">
 						<div class="card justify-content-around h-100 shadow-sm p-4 mb-4">
-							<h2>Voiture</h2>
-							<div class="d-flex flex-row  justify-content-center gap-2">
-								<p>{{ ride.car.model}}</p>
-								<p>{{ ride.car.brand.value}}</p>
-							</div>
-							<div class="d-flex flex-row  justify-content-center gap-2">
-								<p>{{ ride.car.color.value}}</p>
-								<p>{{ ride.car.power.value}}</p>
-							</div>
-							<div class="d-flex flex-row  justify-content-center gap-2">
-								<p>{{ ride.car.registrationNumber}}</p>
+							<h2 class="mb-2">Voiture</h2>
+							<div class="d-flex flex-column p-4">
+								<div class="d-flex flex-row justify-content-center gap-2 p-2">
+									<p class="mb-0">{{ ride.car.model}}</p>
+									<p class="mb-0">{{ ride.car.brand.value}}</p>
+								</div>
+								<div class="d-flex flex-row justify-content-center gap-2 p-2">
+									<p class="mb-0">{{ ride.car.color.value}}</p>
+									<p class="mb-0">{{ ride.car.power.value}}</p>
+								</div>
+								<div class="d-flex flex-row justify-content-center gap-2 p-2">
+									<p class="mb-0">{{ ride.car.registrationNumber}}</p>
+								</div>
 							</div>
 							{% if is_granted('IS_AUTHENTICATED_FULLY') and ride.driver == app.user %}
 								<div class="d-flex justify-content-center">
@@ -126,6 +105,36 @@
 							{% endif %}
 						</div>
 					</div>
+
+					<!-- Partie passagers -->
+					<div class="col-12 mb-4">
+						<div class="card justify-content-around h-100 shadow-sm p-4 mb-4">
+							{% if ride.driver == app.user or is_granted('ROLE_EMPLOYEE') %}
+              <h2>Passager(s)</h2>
+              {% endif %}
+              <p class="text-center mb-0">Il reste
+								{{ ride.availableSeats }}
+								places.</p>
+							{% if ride.driver == app.user or is_granted('ROLE_EMPLOYEE') %}
+								{% for booking in ride.rideBookings %}
+									<div class="card d-flex flex-column flex-md-row justify-content-between mb-2 p-3">
+										<div class="d-flex flex-column flex-md-row align-items-center gap-4">
+											<p class="mb-0">{{ booking.passenger.login }}</p>
+											<p class="mb-0">{{ booking.passenger.email }}</p>
+										</div>
+										{% if is_granted('ROLE_EMPLOYEE')%}
+											<div class="d-flex">
+												<a class="btn w-100" href="{{ path('app_user_show', {'id': booking.passenger.id}) }}" target="_blank">Voir</a>
+											</div>
+										{% endif %}
+									</div>
+								{% else %}
+									<p class="text-center">Aucun passager</p>
+								{% endfor %}
+							{% endif %}
+						</div>
+					</div>
+
 
 				</div>
 			</div>
