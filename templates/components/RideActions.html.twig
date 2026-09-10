@@ -1,28 +1,26 @@
-<div{{attributes}}>
-	<div class="d-flex flex-column flex-md-row">
+<div{{ attributes }}>
+<div class="d-flex flex-column justify-content-center">
     
-		{% if ride.status == constant('App\\Enum\\RideStatus::CONFIRMED') and ride.departureDate|date('Y-m-d') == 'now'|date('Y-m-d') and (ride.driver == this.user or is_granted('ROLE_EMPLOYEE'))%}
-			<button class="btn" {{ live_action('start') }}>Démarrer</button>
+  {% if ride.status == constant('App\\Enum\\RideStatus::CONFIRMED') and ride.departureDate|date('Y-m-d') == 'now'|date('Y-m-d') and (ride.driver == this.user or is_granted('ROLE_EMPLOYEE')) %}
+    <button class="btn" {{ live_action('start') }}>Démarrer</button>
 
-		{% elseif ride.status == constant('App\\Enum\\RideStatus::CONFIRMED') and ride.departureDate|date('Y-m-d') > 'now'|date('Y-m-d') and ride.driver != this.user and not is_granted('ROLE_EMPLOYEE') %}
-			<button class="btn" {{ live_action('book', { ride: ride.id } ) }}>Réserver</button>
+  {% elseif ride.status == constant('App\\Enum\\RideStatus::CONFIRMED') and ride.departureDate|date('Y-m-d') > 'now'|date('Y-m-d') and ride.driver != this.user and not is_granted('ROLE_EMPLOYEE') %}
+    <button class="btn" {{ live_action('book', {ride: ride.id}) }}>Réserver</button>
 
-		{% elseif ride.status == constant('App\\Enum\\RideStatus::CONFIRMED') and (ride.driver == this.user or is_granted('ROLE_EMPLOYEE'))%}
-			<button class="btn" {{ live_action('cancel') }}>Annuler</button>
+  {% elseif ride.status == constant('App\\Enum\\RideStatus::CONFIRMED') and (ride.driver == this.user or is_granted('ROLE_EMPLOYEE')) %}
+    <button class="btn" {{ live_action('cancel') }}>Annuler</button>
 
-		{% elseif ride.status == constant('App\\Enum\\RideStatus::RUNNING') and (ride.driver == this.user or is_granted('ROLE_EMPLOYEE'))%}
-			<button class="btn" {{ live_action('stop') }}>Arrêter</button>
+  {% elseif ride.status == constant('App\\Enum\\RideStatus::RUNNING') and (ride.driver == this.user or is_granted('ROLE_EMPLOYEE')) %}
+    <button class="btn" {{ live_action('stop') }}>Arrêter</button>
 
-		{% elseif ride.status == constant('App\\Enum\\RideStatus::PENDING') and (ride.driver == this.user or is_granted('ROLE_EMPLOYEE'))%}
-			<p class="text-start text-md-center mb-0">...</p>
+  {% elseif ride.status == constant('App\\Enum\\RideStatus::PENDING') and (ride.driver == this.user or is_granted('ROLE_EMPLOYEE')) %}
+    <p class="text-start text-md-center mb-0">...</p>
 
-		{% endif %}
+  {% endif %}
 
-		{% if message %}
-			<div class="alert alert-danger">
-				{{ message }}
-			</div>
-		{% endif %}
+  {% if message %}
+    <strong>{{ message }}</strong>
+  {% endif %}
 
-	</div>
+</div>
 </div>
