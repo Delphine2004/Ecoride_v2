@@ -1,35 +1,33 @@
-<div{{attributes}}>
-	<div class="card flex-column flex-md-row justify-content-between align-items-center w-100 gap-3 p-3 my-2">
-		{% if not this.deleted %}
-			<div class="d-flex flex-row flex-md-column justify-content-between flex-wrap gap-2">
-				<p class="text-start text-md-center mb-0">{{ car.brand.value}}</p>
-				<p class="text-start text-md-center mb-0">{{ car.model}}</p>
-			</div>
-			<div class="d-flex flex-row flex-md-column justify-content-between flex-wrap gap-2">
-				<p class="text-start text-md-center mb-0">{{ car.year}}</p>
-				<p class="text-start text-md-center mb-0">{{ car.power.value}}</p>
-			</div>
-			<div class="d-flex flex-row flex-md-column justify-content-between flex-wrap gap-2">
-				<p class="text-start text-md-center mb-0">{{ car.color.value}}</p>
-				<p class="text-start text-md-center mb-0">{{ car.seats}}</p>
-			</div>
-			<div class="d-flex flex-row flex-md-column justify-content-between flex-wrap gap-2">
-				<p class="text-start text-md-center mb-0">{{ car.registrationDate ? car.registrationDate|date('d/m/Y') : ''}}</p>
-				<p class="text-start text-md-center mb-0">{{ car.registrationNumber}}</p>
-			</div>
+<div{{ attributes }}>
+<div class="card flex-column flex-md-row justify-content-between align-items-center w-100 gap-3 p-3 my-2">
+  {% if not this.deleted %}
+    <div class="d-flex flex-row flex-md-column justify-content-between flex-wrap gap-2">
+      <p class="text-start text-md-center mb-0">{{ car.brand.value }}</p>
+      <p class="text-start text-md-center mb-0">{{ car.model }}</p>
+    </div>
+    <div class="d-flex flex-row flex-md-column justify-content-between flex-wrap gap-2">
+      <p class="text-start text-md-center mb-0">{{ car.year }}</p>
+      <p class="text-start text-md-center mb-0">{{ car.power.value }}</p>
+    </div>
+    <div class="d-flex flex-row flex-md-column justify-content-between flex-wrap gap-2">
+      <p class="text-start text-md-center mb-0">{{ car.color.value }}</p>
+      <p class="text-start text-md-center mb-0">{{ car.seats }}</p>
+    </div>
+    <div class="d-flex flex-row flex-md-column justify-content-between flex-wrap gap-2">
+      <p class="text-start text-md-center mb-0">{{ car.registrationDate ? car.registrationDate|date('d/m/Y') : '' }}</p>
+      <p class="text-start text-md-center mb-0">{{ car.registrationNumber }}</p>
+    </div>
 
 
-			<div class="d-flex flex-column flex-md-row">
-				<button type="button" class="btn w-100" {{ live_action('delete') }}>
-					Supprimer
-				</button>
-			</div>
-		{% endif %}
+    <div class="d-flex flex-column flex-md-row">
+      <button type="button" class="btn w-100" {{ live_action('delete') }}>
+        Supprimer
+      </button>
+      {% if message %}
+        <strong>{{ message }}</strong>
+      {% endif %}
+    </div>
+  {% endif %}
 
-		{% if message %}
-			<div class="alert alert-danger">
-				{{ message }}
-			</div>
-		{% endif %}
-	</div>
+</div>
 </div>
