@@ -1,0 +1,11 @@
+<h1 style="padding: 20px; color: #254d32ff; font-family: sans-serif">Bonjour,</h1>
+<p style="padding: 20px; color: #69b578ff; font-family: sans-serif">Nous sommes heureux de vous confirmer la réservation n°{{ booking.id }} pour le trajet suivant: </p>
+<p style="padding: 20px; color: #69b578ff; font-family: sans-serif">
+    <strong>Date de départ :</strong> {{ booking.ride.departureDate ? booking.ride.departureDate|date('d/m/Y') : '' }} à {{ booking.ride.departureDate ? ride.departureDate|date('H:i') : '' }}<br>
+    <strong>Ville de départ :</strong> {{ booking.ride.departurePlace}}<br>
+    <strong>Ville d'arrivée :</strong> {{ booking.ride.arrivalDate }}<br>
+</p>
+
+<p style="padding: 20px; color: #69b578ff; font-family: sans-serif">Vous pouvez gérer vos réservations à tout moment depuis votre espace utilisateur.</p>
+
+<p style="padding: 20px; color: #254d32ff; font-family: sans-serif">Merci pour votre confiance! <br> <strong>L’équipe EcoRide</strong></p>
