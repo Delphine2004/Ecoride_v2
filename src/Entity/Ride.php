@@ -142,7 +142,7 @@ class Ride
 
     public function setDeparturePlace(string $departurePlace): static
     {
-        $this->departurePlace = $departurePlace;
+        $this->departurePlace = mb_strtoupper($departurePlace);
 
         return $this;
     }
@@ -166,7 +166,7 @@ class Ride
 
     public function setArrivalPlace(string $arrivalPlace): static
     {
-        $this->arrivalPlace = $arrivalPlace;
+        $this->arrivalPlace = mb_strtoupper($arrivalPlace);
 
         return $this;
     }
