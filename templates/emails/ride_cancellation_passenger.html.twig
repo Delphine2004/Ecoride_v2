@@ -3,8 +3,7 @@
 <p style="padding: 20px; color: #69b578ff; font-family: sans-serif">
     <strong>Date de départ :</strong> {{ ride.departureDate ? ride.departureDate|date('d/m/Y') : '' }} à {{ ride.departureDate ? ride.departureDate|date('H:i') : '' }}<br>
     <strong>Ville de départ :</strong> {{ ride.departurePlace}}<br>
-    <strong>Ville d'arrivée :</strong> {{ ride.arrivalDate }}<br>
-    <strong>Référence :</strong> {{ ride.id }}<br>
+    <strong>Ville d'arrivée :</strong> {{ ride.arrivalPlace }}<br>
 </p>
 
 <p style="padding: 20px; color: #69b578ff; font-family: sans-serif">Vous pouvez rechercher un nouveau trajet sur la plateforme.</p>
