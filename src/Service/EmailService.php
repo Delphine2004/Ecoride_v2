@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\User;
+use App\Entity\Ride;
 
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
@@ -51,6 +52,19 @@ final class EmailService
             template: 'emails/user_become_driver.html.twig',
             context: [
                 'user' => $user,
+            ],
+        );
+    }
+
+    public function sendConfirmationRide(User $user, Ride $ride): void
+    {
+        $this->sendTemplate(
+            to: $user->getEmail(),
+            subject: 'Confirmation trajet',
+            template: 'emails/ride_confirmation.html.twig',
+            context: [
+                'user' => $user,
+                'ride' => $ride
             ],
         );
     }
