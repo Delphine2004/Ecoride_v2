@@ -235,16 +235,6 @@ final class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $uploadedFile = $form->get('picture')->getData();
-            if ($uploadedFile) {
-                $fileName = uniqid() . '.' . $uploadedFile->guessExtension();
-                $uploadedFile->move($this->uploadsUsersDirectory, $fileName);
-                $user->setPicture($fileName);
-
-                $entityManager->persist($user);
-            }
-
-
             $entityManager->flush();
             $this->addFlash('success', 'Crédit ajoutés avec succés.');
             return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
