@@ -1,66 +1,71 @@
-{{ form_start(form, {'attr': {'novalidate':  true}}) }}
+{{ form_start(form, {'attr': {'data-turbo': 'false','novalidate': true}}) }}
 <div class="row g-3 justify-content-around my-3">
 
-	{% if form.departureDate is defined %}
-		<div class="col-12 col-md-6 mb-3">
-			{{ form_label(form.departureDate) }}
-			{{ form_widget(form.departureDate, {attr: {class: 'form-control'}}) }}
-			{{ form_errors(form.departureDate) }}
-		</div>
-	{% endif %}
+  {% if form.departureDate is defined %}
+    <div class="col-12 col-md-6 mb-3">
+      {{ form_label(form.departureDate) }}
+      {{ form_widget(form.departureDate, {attr: {class: 'form-control'}}) }}
+      {{ form_errors(form.departureDate) }}
+    </div>
+  {% endif %}
 
-	{% if form.departurePlace is defined %}
-		<div class="col-12 col-md-6 mb-3">
-			{{ form_label(form.departurePlace) }}
-			{{ form_widget(form.departurePlace, {attr: {class: 'form-control'}}) }}
-			{{ form_errors(form.departurePlace) }}
-		</div>
-	{% endif %}
+  {% if form.departurePlace is defined %}
+    <div class="col-12 col-md-6 mb-3">
+      {{ form_label(form.departurePlace) }}
+      {{ form_widget(form.departurePlace, {attr: {class: 'form-control'}}) }}
+      {{ form_errors(form.departurePlace) }}
+    </div>
+  {% endif %}
 
-	{% if form.arrivalDate is defined %}
-		<div class="col-12 col-md-6 mb-3">
-			{{ form_label(form.arrivalDate) }}
-			{{ form_widget(form.arrivalDate, {attr: {class: 'form-control'}}) }}
-			{{ form_errors(form.arrivalDate) }}
-		</div>
-	{% endif %}
+  {% if form.arrivalDate is defined %}
+    <div class="col-12 col-md-6 mb-3">
+      {{ form_label(form.arrivalDate) }}
+      {{ form_widget(form.arrivalDate, {attr: {class: 'form-control'}}) }}
+      {{ form_errors(form.arrivalDate) }}
+    </div>
+  {% endif %}
 
-	{% if form.arrivalPlace is defined %}
-		<div class="col-12 col-md-6 mb-3">
-			{{ form_label(form.arrivalPlace) }}
-			{{ form_widget(form.arrivalPlace, {attr: {class: 'form-control'}}) }}
-			{{ form_errors(form.arrivalPlace) }}
-		</div>
-	{% endif %}
+  {% if form.arrivalPlace is defined %}
+    <div class="col-12 col-md-6 mb-3">
+      {{ form_label(form.arrivalPlace) }}
+      {{ form_widget(form.arrivalPlace, {attr: {class: 'form-control'}}) }}
+      {{ form_errors(form.arrivalPlace) }}
+    </div>
+  {% endif %}
 
-	{% if form.price is defined %}
-		<div class="col-12 col-md-6 mb-3">
-			{{ form_label(form.price) }}
-			{{ form_widget(form.price, {attr: {class: 'form-control'}}) }}
-			{{ form_errors(form.price) }}
-		</div>
-	{% endif %}
+  {% if form.price is defined %}
+    <div class="col-12 col-md-6 mb-3">
+      {{ form_label(form.price) }}
+      {{ form_widget(form.price, {attr: {class: 'form-control'}}) }}
+      {{ form_errors(form.price) }}
+    </div>
+  {% endif %}
 
-	{% if form.availableSeats is defined %}
-		<div class="col-12 col-md-6 mb-3">
-			{{ form_label(form.availableSeats) }}
-			{{ form_widget(form.availableSeats, {attr: {class: 'form-control'}}) }}
-			{{ form_errors(form.availableSeats) }}
-		</div>
-	{% endif %}
+  {% if form.availableSeats is defined %}
+    <div class="col-12 col-md-6 mb-3">
+      {{ form_label(form.availableSeats) }}
+      {{ form_widget(form.availableSeats, {attr: {class: 'form-control'}}) }}
+      {{ form_errors(form.availableSeats) }}
+    </div>
+  {% endif %}
 
-	{% if form.car is defined %}
-		<div class="col-12 col-md-6 mb-3">
-			{{ form_label(form.car) }}
-			{{ form_widget(form.car, {attr: {class: 'form-control'}}) }}
-			{{ form_errors(form.car) }}
-		</div>
-	{% endif %}
+  {% if form.car is defined %}
+    <div class="col-12 col-md-6 mb-3">
+      {{ form_label(form.car) }}
+      {{ form_widget(form.car, {attr: {class: 'form-control'}}) }}
+      {{ form_errors(form.car) }}
+    </div>
+  {% endif %}
 
 </div>
 <div class="row g-3 justify-content-around my-3">
-	<div class="col-12 col-md-4 mb-3">
-		<button class="btn w-100">{{ button_label|default('Enregistrer') }}</button>
-	</div>
+
+  <div class="col-12 mb-3">
+    {{ form_errors(form) }}
+  </div>
+
+  <div class="col-12 col-md-4 mb-3">
+    <button class="btn w-100">{{ button_label|default('Enregistrer') }}</button>
+  </div>
 </div>
 {{ form_end(form) }}
