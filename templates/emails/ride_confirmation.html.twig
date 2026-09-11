@@ -1,9 +1,10 @@
 <h1 style="padding: 20px; color: #254d32ff; font-family: sans-serif">Bonjour,</h1>
+
 <p style="padding: 20px; color: #69b578ff; font-family: sans-serif">Nous sommes heureux de vous confirmer la création du trajet suivant: </p>
 <p style="padding: 20px; color: #69b578ff; font-family: sans-serif">
   <strong>Date de départ :</strong> {{ ride.departureDate ? ride.departureDate|date('d/m/Y') : '' }} à {{ ride.departureDate ? ride.departureDate|date('H:i') : '' }}<br>
   <strong>Ville de départ :</strong> {{ ride.departurePlace }}<br>
-  <strong>Ville d'arrivée :</strong> {{ ride.arrivalDate }}<br>
+  <strong>Ville d'arrivée :</strong> {{ ride.arrivalPlace }}<br>
   <strong>Référence :</strong> {{ ride.id }}<br>
 </p>
 <p style="padding: 20px; color: #69b578ff; font-family: sans-serif">Le jour du départ, n'oubliez pas de "démarrer" le trajet.</p>
