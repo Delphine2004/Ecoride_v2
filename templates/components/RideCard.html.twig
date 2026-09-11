@@ -1,7 +1,7 @@
 <div{{ attributes }}>
 <div class="card flex-column justify-content-between align-items-center w-100 gap-3 p-3 my-2">
 		
-  <div class="d-flex">
+  <div class="d-flex gap-4">
     <div class="d-flex flex-column justify-content-between flex-wrap gap-2">
       <p class="text-center text-md-start mb-0">Le {{ ride.departureDate ? ride.departureDate|date('d/m/Y') : '' }} à {{ ride.departureDate ? ride.departureDate|date('H:i') : '' }}</p>
       <p class="text-center text-md-start mb-0">{{ ride.departurePlace }} - {{ ride.arrivalPlace }}</p>
