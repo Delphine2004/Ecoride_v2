@@ -39,13 +39,13 @@
 
 								{% if is_granted('IS_AUTHENTICATED_FULLY') and (ride.driver == app.user or is_granted('ROLE_EMPLOYEE')) %}
 									<!-- ref + statut réservation -->
-									<div class="d-flex flex-column flex-md-row justify-content-between align-items-center p-2">
+									<div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-2">
 										<p class="mb-0">Trajet #{{ ride.id }}</p>
 										<p class="mb-0">{{ ride.status.value }}</p>
 									</div>
 
 									<!-- Info création -->
-									<div class="d-flex flex-column flex-md-row p-2">
+									<div class="d-flex flex-column flex-md-row mb-2">
 										<p class="mb-0">Créé le :
 											{{ ride.createdAt ? ride.createdAt|date('Y-m-d') : '' }}
 											à
@@ -53,7 +53,7 @@
 									</div>
 
 									<!-- Boutons d'action -->
-									<div class="d-flex flex-column flex-md-row justify-content-center p-2">
+									<div class="d-flex flex-column flex-md-row justify-content-center mb-2">
 										<twig:RideActions :ride="ride"/>
 									</div>
 								{% endif %}
