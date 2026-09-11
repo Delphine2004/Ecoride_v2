@@ -10,6 +10,7 @@ use App\Enum\Type;
 use App\Form\UserType;
 use App\DTO\SearchClientDTO;
 use App\DTO\SearchBookingDTO;
+use App\Service\EmailService;
 use App\Repository\UserRepository;
 use App\Repository\BookingRepository;
 use App\Repository\RideRepository;
@@ -262,7 +263,8 @@ final class UserController extends AbstractController
         Request $request,
         User $user,
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        EmailService $emailService
     ): Response {
 
         if ($user->getCars()->isEmpty()) {
@@ -301,6 +303,7 @@ final class UserController extends AbstractController
             }
 
             $this->addFlash('success', 'Modifié avec succés.');
+            $emailService->sendConfirmationEditStatus($user);
             return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
         }
 
