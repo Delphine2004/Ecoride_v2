@@ -5,6 +5,7 @@ namespace App\Twig\Components;
 use App\Entity\Booking;
 use App\Entity\User;
 use App\Service\BookingService;
+use App\Service\EmailService;
 
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
@@ -19,7 +20,8 @@ final class BookingActions
 
     public function __construct(
         private Security $security,
-        private BookingService $bookingService
+        private BookingService $bookingService,
+        private EmailService $emailService
     ) {}
 
     #[LiveProp]
@@ -37,24 +39,68 @@ final class BookingActions
     #[LiveAction]
     public function cancel(): void
     {
-        $this->bookingService->cancel($this->booking, $this->getUser());
+        $user = $this->getUser();
+
+        if (!$user instanceof User) {
+            $this->message = 'Vous devez être connecté.';
+            return;
+        }
+        try {
+            $this->bookingService->cancel($this->booking, $this->getUser());
+            $this->message = 'Annulation confirmée.';
+        } catch (\LogicException $e) {
+            $this->message = $e->getMessage();
+        }
     }
 
     #[LiveAction]
     public function report(): void
     {
-        $this->bookingService->report($this->booking);
+        $user = $this->getUser();
+
+        if (!$user instanceof User) {
+            $this->message = 'Vous devez être connecté.';
+            return;
+        }
+        try {
+            $this->bookingService->report($this->booking);
+            $this->message = 'Réservation signalée.';
+        } catch (\LogicException $e) {
+            $this->message = $e->getMessage();
+        }
     }
 
     #[LiveAction]
     public function finalize(): void
     {
-        $this->bookingService->finalize($this->booking);
+        $user = $this->getUser();
+
+        if (!$user instanceof User) {
+            $this->message = 'Vous devez être connecté.';
+            return;
+        }
+        try {
+            $this->bookingService->finalize($this->booking);
+            $this->message = 'Réservation finalisée.';
+        } catch (\LogicException $e) {
+            $this->message = $e->getMessage();
+        }
     }
 
     #[LiveAction]
     public function refund(): void
     {
-        $this->bookingService->refund($this->booking);
+        $user = $this->getUser();
+
+        if (!$user instanceof User) {
+            $this->message = 'Vous devez être connecté.';
+            return;
+        }
+        try {
+            $this->bookingService->refund($this->booking);
+            $this->message = 'Réservation remboursée.';
+        } catch (\LogicException $e) {
+            $this->message = $e->getMessage();
+        }
     }
 }

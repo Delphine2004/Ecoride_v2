@@ -5,6 +5,7 @@ namespace App\Twig\Components;
 use App\Entity\Ride;
 use App\Entity\User;
 use App\Service\RideService;
+use App\Service\EmailService;
 
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
@@ -19,7 +20,9 @@ final class RideActions
 
     public function __construct(
         private Security $security,
-        private RideService $rideService
+        private RideService $rideService,
+        private EmailService $emailService
+
     ) {}
 
     #[LiveProp]
@@ -37,11 +40,10 @@ final class RideActions
     public function book(): void
     {
 
-
         $user = $this->getUser();
 
         if (!$user instanceof User) {
-            $this->message = 'Vous devez être connecté pour réserver un trajet.';
+            $this->message = 'Vous devez être connecté pour réserver.';
             return;
         }
 
@@ -57,18 +59,54 @@ final class RideActions
     #[LiveAction]
     public function cancel(): void
     {
-        $this->rideService->cancel($this->ride, $this->getUser());
+
+        $user = $this->getUser();
+
+        if (!$user instanceof User) {
+            $this->message = 'Vous devez être connecté.';
+            return;
+        }
+        try {
+            $this->rideService->cancel($this->ride, $this->getUser());
+            $this->message = 'Annulation confirmée.';
+        } catch (\LogicException $e) {
+            $this->message = $e->getMessage();
+        }
     }
 
     #[LiveAction]
     public function start(): void
     {
-        $this->rideService->start($this->ride);
+
+        $user = $this->getUser();
+
+        if (!$user instanceof User) {
+            $this->message = 'Vous devez être connecté.';
+            return;
+        }
+        try {
+            $this->rideService->start($this->ride);
+            $this->message = 'Trajet démarré.';
+        } catch (\LogicException $e) {
+            $this->message = $e->getMessage();
+        }
     }
 
     #[LiveAction]
     public function stop(): void
     {
-        $this->rideService->stop($this->ride);
+
+        $user = $this->getUser();
+
+        if (!$user instanceof User) {
+            $this->message = 'Vous devez être connecté.';
+            return;
+        }
+        try {
+            $this->rideService->stop($this->ride);
+            $this->message = 'Trajet arrêté.';
+        } catch (\LogicException $e) {
+            $this->message = $e->getMessage();
+        }
     }
 }
