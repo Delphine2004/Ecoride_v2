@@ -2,6 +2,8 @@
 
 namespace App\Service;
 
+use App\Entity\User;
+
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 
@@ -12,7 +14,7 @@ final class EmailService
         private MailerInterface $mailer,
     ) {}
 
-    public function send(
+    private function sendTemplate(
         string $to,
         string $subject,
         string $template,
@@ -26,5 +28,18 @@ final class EmailService
             ->context($context);
 
         $this->mailer->send($email);
+    }
+
+
+    public function sendConfirmationRegistration(User $user): void
+    {
+        $this->sendTemplate(
+            to: $user->getEmail(),
+            subject: 'Bienvenue !',
+            template: 'emails/user_registration.html.twig',
+            context: [
+                'user' => $user,
+            ],
+        );
     }
 }
