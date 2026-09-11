@@ -35,7 +35,9 @@
 										à
 										{{ booking.ride.arrivalDate ? booking.ride.arrivalDate|date('H:i') : ''}}</p>
 								</div>
-
+                <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-center mb-2">
+                  <p class="mb-0">{{ booking.ride.price }} crédits</p>
+                </div>
 								<!-- refs + statuts -->
 								<div class="d-flex flex-column flex-md-row justify-content-between align-items-center p-2">
 									<p class="mb-0">Trajet #{{ booking.ride.id }}</p>
@@ -66,7 +68,7 @@
 
 					<!-- Partie conducteur -->
 					<div class="col-12 col-md-6 mb-4">
-						<div class="card justify-content-around h-100 shadow-sm p-4 mb-4">
+						<div class="card justify-content-between h-100 shadow-sm p-4 mb-4">
 							<h2 class="mb-2">Conducteur
 							</h2>
 							<div class="d-flex flex-column align-items-center">
@@ -85,7 +87,7 @@
 
 					<!-- Voiture -->
 					<div class="col-12 col-md-6 mb-4">
-						<div class="card justify-content-around h-100 shadow-sm p-4 mb-4">
+						<div class="card justify-content-between h-100 shadow-sm p-4 mb-4">
 							<h2 class="mb-2">Voiture</h2>
 							<div class="d-flex flex-column p-4">
 								<div class="d-flex flex-row justify-content-center gap-2 p-2">
