@@ -187,7 +187,7 @@ class BookingRepository extends ServiceEntityRepository
             ->leftJoin('b.ride', 'r')->addSelect('r')
             ->leftJoin('b.passenger', 'u')->addSelect('u')
             ->andWhere('u.id = :passengerId')
-            ->andWhere('b.statuses IN (:statuses)')
+            ->andWhere('b.status IN (:statuses)')
             ->setParameter('passengerId', $passengerId)
             ->setParameter('statuses', [BookingStatus::CANCELLED->value, BookingStatus::FINALIZED->value, BookingStatus::REFUNDED->value])
             ->orderBy('b.id', 'DESC')
