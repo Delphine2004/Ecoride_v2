@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Form\RideType;
 use App\Enum\UserRole;
 use App\Enum\RideStatus;
+use App\Service\EmailService;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -40,7 +41,8 @@ final class RideController extends AbstractController
     #[Route('/new', name: 'app_ride_new', methods: ['GET', 'POST'])]
     public function new(
         Request $request,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        EmailService $emailService
     ): Response {
 
         $user = $this->security->getUser();
@@ -50,6 +52,8 @@ final class RideController extends AbstractController
 
         $ride = new Ride();
         $ride->setStatus(RideStatus::CONFIRMED);
+        $ride->setCommission('2');
+        $ride->setDriver($user);
         $form = $this->createForm(RideType::class, $ride, [
             'user' => $user,
             'mode' => 'create'
@@ -58,13 +62,16 @@ final class RideController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
+
+                $user->spendCredit($ride->getCommission());
                 $entityManager->persist($ride);
                 $entityManager->flush();
 
                 $this->addFlash('success', 'Trajet ajouté avec succés.');
+                $emailService->sendConfirmationRide($user, $ride);
             } catch (\Exception $e) {
                 $this->addFlash('error', $e->getMessage());
-                return $this->redirectToRoute('app_home');
+                return $this->redirectToRoute('app_dashboard_client');
             }
             return $this->redirectToRoute('app_dashboard_client', [], Response::HTTP_SEE_OTHER);
         }
