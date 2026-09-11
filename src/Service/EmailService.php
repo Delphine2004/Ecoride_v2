@@ -42,4 +42,16 @@ final class EmailService
             ],
         );
     }
+
+    public function sendConfirmationEditStatus(User $user): void
+    {
+        $this->sendTemplate(
+            to: $user->getEmail(),
+            subject: 'Modification de statut',
+            template: 'emails/user_become_driver.html.twig',
+            context: [
+                'user' => $user,
+            ],
+        );
+    }
 }
