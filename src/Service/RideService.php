@@ -57,7 +57,7 @@ class RideService
         $ride->setStatus(RideStatus::CANCELLED);
 
         foreach ($ride->getRideBookings() as $booking) {
-            $this->bookingService->cancel($booking, $booking->getPassenger());
+            $this->bookingService->cancelAfterRideCancelation($booking, $booking->getPassenger());
         }
 
         $this->emailService->sendCancelationRideToDriver($user, $ride);
@@ -93,7 +93,7 @@ class RideService
     public function finalize(Ride $ride): void
     {
         // A FAIRE - Manque la logique - vérification que toutes les réservations attachées sont finalisées
-
+        // Crediter le driver
         $ride->setStatus(RideStatus::COMPLETED);
 
 
