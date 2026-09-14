@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Enum\BookingStatus;
 use App\Enum\RideStatus;
 use App\Service\BookingService;
+use App\Service\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
 
 
@@ -15,11 +16,14 @@ class RideService
 {
     public function __construct(
         private EntityManagerInterface $entityManagerInterface,
-        private BookingService $bookingService
+        private BookingService $bookingService,
+        private EmailService $emailService
     ) {}
 
-    public function book(Ride $ride, User $user): void
-    {
+    public function book(
+        Ride $ride,
+        User $user
+    ): void {
 
         $ridePrice = $ride->getPrice();
 
@@ -36,20 +40,27 @@ class RideService
         $booking->setRide($ride);
         $booking->setPassenger($user);
 
-
         $this->entityManagerInterface->persist($booking);
+
+        $this->emailService->sendConfirmationBookingToDriver($user, $ride);
+        $this->emailService->sendConfirmationBookingToPassenger($user, $ride, $booking);
 
         $this->entityManagerInterface->flush();
     }
 
-    public function cancel(Ride $ride, User $user): void
-    {
+
+    public function cancel(
+        Ride $ride,
+        User $user
+    ): void {
 
         $ride->setStatus(RideStatus::CANCELLED);
 
         foreach ($ride->getRideBookings() as $booking) {
-            $this->bookingService->cancel($booking, $user);
+            $this->bookingService->cancel($booking, $booking->getPassenger());
         }
+
+        $this->emailService->sendCancelationRideToDriver($user, $ride);
 
         $this->entityManagerInterface->flush();
     }

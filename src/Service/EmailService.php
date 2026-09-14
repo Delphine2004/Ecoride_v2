@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\User;
 use App\Entity\Ride;
+use App\Entity\Booking;
 
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
@@ -32,8 +33,9 @@ final class EmailService
     }
 
 
-    public function sendConfirmationRegistration(User $user): void
-    {
+    public function sendConfirmationRegistration(
+        User $user
+    ): void {
         $this->sendTemplate(
             to: $user->getEmail(),
             subject: 'Bienvenue !',
@@ -44,8 +46,9 @@ final class EmailService
         );
     }
 
-    public function sendConfirmationEditStatus(User $user): void
-    {
+    public function sendConfirmationEditStatus(
+        User $user
+    ): void {
         $this->sendTemplate(
             to: $user->getEmail(),
             subject: 'Modification de statut',
@@ -56,12 +59,78 @@ final class EmailService
         );
     }
 
-    public function sendConfirmationRide(User $user, Ride $ride): void
-    {
+    public function sendConfirmationRide(
+        User $user,
+        Ride $ride
+    ): void {
         $this->sendTemplate(
             to: $user->getEmail(),
             subject: 'Confirmation trajet',
             template: 'emails/ride_confirmation.html.twig',
+            context: [
+                'user' => $user,
+                'ride' => $ride
+            ],
+        );
+    }
+
+    public function sendConfirmationBookingToPassenger(
+        User $user,
+        Ride $ride,
+        Booking $booking
+    ): void {
+        $this->sendTemplate(
+            to: $user->getEmail(),
+            subject: 'Confirmation réservation',
+            template: 'emails/booking_confirmation_passenger.html.twig',
+            context: [
+                'user' => $user,
+                'ride' => $ride,
+                'booking' => $booking
+            ],
+        );
+    }
+
+    public function sendConfirmationBookingToDriver(
+        User $user,
+        Ride $ride
+    ): void {
+        $this->sendTemplate(
+            to: $user->getEmail(),
+            subject: 'Un nouveau passager',
+            template: 'emails/booking_confirmation_driver.html.twig',
+            context: [
+                'user' => $user,
+                'ride' => $ride
+            ],
+        );
+    }
+
+    public function sendCancelationRideToPassenger(
+        User $user,
+        Ride $ride,
+        Booking $booking
+    ): void {
+        $this->sendTemplate(
+            to: $user->getEmail(),
+            subject: 'Annulation réservation',
+            template: 'emails/ride_cancellation_passenger.html.twig',
+            context: [
+                'user' => $user,
+                'ride' => $ride,
+                'booking' => $booking
+            ],
+        );
+    }
+
+    public function sendCancelationRideToDriver(
+        User $user,
+        Ride $ride
+    ): void {
+        $this->sendTemplate(
+            to: $user->getEmail(),
+            subject: 'Annulation trajet',
+            template: 'emails/ride_cancellation_driver.html.twig',
             context: [
                 'user' => $user,
                 'ride' => $ride
