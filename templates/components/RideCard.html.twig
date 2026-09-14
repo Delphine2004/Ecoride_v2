@@ -1,7 +1,7 @@
 <div{{ attributes }}>
 <div class="card flex-column justify-content-between align-items-center w-100 gap-3 p-3 my-2">
 		
-  <div class="d-flex gap-4">
+  <div class="d-flex gap-4 justify-content-around w-100">
     <div class="d-flex flex-column justify-content-between flex-wrap gap-2">
       <p class="text-center text-md-start mb-0">Le {{ ride.departureDate ? ride.departureDate|date('d/m/Y') : '' }} à {{ ride.departureDate ? ride.departureDate|date('H:i') : '' }}</p>
       <p class="text-center text-md-start mb-0">{{ ride.departurePlace }} - {{ ride.arrivalPlace }}</p>
@@ -9,17 +9,19 @@
 
     <div class="d-flex flex-column justify-content-between flex-wrap gap-2">
       <p class="text-center text-md-start mb-0">{{ ride.duration }}</p>
-      {% if is_granted('ROLE_EMPLOYEE') or is_granted('ROLE_PASSENGER') %}
-        <a href="{{ path('app_ride_show', {'id': ride.id}) }}" target="_blank">Plus de détails</a>
-      {% endif %}
+      <p class="text-center text-md-start mb-0">{{ ride.price }}</p>
     </div>
-    <div class="d-flex flex-row justify-content-between flex-wrap gap-2">
+
+    <div class="d-flex flex-column justify-content-between flex-wrap gap-2">
       <p class="text-center text-md-start mb-0">{{ ride.driver.Login }}</p>
       <p class="text-center text-md-start mb-0">{{ ride.car.power.value }}</p>
     </div>
   </div>
 
-  <div class="d-flex">
+  <div class="d-flex flex-column gap-2">
+          {% if is_granted('ROLE_EMPLOYEE') or is_granted('ROLE_PASSENGER') %}
+        <a href="{{ path('app_ride_show', {'id': ride.id}) }}" target="_blank">Plus de détails</a>
+      {% endif %}
     <twig:RideActions :ride="ride"/>
   </div>
 
