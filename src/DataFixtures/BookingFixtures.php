@@ -29,21 +29,21 @@ class BookingFixtures extends Fixture implements DependentFixtureInterface
                 'status' => BookingStatus::CONFIRMED,
                 'createdAt' => $today->modify('-8 days'),
                 'passenger' => $this->getReference('client_5', User::class),
-                'ride' => $this->getReference('ride_4', Ride::class),
+                'ride' => $this->getReference('ride_1', Ride::class),
             ],
             [
                 'number' => '2',
                 'status' => BookingStatus::CONFIRMED,
                 'createdAt' => $today->modify('-4 days'),
                 'passenger' => $this->getReference('client_6', User::class),
-                'ride' => $this->getReference('ride_4', Ride::class),
+                'ride' => $this->getReference('ride_1', Ride::class),
             ],
             [
                 'number' => '3',
                 'status' => BookingStatus::CANCELLED,
                 'createdAt' => $today->modify('-8 days'),
                 'passenger' => $this->getReference('client_6', User::class),
-                'ride' => $this->getReference('ride_4', Ride::class),
+                'ride' => $this->getReference('ride_1', Ride::class),
             ],
 
 
@@ -86,14 +86,14 @@ class BookingFixtures extends Fixture implements DependentFixtureInterface
                 'status' => BookingStatus::CONFIRMED,
                 'createdAt' => $today->modify('-7 days'),
                 'passenger' => $this->getReference('client_5', User::class),
-                'ride' => $this->getReference('ride_11', Ride::class),
+                'ride' => $this->getReference('ride_3', Ride::class),
             ],
             [
                 'number' => '9',
                 'status' => BookingStatus::CANCELLED,
                 'createdAt' => $today->modify('-3 days'),
                 'passenger' => $this->getReference('client_5', User::class),
-                'ride' => $this->getReference('ride_12', Ride::class),
+                'ride' => $this->getReference('ride_3', Ride::class),
             ],
 
 
@@ -103,7 +103,7 @@ class BookingFixtures extends Fixture implements DependentFixtureInterface
                 'status' => BookingStatus::CONFIRMED,
                 'createdAt' => $today->modify('-1 days'),
                 'passenger' => $this->getReference('client_6', User::class),
-                'ride' => $this->getReference('ride_14', Ride::class),
+                'ride' => $this->getReference('ride_3', Ride::class),
             ],
             [
                 'number' => '11',
