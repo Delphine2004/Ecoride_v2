@@ -19,13 +19,16 @@ class BookingService
 
     public function cancelAfterRideCancelation(Booking $booking, User $user): void
     {
-        $booking->setStatus(BookingStatus::CANCELLED);
+        if ($booking->getStatus() !== BookingStatus::CANCELLED) {
+            $booking->setStatus(BookingStatus::CANCELLED);
 
-        $ride = $booking->getRide();
+            $ride = $booking->getRide();
 
-        $user->refundCredit($ride->getPrice());
-        $this->emailService->sendCancelationRideToPassenger($user, $ride, $booking);
-        $this->entityManagerInterface->flush();
+            $user->refundCredit($ride->getPrice());
+
+            $this->emailService->sendCancelationRideToPassenger($user, $ride, $booking);
+            $this->entityManagerInterface->flush();
+        }
     }
 
     public function cancel(Booking $booking, User $user): void
