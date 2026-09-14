@@ -199,11 +199,11 @@ class RideRepository extends ServiceEntityRepository
         int $driverId
     ): array {
 
-        return $this->createQueryBuilder('b')
-            ->leftJoin('b.ride', 'r')->addSelect('r')
+        return $this->createQueryBuilder('r')
             ->leftJoin('r.driver', 'u')->addSelect('u')
             ->andWhere('u.id = :driverId')
-            ->setParameter('passengerId', $driverId)
+            ->andWhere('r.status IN (:statuses)')
+            ->setParameter('driverId', $driverId)
             ->setParameter('statuses', [RideStatus::CANCELLED->value, RideStatus::COMPLETED->value])
             ->orderBy('r.id', 'DESC')
             ->getQuery()
