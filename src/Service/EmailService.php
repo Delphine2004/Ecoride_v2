@@ -97,7 +97,7 @@ final class EmailService
     ): void {
         $this->sendTemplate(
             to: $user->getEmail(),
-            subject: 'Un nouveau passager',
+            subject: 'Actualisation trajet - Un nouveau passager',
             template: 'emails/booking_confirmation_driver.html.twig',
             context: [
                 'user' => $user,
@@ -134,6 +134,40 @@ final class EmailService
             context: [
                 'user' => $user,
                 'ride' => $ride
+            ],
+        );
+    }
+
+    public function sendCancelationBookingToPassenger(
+        User $user,
+        Ride $ride,
+        Booking $booking
+    ): void {
+        $this->sendTemplate(
+            to: $user->getEmail(),
+            subject: 'Annulation réservation',
+            template: 'emails/booking_cancellation_passenger.html.twig',
+            context: [
+                'user' => $user,
+                'ride' => $ride,
+                'booking' => $booking
+            ],
+        );
+    }
+
+    public function sendCancelationBookingToDriver(
+        User $user,
+        Ride $ride,
+        Booking $booking
+    ): void {
+        $this->sendTemplate(
+            to: $user->getEmail(),
+            subject: 'Actualisation trajet - Annulation réservation',
+            template: 'emails/booking_cancellation_driver.html.twig',
+            context: [
+                'user' => $user,
+                'ride' => $ride,
+                'booking' => $booking
             ],
         );
     }
