@@ -325,7 +325,7 @@ final class UserController extends AbstractController
         return $this->render('user/history.html.twig', [
             'user' => $user,
             'bookings' => $bookingRepository->findHistoryBookingByClient($userId),
-            'rides' => $rideRepository->findHistoryRideClient($userId)
+            'rides' => $rideRepository->findHistoryRideByClient($userId)
         ]);
     }
 
