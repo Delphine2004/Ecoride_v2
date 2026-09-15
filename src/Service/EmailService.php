@@ -171,4 +171,49 @@ final class EmailService
             ],
         );
     }
+
+    public function sendConfirmationRideStarted(
+        User $user,
+        Ride $ride
+    ): void {
+        $this->sendTemplate(
+            to: $user->getEmail(),
+            subject: 'Le trajet a démarré',
+            template: 'emails/ride_start.html.twig',
+            context: [
+                'user' => $user,
+                'ride' => $ride
+            ],
+        );
+    }
+
+    public function sendConfirmationRideStoppedDriver(
+        User $user,
+        Ride $ride
+    ): void {
+        $this->sendTemplate(
+            to: $user->getEmail(),
+            subject: 'Vous êtes arrivé(e)s',
+            template: 'emails/ride_stop_driver.html.twig',
+            context: [
+                'user' => $user,
+                'ride' => $ride
+            ],
+        );
+    }
+
+    public function sendConfirmationRideStoppedPassenger(
+        User $user,
+        Ride $ride
+    ): void {
+        $this->sendTemplate(
+            to: $user->getEmail(),
+            subject: 'Vous êtes arrivé(e)s',
+            template: 'emails/ride_stop_passenger.html.twig',
+            context: [
+                'user' => $user,
+                'ride' => $ride
+            ],
+        );
+    }
 }

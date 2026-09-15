@@ -48,7 +48,6 @@ class RideService
         $this->entityManagerInterface->flush();
     }
 
-
     public function cancel(
         Ride $ride,
         User $user
@@ -73,8 +72,11 @@ class RideService
         foreach ($ride->getRideBookings() as $booking) {
             if ($booking->getStatus() !== BookingStatus::CANCELLED) {
                 $booking->setStatus(BookingStatus::RUNNING);
+                $this->emailService->sendConfirmationRideStarted($booking->getPassenger(), $ride);
             }
         }
+
+        $this->emailService->sendConfirmationRideStarted($ride->getDriver(), $ride);
 
         $this->entityManagerInterface->flush();
     }
@@ -84,8 +86,13 @@ class RideService
         $ride->setStatus(RideStatus::PENDING);
 
         foreach ($ride->getRideBookings() as $booking) {
-            $booking->setStatus(BookingStatus::PENDING);
+            if ($booking->getStatus() !== BookingStatus::CANCELLED) {
+                $booking->setStatus(BookingStatus::PENDING);
+                $this->emailService->sendConfirmationRideStoppedPassenger($booking->getPassenger(), $ride);
+            }
         }
+
+        $this->emailService->sendConfirmationRideStoppedDriver($ride->getDriver(), $ride);
 
         $this->entityManagerInterface->flush();
     }
