@@ -12,6 +12,8 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB}?serverVersion=${POSTGRES_VERSION}&charset=${POSTGRES_CHARSET}
     
     volumes:
+      - .:/srv/app:rw,cached
+      - php_var:/srv/app/var
       - caddy_data:/data
       - caddy_config:/config
     ports:
@@ -47,4 +49,4 @@ volumes:
   caddy_data:
   caddy_config:
   database_data:
-
+  php_var:
