@@ -2,13 +2,18 @@
 
 namespace App\Service;
 
+use App\Entity\Ride;
 use App\Entity\Booking;
 use App\Entity\User;
+
+use App\Enum\RideStatus;
 use App\Enum\BookingStatus;
+
 use App\Service\EmailService;
+
 use Doctrine\ORM\EntityManagerInterface;
 
-class BookingService
+class CancelationService
 {
 
     public function __construct(
@@ -16,9 +21,10 @@ class BookingService
         private EmailService $emailService
     ) {}
 
-
-    public function cancelAfterRideCancelation(Booking $booking, User $user): void
-    {
+    public function cancelBookingAfterRideCancelation(
+        Booking $booking,
+        User $user
+    ): void {
         if ($booking->getStatus() !== BookingStatus::CANCELLED) {
             $booking->setStatus(BookingStatus::CANCELLED);
 
@@ -31,8 +37,11 @@ class BookingService
         }
     }
 
-    public function cancel(Booking $booking, User $user): void
-    {
+
+    public function cancelBooking(
+        Booking $booking,
+        User $user
+    ): void {
         $booking->setStatus(BookingStatus::CANCELLED);
 
         $ride = $booking->getRide();
@@ -44,23 +53,20 @@ class BookingService
         $this->entityManagerInterface->flush();
     }
 
-    public function report(Booking $booking): void
-    {
-        $booking->setStatus(BookingStatus::REPORTED);
-        $this->entityManagerInterface->flush();
-    }
 
-    public function finalize(Booking $booking): void
-    {
-        $booking->setStatus(BookingStatus::FINALIZED);
-        // A FAIRE : 
-        $this->entityManagerInterface->flush();
-    }
+    public function cancelRide(
+        Ride $ride,
+        User $user
+    ): void {
 
-    public function refund(Booking $booking): void
-    {
-        $booking->setStatus(BookingStatus::REFUNDED);
-        // A FAIRE : 
+        $ride->setStatus(RideStatus::CANCELLED);
+
+        foreach ($ride->getRideBookings() as $booking) {
+            $this->cancelBookingAfterRideCancelation($booking, $booking->getPassenger());
+        }
+
+        $this->emailService->sendCancelationRideToDriver($user, $ride);
+
         $this->entityManagerInterface->flush();
     }
 }
