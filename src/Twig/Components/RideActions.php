@@ -4,8 +4,10 @@ namespace App\Twig\Components;
 
 use App\Entity\Ride;
 use App\Entity\User;
-use App\Service\RideService;
-use App\Service\EmailService;
+
+use App\Service\CreationService;
+use App\Service\CancelationService;
+use App\Service\StateService;
 
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
@@ -20,9 +22,9 @@ final class RideActions
 
     public function __construct(
         private Security $security,
-        private RideService $rideService,
-        private EmailService $emailService
-
+        private CreationService $creationService,
+        private CancelationService $cancelationService,
+        private StateService $stateService,
     ) {}
 
     #[LiveProp]
@@ -48,7 +50,7 @@ final class RideActions
         }
 
         try {
-            $this->rideService->book($this->ride, $user);
+            $this->creationService->bookRide($this->ride, $user);
             $this->message = 'Réservation confirmée.';
         } catch (\LogicException $e) {
             $this->message = $e->getMessage();
@@ -67,7 +69,7 @@ final class RideActions
             return;
         }
         try {
-            $this->rideService->cancel($this->ride, $this->getUser());
+            $this->cancelationService->cancelRide($this->ride, $this->getUser());
             $this->message = 'Annulation confirmée.';
         } catch (\LogicException $e) {
             $this->message = $e->getMessage();
@@ -85,7 +87,7 @@ final class RideActions
             return;
         }
         try {
-            $this->rideService->start($this->ride);
+            $this->stateService->startRide($this->ride);
             $this->message = 'Trajet démarré.';
         } catch (\LogicException $e) {
             $this->message = $e->getMessage();
@@ -103,7 +105,7 @@ final class RideActions
             return;
         }
         try {
-            $this->rideService->stop($this->ride);
+            $this->stateService->stopRide($this->ride);
             $this->message = 'Trajet arrêté.';
         } catch (\LogicException $e) {
             $this->message = $e->getMessage();

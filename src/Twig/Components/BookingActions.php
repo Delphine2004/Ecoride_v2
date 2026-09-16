@@ -4,8 +4,10 @@ namespace App\Twig\Components;
 
 use App\Entity\Booking;
 use App\Entity\User;
-use App\Service\BookingService;
-use App\Service\EmailService;
+
+use App\Service\CreationService;
+use App\Service\CancelationService;
+use App\Service\StateService;
 
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
@@ -20,8 +22,9 @@ final class BookingActions
 
     public function __construct(
         private Security $security,
-        private BookingService $bookingService,
-        private EmailService $emailService
+        private CreationService $creationService,
+        private CancelationService $cancelationService,
+        private StateService $stateService,
     ) {}
 
     #[LiveProp]
@@ -46,7 +49,7 @@ final class BookingActions
             return;
         }
         try {
-            $this->bookingService->cancel($this->booking, $this->getUser());
+            $this->cancelationService->cancelBooking($this->booking, $this->getUser());
             $this->message = 'Annulation confirmée.';
         } catch (\LogicException $e) {
             $this->message = $e->getMessage();
@@ -63,7 +66,7 @@ final class BookingActions
             return;
         }
         try {
-            $this->bookingService->report($this->booking);
+            $this->stateService->reportBooking($this->booking);
             $this->message = 'Réservation signalée.';
         } catch (\LogicException $e) {
             $this->message = $e->getMessage();
@@ -80,7 +83,7 @@ final class BookingActions
             return;
         }
         try {
-            $this->bookingService->finalize($this->booking);
+            $this->stateService->finalizeBooking($this->booking);
             $this->message = 'Réservation finalisée.';
         } catch (\LogicException $e) {
             $this->message = $e->getMessage();
@@ -97,7 +100,7 @@ final class BookingActions
             return;
         }
         try {
-            $this->bookingService->refund($this->booking);
+            $this->stateService->refundBooking($this->booking);
             $this->message = 'Réservation remboursée.';
         } catch (\LogicException $e) {
             $this->message = $e->getMessage();
