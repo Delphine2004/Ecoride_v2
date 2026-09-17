@@ -262,7 +262,7 @@ final class EmailService
         );
     }
 
-    public function sendBookingRefundedPassenger(
+    public function sendBookingRefunded(
         User $user,
         Ride $ride
     ): void {
@@ -277,20 +277,6 @@ final class EmailService
         );
     }
 
-    public function sendBookingRefundedDriver(
-        User $user,
-        Ride $ride
-    ): void {
-        $this->sendTemplate(
-            to: $user->getEmail(),
-            subject: 'Réservation non créditée',
-            template: 'emails/booking_refunded_driver.html.twig',
-            context: [
-                'user' => $user,
-                'ride' => $ride
-            ],
-        );
-    }
 
     public function sendRideFinalized(
         User $user,
