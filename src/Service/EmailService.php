@@ -216,4 +216,94 @@ final class EmailService
             ],
         );
     }
+
+    public function sendBookingReportedPassenger(
+        User $user,
+        Ride $ride
+    ): void {
+        $this->sendTemplate(
+            to: $user->getEmail(),
+            subject: 'Réservation signalée',
+            template: 'emails/booking_reported_passenger.html.twig',
+            context: [
+                'user' => $user,
+                'ride' => $ride
+            ],
+        );
+    }
+
+    public function sendBookingReportedDriver(
+        User $user,
+        Ride $ride
+    ): void {
+        $this->sendTemplate(
+            to: $user->getEmail(),
+            subject: 'Réservation signalée',
+            template: 'emails/booking_reported_driver.html.twig',
+            context: [
+                'user' => $user,
+                'ride' => $ride
+            ],
+        );
+    }
+
+    public function sendBookingFinalized(
+        User $user,
+        Ride $ride
+    ): void {
+        $this->sendTemplate(
+            to: $user->getEmail(),
+            subject: 'Réservation finalisée',
+            template: 'emails/booking_finalized.html.twig',
+            context: [
+                'user' => $user,
+                'ride' => $ride
+            ],
+        );
+    }
+
+    public function sendBookingRefundedPassenger(
+        User $user,
+        Ride $ride
+    ): void {
+        $this->sendTemplate(
+            to: $user->getEmail(),
+            subject: 'Réservation remboursée',
+            template: 'emails/booking_refunded_passenger.html.twig',
+            context: [
+                'user' => $user,
+                'ride' => $ride
+            ],
+        );
+    }
+
+    public function sendBookingRefundedDriver(
+        User $user,
+        Ride $ride
+    ): void {
+        $this->sendTemplate(
+            to: $user->getEmail(),
+            subject: 'Réservation non créditée',
+            template: 'emails/booking_refunded_driver.html.twig',
+            context: [
+                'user' => $user,
+                'ride' => $ride
+            ],
+        );
+    }
+
+    public function sendRideFinalized(
+        User $user,
+        Ride $ride
+    ): void {
+        $this->sendTemplate(
+            to: $user->getEmail(),
+            subject: 'Trajet finalisé',
+            template: 'emails/ride_finalized.html.twig',
+            context: [
+                'user' => $user,
+                'ride' => $ride
+            ],
+        );
+    }
 }
