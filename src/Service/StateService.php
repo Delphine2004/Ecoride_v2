@@ -89,6 +89,8 @@ class StateService
 
         $ride->setStatus(RideStatus::COMPLETED);
 
+        $this->emailService->sendRideFinalized($driver, $ride);
+
         $this->entityManagerInterface->flush();
     }
 
@@ -96,7 +98,15 @@ class StateService
     public function reportBooking(
         Booking $booking
     ): void {
+
+        $ride = $booking->getRide();
+        $driver = $ride->getDriver();
+        $passenger = $booking->getPassenger();
+
         $booking->setStatus(BookingStatus::REPORTED);
+        $this->emailService->sendBookingReportedDriver($driver, $ride);
+        $this->emailService->sendBookingReportedPassenger($passenger, $ride);
+
         $this->entityManagerInterface->flush();
     }
 
@@ -104,9 +114,15 @@ class StateService
     public function finalizeBooking(
         Booking $booking
     ): void {
+
+        $ride = $booking->getRide();
+        $passenger = $booking->getPassenger();
+
         $booking->setStatus(BookingStatus::FINALIZED);
+        $this->emailService->sendBookingFinalized($passenger, $ride);
 
         $this->finalizeRide($booking->getRide());
+
         $this->entityManagerInterface->flush();
     }
 
@@ -114,7 +130,16 @@ class StateService
     public function refundBooking(
         Booking $booking
     ): void {
+
+        $ride = $booking->getRide();
+        $passenger = $booking->getPassenger();
+        $price = $ride->getPrice();
+
         $booking->setStatus(BookingStatus::REFUNDED);
+        $passenger->refundCredit($price);
+
+        $this->emailService->sendBookingRefunded($passenger, $ride);
+
 
         $this->finalizeRide($booking->getRide());
         $this->entityManagerInterface->flush();
