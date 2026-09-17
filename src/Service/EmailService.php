@@ -269,7 +269,7 @@ final class EmailService
         $this->sendTemplate(
             to: $user->getEmail(),
             subject: 'Réservation remboursée',
-            template: 'emails/booking_refunded_passenger.html.twig',
+            template: 'emails/booking_refunded.html.twig',
             context: [
                 'user' => $user,
                 'ride' => $ride
