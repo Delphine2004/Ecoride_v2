@@ -4,109 +4,113 @@
 {% endblock %}
 
 {% block body %}
-	<main class="py-5">
-		<section class="container-fluid">
-			<div class="container">
-				<div class="row justify-content-center">
+  <main class="py-5">
+    <section class="container-fluid">
+      <div class="container">
+        <div class="row justify-content-center">
 
-					<!-- Partie trajet -->
-					<div class="col-12 mb-4">
-						<div class="card justify-content-around h-100 flex-column shadow-sm p-4 mb-4">
+          <!-- Partie trajet -->
+          <div class="col-12 mb-4">
+            <div class="card justify-content-around h-100 flex-column shadow-sm p-4 mb-4">
 
-							<h1 class="mb-2">Récapitulatif trajet</h1>
+              <h1 class="mb-2">Récapitulatif réservation</h1>
 
-							<div
-								class="d-flex flex-column p-2">
-								<!-- Dates et heures -->
-								<div class="d-flex flex-column flex-md-row justify-content-md-between align-items-center mb-2">
-									<p class="mb-0">Depart de
-										{{ booking.ride.departurePlace}}</p>
-									<p class="mb-0">le
-										{{ booking.ride.departureDate ? booking.ride.departureDate|date('d/m/Y') : ''}}
-										à
-										{{ booking.ride.departureDate ? booking.ride.departureDate|date('H:i') : ''}}</p>
-								</div>
+              <div
+                class="d-flex flex-column p-2"
+              >
+                <!-- Dates et heures -->
+                <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-center mb-4">
+                  <p class="mb-0">Depart de
+                    {{ booking.ride.departurePlace }}</p>
+                  <p class="mb-0">le
+                    {{ booking.ride.departureDate ? booking.ride.departureDate|date('d/m/Y') : '' }}
+                    à
+                    {{ booking.ride.departureDate ? booking.ride.departureDate|date('H:i') : '' }}</p>
+                </div>
 
-								<div class="d-flex flex-column flex-md-row justify-content-md-between align-items-center mb-2">
-									<p class="mb-0">Arrivée à
-										{{ booking.ride.arrivalPlace}}</p>
-									<p class="mb-0">le
-										{{ booking.ride.arrivalDate ? booking.ride.arrivalDate|date('d/m/Y') : ''}}
-										à
-										{{ booking.ride.arrivalDate ? booking.ride.arrivalDate|date('H:i') : ''}}</p>
-								</div>
-                <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-center mb-2">
+                <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-center mb-4">
+                  <p class="mb-0">Arrivée à
+                    {{ booking.ride.arrivalPlace }}</p>
+                  <p class="mb-0">le
+                    {{ booking.ride.arrivalDate ? booking.ride.arrivalDate|date('d/m/Y') : '' }}
+                    à
+                    {{ booking.ride.arrivalDate ? booking.ride.arrivalDate|date('H:i') : '' }}</p>
+                </div>
+
+
+                <!-- refs + statuts -->
+                <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-center mb-4">
+                  <p class="mb-0">Trajet #{{ booking.ride.id }} || {{ booking.ride.status.value }}</p>
+                  <p class="mb-0">Réservation #{{ booking.id }} || {{ booking.status.value }}</p>
+                </div>
+
+                <!-- Information passager -->
+                {% if is_granted('ROLE_EMPLOYEE') %}
+                  <div class="d-flex flex-column flex-md-row justify-content-start align-items-center gap-3 mb-4">
+                    <p class="mb-0">{{ booking.passenger.firstName }} {{ booking.passenger.lastName }}</p>
+                    <p class="mb-0">{{ booking.passenger.email }}</p>
+                  </div>
+                {% endif %}
+
+                <!-- Info création + prix -->
+                <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-center mb-4">
+                  <p class="mb-0">Réservé le :
+                    {{ booking.createdAt ? booking.createdAt|date('Y-m-d') : '' }}
+                    à
+                    {{ booking.createdAt ? booking.createdAt|date('H:i:s') : '' }}</p>
                   <p class="mb-0">{{ booking.ride.price }} crédits</p>
                 </div>
-								<!-- refs + statuts -->
-								<div class="d-flex flex-column flex-md-row justify-content-between align-items-center p-2">
-									<p class="mb-0">Trajet #{{ booking.ride.id }}</p>
-									<p class="mb-0">{{ booking.ride.status.value }}</p>
-								</div>
 
-								<div class="d-flex flex-column flex-md-row justify-content-between align-items-center p-2">
-									<p class="mb-0">Réservation #{{ booking.id }}</p>
-									<p class="mb-0">{{ booking.status.value }}</p>
-								</div>
+                <!-- Boutons d'action -->
+                <div class="d-flex flex-column flex-md-row justify-content-center mb-4">
+                  <twig:BookingActions :booking="booking"/>
+                </div>
 
-								<!-- Info création -->
-								<div class="d-flex flex-column flex-md-row p-2">
-									<p>Réservé le :
-										{{ booking.createdAt ? booking.createdAt|date('Y-m-d') : '' }}
-										à
-										{{ booking.createdAt ? booking.createdAt|date('H:i:s') : '' }}</p>
-								</div>
+              </div>
+            </div>
+          </div>
 
-								<!-- Boutons d'action -->
-								<div class="d-flex flex-column flex-md-row justify-content-center p-2">
-									<twig:BookingActions :booking="booking"/>
-								</div>
+          <!-- Partie conducteur -->
+          <div class="col-12 col-md-6 mb-4">
+            <div class="card justify-content-between h-100 shadow-sm p-4 mb-4">
+              <h2 class="mb-2">Conducteur
+              </h2>
+              <div class="d-flex flex-column align-items-center">
+                <p class="mb-0">{{ booking.ride.driver.login }}
+                </p>
+                <p class="mb-0">Note</p>
+              </div>
+              <div class="d-flex flex-column flex-md-row align-items-center gap-2">
+                <a class="btn w-100" href="">Avis</a>
+                {% if is_granted('ROLE_EMPLOYEE') %}
+                  <a class="btn w-100" href="{{ path('app_user_show', {'id': booking.ride.driver.id}) }}" target="_blank">Voir</a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
 
-							</div>
-						</div>
-					</div>
+          <!-- Voiture -->
+          <div class="col-12 col-md-6 mb-4">
+            <div class="card justify-content-between h-100 shadow-sm p-4 mb-4">
+              <h2 class="mb-2">Voiture</h2>
+              <div class="d-flex flex-column p-4">
+                <div class="d-flex flex-row justify-content-center gap-2 p-2">
+                  <p class="mb-0">{{ booking.ride.car.model }}</p>
+                  <p class="mb-0">{{ booking.ride.car.brand.value }}</p>
+                </div>
+                <div class="d-flex flex-row justify-content-center gap-2 p-2">
+                  <p class="mb-0">{{ booking.ride.car.color.value }}</p>
+                  <p class="mb-0">{{ booking.ride.car.power.value }}</p>
+                </div>
+                <div class="d-flex flex-row justify-content-center gap-2 p-2">
+                  <p class="mb-0">{{ booking.ride.car.registrationNumber }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
 
-					<!-- Partie conducteur -->
-					<div class="col-12 col-md-6 mb-4">
-						<div class="card justify-content-between h-100 shadow-sm p-4 mb-4">
-							<h2 class="mb-2">Conducteur
-							</h2>
-							<div class="d-flex flex-column align-items-center">
-								<p class="mb-0">{{ booking.ride.driver.login }}
-								</p>
-								<p>Note</p>
-							</div>
-							<div class="d-flex flex-column flex-md-row align-items-center gap-2">
-								<a class="btn w-100" href="">Avis</a>
-								{% if is_granted('ROLE_EMPLOYEE') %}
-									<a class="btn w-100" href="{{ path('app_user_show', {'id': booking.ride.driver.id}) }}" target="_blank">Voir</a>
-								{% endif %}
-							</div>
-						</div>
-					</div>
-
-					<!-- Voiture -->
-					<div class="col-12 col-md-6 mb-4">
-						<div class="card justify-content-between h-100 shadow-sm p-4 mb-4">
-							<h2 class="mb-2">Voiture</h2>
-							<div class="d-flex flex-column p-4">
-								<div class="d-flex flex-row justify-content-center gap-2 p-2">
-									<p class="mb-0">{{ booking.ride.car.model}}</p>
-									<p class="mb-0">{{ booking.ride.car.brand.value}}</p>
-								</div>
-								<div class="d-flex flex-row justify-content-center gap-2 p-2">
-									<p class="mb-0">{{ booking.ride.car.color.value}}</p>
-									<p class="mb-0">{{ booking.ride.car.power.value}}</p>
-								</div>
-								<div class="d-flex flex-row justify-content-center gap-2 p-2">
-									<p class="mb-0">{{ booking.ride.car.registrationNumber}}</p>
-								</div>
-							</div>
-						</div>
-					</div>
-
-				</div>
-			</div>
-		</section>
-	</main>
+        </div>
+      </div>
+    </section>
+  </main>
 {% endblock %}
