@@ -21,14 +21,15 @@ class CarRepository extends ServiceEntityRepository
     }
 
     public function findCarsByDriver(
-        int $driverId
+        int $driverId,
+        string $orderBy = 'ASC'
     ): array {
         return $this->createQueryBuilder('c')
             ->where('c.owner = :driverId')
             ->andWhere('c.brand != :brand')
             ->setParameter('driverId', $driverId)
             ->setParameter('brand', CarBrand::NA->value)
-            ->orderBy('c.id', 'ASC')
+            ->orderBy('c.id', $orderBy)
             ->getQuery()
             ->getResult()
         ;
@@ -48,8 +49,10 @@ class CarRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function hasOtherCar(int $driverId, int $carId): bool
-    {
+    public function hasOtherCar(
+        int $driverId,
+        int $carId
+    ): bool {
         return (bool) $this->createQueryBuilder('c')
             ->select('COUNT(c.id)')
             ->where('c.owner = :driverId')
@@ -60,9 +63,9 @@ class CarRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function hasActiveRide(int $carId): bool
-    {
-        $now = new \DateTimeImmutable();
+    public function hasActiveRide(
+        int $carId
+    ): bool {
 
         return (bool) $this->createQueryBuilder('c')
             ->select('COUNT(r.id)')

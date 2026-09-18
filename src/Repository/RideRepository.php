@@ -147,7 +147,8 @@ class RideRepository extends ServiceEntityRepository
     }
 
     public function findActionsRideByClient(
-        int $driverId
+        int $driverId,
+        string $orderBy = 'ASC'
     ): array {
         $today = new DateTimeImmutable('today');
         $tomorrow = $today->modify('+1 day');
@@ -172,13 +173,14 @@ class RideRepository extends ServiceEntityRepository
             ->setParameter('confirmed', RideStatus::CONFIRMED->value)
             ->setParameter('today', $today)
             ->setParameter('tomorrow', $tomorrow)
-            ->orderBy('r.id', 'DESC')
+            ->orderBy('r.departureDate', $orderBy)
             ->getQuery()
             ->getResult();
     }
 
     public function findUpcomingRideByClient(
-        int $driverId
+        int $driverId,
+        string $orderBy = 'ASC'
     ): array {
         $tomorrow = new DateTimeImmutable('tomorrow');
 
@@ -190,13 +192,14 @@ class RideRepository extends ServiceEntityRepository
             ->setParameter('driverId', $driverId)
             ->setParameter('status', RideStatus::CONFIRMED->value)
             ->setParameter('tomorrow', $tomorrow)
-            ->orderBy('r.id', 'DESC')
+            ->orderBy('r.departureDate', $orderBy)
             ->getQuery()
             ->getResult();
     }
 
     public function findHistoryRideByClient(
-        int $driverId
+        int $driverId,
+        string $orderBy = 'ASC'
     ): array {
 
         return $this->createQueryBuilder('r')
@@ -205,7 +208,7 @@ class RideRepository extends ServiceEntityRepository
             ->andWhere('r.status IN (:statuses)')
             ->setParameter('driverId', $driverId)
             ->setParameter('statuses', [RideStatus::CANCELLED->value, RideStatus::COMPLETED->value])
-            ->orderBy('r.id', 'DESC')
+            ->orderBy('r.departureDate', $orderBy)
             ->getQuery()
             ->getResult();
     }
