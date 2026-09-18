@@ -80,7 +80,7 @@ final class UserController extends AbstractController
     }
 
     #[IsGranted(UserRole::EMPLOYEE->value)]
-    #[Route('/client/search', name: 'app_client_index', methods: ['GET'])]
+    #[Route('/clients', name: 'app_client_index', methods: ['GET'])]
     public function indexClient(): Response
     {
 
@@ -92,7 +92,7 @@ final class UserController extends AbstractController
     }
 
     #[IsGranted(UserRole::ADMIN->value)]
-    #[Route('/user/search', name: 'app_user_index', methods: ['GET'])]
+    #[Route('/users', name: 'app_user_index', methods: ['GET'])]
     public function indexUser(
         UserRepository $userRepository
     ): Response {
@@ -106,19 +106,25 @@ final class UserController extends AbstractController
         ]);
     }
 
-    #[IsGranted(UserRole::EMPLOYEE->value)]
+    #[IsGranted(UserRole::ADMIN->value)]
     #[Route('/user/new', name: 'app_user_new', methods: ['GET', 'POST'])]
     public function newUser(
         Request $request,
+        UserPasswordHasherInterface $userPasswordHasher,
         EntityManagerInterface $entityManager
     ): Response {
         $user = new User();
-        $user->setRoles([UserRole::EMPLOYEE]);
-        $user->setType(Type::STAFF);
         $form = $this->createForm(UserType::class, $user, ['mode' => 'createUser']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $plainPassword = $form->get('password')->getData();
+
+            // Encoder le mdp
+            $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
+            $user->setRoles([UserRole::EMPLOYEE]);
+            $user->setType(Type::STAFF);
+
             $entityManager->persist($user);
             $entityManager->flush();
 
