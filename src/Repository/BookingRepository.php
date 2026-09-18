@@ -28,7 +28,7 @@ class BookingRepository extends ServiceEntityRepository
     public function findBookingsByFields(
         ?SearchBookingDTO $criteria,
         int $limit = 10,
-        string $orderBy = 'DESC'
+        string $orderBy = 'ASC'
     ): array {
 
         $qb = $this->createQueryBuilder('b')
@@ -132,7 +132,8 @@ class BookingRepository extends ServiceEntityRepository
     }
 
     public function findActionsBookingByClient(
-        int $passengerId
+        int $passengerId,
+        string $orderBy = 'ASC'
     ): array {
         $today = new DateTimeImmutable('today');
         $tomorrow = $today->modify('+1 day');
@@ -142,26 +143,30 @@ class BookingRepository extends ServiceEntityRepository
             ->leftJoin('b.passenger', 'u')->addSelect('u')
             ->andWhere('u.id = :passengerId')
             ->andWhere(
-                '(r.status IN (:alwaysVisibleStatuses))
+                '(b.status IN (:alwaysVisibleStatuses))
         OR
         (
-            r.status = :confirmed
+            b.status = :confirmed
             AND r.departureDate >= :today
             AND r.departureDate < :tomorrow
         )'
             )
             ->setParameter('passengerId', $passengerId)
-            ->setParameter('alwaysVisibleStatuses', [BookingStatus::PENDING->value, BookingStatus::RUNNING->value])
+            ->setParameter('alwaysVisibleStatuses', [
+                BookingStatus::PENDING->value,
+                BookingStatus::RUNNING->value
+            ])
             ->setParameter('confirmed', BookingStatus::CONFIRMED->value)
             ->setParameter('today', $today)
             ->setParameter('tomorrow', $tomorrow)
-            ->orderBy('b.id', 'DESC')
+            ->orderBy('r.departureDate', $orderBy)
             ->getQuery()
             ->getResult();
     }
 
     public function findUpcomingBookingByClient(
-        int $passengerId
+        int $passengerId,
+        string $orderBy = 'ASC'
     ): array {
         $tomorrow = new DateTimeImmutable('tomorrow');
 
@@ -174,13 +179,14 @@ class BookingRepository extends ServiceEntityRepository
             ->setParameter('passengerId', $passengerId)
             ->setParameter('status', BookingStatus::CONFIRMED->value)
             ->setParameter('tomorrow', $tomorrow)
-            ->orderBy('b.id', 'DESC')
+            ->orderBy('r.departureDate', $orderBy)
             ->getQuery()
             ->getResult();
     }
 
     public function findHistoryBookingByClient(
-        int $passengerId
+        int $passengerId,
+        string $orderBy = 'ASC'
     ): array {
 
         return $this->createQueryBuilder('b')
@@ -190,7 +196,7 @@ class BookingRepository extends ServiceEntityRepository
             ->andWhere('b.status IN (:statuses)')
             ->setParameter('passengerId', $passengerId)
             ->setParameter('statuses', [BookingStatus::CANCELLED->value, BookingStatus::FINALIZED->value, BookingStatus::REFUNDED->value])
-            ->orderBy('b.id', 'DESC')
+            ->orderBy('r.departureDate', $orderBy)
             ->getQuery()
             ->getResult();
     }
