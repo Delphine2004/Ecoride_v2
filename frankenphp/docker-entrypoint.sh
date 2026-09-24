@@ -1,6 +1,9 @@
 #!/bin/sh
 set -e
 
+mkdir -p var/cache var/log
+chmod -R 777 var/ 2>/dev/null || true
+
 if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 
 	if [ -z "$(ls -A 'vendor/' 2>/dev/null)" ]; then
@@ -37,6 +40,9 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 			php bin/console doctrine:migrations:migrate --no-interaction --all-or-nothing
 		fi
 	fi
+	echo 'Warming up Symfony cache...'
+    php bin/console cache:clear --no-warmup
+    php bin/console cache:warmup
 
 	echo 'PHP app ready!'
 fi
