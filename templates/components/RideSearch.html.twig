@@ -11,10 +11,11 @@
 
           {% if is_granted('ROLE_EMPLOYEE') %}
             <!-- Recherche par le staff ou l'admin -->
-            <h1>Trajets</h1>
-
-            <!-- ID et Statut -->
             <div class="row g-3 justify-content-around my-3">
+              <div class="col-12">
+                <h1>Trajets</h1>
+              </div>
+              <!-- ID et Statut -->
               <div class="col-md-6">
                 {{ form_label(form.id) }}
                 {{ form_widget(form.id, {attr: {class: 'form-control'}}) }}
