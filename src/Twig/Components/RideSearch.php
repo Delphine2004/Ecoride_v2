@@ -60,6 +60,9 @@ final class RideSearch extends AbstractController
     #[LiveAction]
     public function search(): void
     {
+        $this->hasSearched = true;
+        $this->showDescription = false;
+
         $this->submitForm();
 
         $data = $this->getForm()->getData();
@@ -85,15 +88,12 @@ final class RideSearch extends AbstractController
             static fn(Ride $ride) => $ride->getId(),
             $rides
         );
-
-        $this->hasSearched = true;
-        $this->showDescription = false;
     }
 
     // Reconstruction des résultats à partir de l'id
     public function getResults(): array
     {
-        if (empty($this->rideIds)) {
+        if (!$this->hasSearched || empty($this->rideIds)) {
             return [];
         }
 
