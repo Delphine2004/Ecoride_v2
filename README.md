@@ -1,60 +1,208 @@
-# Symfony Docker
+# Ecoride V2
 
-A [Docker](https://www.docker.com/)-based installer and runtime for the [Symfony](https://symfony.com) web framework,
-with [FrankenPHP](https://frankenphp.dev) and [Caddy](https://caddyserver.com/) inside!
+## 1. Description du projet
 
-Specially tailored for coding agents: ships with a [Dev Container](https://containers.dev/) configuration
-that lets [Claude Code](https://claude.ai/claude-code) (and other AI coding assistants) run in fully autonomous
-mode inside a sandboxed environment.
+**Ecoride V2** est une application web de covoiturage qui privilégie l'utilisation de véhicules à faible empreinte écologique. Elle permet aux utilisateurs de rechercher et de proposer des trajets, de gérer leur profil et d'interagir avec la plateforme selon leur rôle (*Passenger*, *Driver*, *Employee* ou *Admin*). 
+> **Note :** Il s'agit de la version sous framework (Symfony) du projet initialement présenté lors de mon examen.
 
-![CI](https://github.com/dunglas/symfony-docker/workflows/CI/badge.svg)
+---
 
-## Getting Started
+## 2. Technologies utilisées
 
-1. If not already done, [install Docker Compose](https://docs.docker.com/compose/install/) (v2.10+)
-2. Run `docker compose build --pull --no-cache` to build fresh images
-3. Run `docker compose up --wait` to set up and start a fresh Symfony project
-4. Open `https://localhost` in your favorite web browser and [accept the auto-generated TLS certificate](https://stackoverflow.com/a/15076602/1352334)
-5. Run `docker compose down --remove-orphans` to stop the Docker containers.
+### **Front-End**
 
-## Features
+- HTML5
+- CSS3 & Sass
+- Bootstrap
+- Approche mobile-first
 
-- Production, development and CI ready
-- Just 1 service by default
-- Super-readable configuration
-- Blazing-fast performance thanks to [the worker mode of FrankenPHP](https://frankenphp.dev/docs/worker/)
-- [Installation of extra Docker Compose services](docs/extra-services.md) with Symfony Flex
-- Automatic HTTPS (in dev and prod)
-- HTTP/3 and [Early Hints](https://symfony.com/blog/new-in-symfony-6-3-early-hints) support
-- Real-time messaging thanks to a built-in [Mercure hub](https://symfony.com/doc/current/mercure.html)
-- [Vulcain](https://vulcain.rocks) support
-- Native [XDebug](docs/xdebug.md) integration
-- [Hot Reloading](https://frankenphp.dev/docs/hot-reload/)
-- [Dev Container](https://containers.dev/) support, optimized for AI coding agents
-- [AI coding agents](docs/agents.md) with sandboxing out of the box
-- Rootless, slim production image
+### **Back-End**
 
-**Enjoy!**
+#### Langage & Framework
 
-## Docs
+- PHP 8.4
+- Symfony 7.4
 
-1. [Options available](docs/options.md)
-2. [Using Symfony Docker with an existing project](docs/existing-project.md)
-3. [Support for extra services](docs/extra-services.md)
-4. [Deploying in production](docs/production.md)
-5. [Debugging with Xdebug](docs/xdebug.md)
-6. [TLS Certificates](docs/tls.md)
-7. [Using MySQL instead of PostgreSQL](docs/mysql.md)
-8. [Using Alpine Linux instead of Debian](docs/alpine.md)
-9. [Using a Makefile](docs/makefile.md)
-10. [Updating the template](docs/updating.md)
-11. [Troubleshooting](docs/troubleshooting.md)
-12. [Using AI Coding Agents](docs/agents.md)
+#### Gestion des données
 
-## License
+- Doctrine ORM
+- Doctrine Migrations
+- Doctrine Fixtures
 
-Symfony Docker is available under the MIT License.
+#### Sécurité
 
-## Credits
+- Symfony Security Bundle
+- Password Hasher
+- Reset Password Bundle
+- Verify Email Bundle
 
-Created by [Kévin Dunglas](https://dunglas.dev), co-maintained by [Maxime Helias](https://twitter.com/maxhelias) and sponsored by [Les-Tilleuls.coop](https://les-tilleuls.coop).
+#### Templates & formulaires
+
+- Twig
+- Symfony Form
+- Symfony Validator
+
+#### Symfony UX (Front-End dynamique)
+
+- Stimulus
+- Turbo / Hotwire
+- Twig Components
+
+#### Gestion des assets Front-End
+
+- Symfony AssetMapper
+
+#### Services supplémentaires
+
+- Symfony Mailer
+- Symfony HTTP Client
+- Symfony Maker Bundle
+
+### **Base de données**
+
+- **PostGreSQL** : gestion des entités principales (utilisateurs, voitures, trajets et réservation).
+
+---
+
+## 3. Environnement de travail
+
+- IDE : VS Code avec extensions PHP Intelephense et Prettier.
+- Serveur local : Docker.
+- Versionning : Git & GitHub.
+
+---
+
+## 4. Sécurité
+
+- Authentification via Symfony Security
+- Gestion des rôles (Visiteur, Employé, Administrateur)
+- Hashage automatique des mots de passe via le composant Security
+- Système sécurisé de réinitialisation de mot de passe (Reset Password)
+- Protection CSRF sur les formulaires
+- Validation des données avec Symfony Validator
+
+---
+
+## 5. Fonctionnalités principales
+
+### Visiteur
+
+- Rechercher et filtrer des trajets
+- Consulter les détails d’un trajet
+
+### Passager
+
+- Réserver un trajet
+- Gérer ses réservations
+- Gérer son profil utilisateur
+
+### Conducteur
+
+- Proposer un nouveau trajet
+- Gérer ses trajets
+- Gérer les informations de son/ses véhicules
+
+### Employé
+
+- Gérer les trajets signalés
+
+
+### Administrateur
+
+- Gérer les utilisateurs
+
+---
+
+## 6. Aperçu de l'application
+
+### Page d’accueil
+
+![Accueil](docs/screenshots/home.jpg)
+
+### Page de recherche de trajet disponible
+
+![Résultat de recherche](docs/screenshots/result.jpg)
+
+## 7. Installation
+
+### 1. Cloner le dépôt dans un dossier:
+
+```bash
+ git clone https://github.com/Delphine2004/Ecoride_v2.git
+```
+
+### 2. Se déplacer dans le dossier puis copier le fichier d’exemple des variables d’environnement :
+
+```bash
+cp .env.example .env
+```
+
+Modifier les mots de passe dans le fichier .env si nécessaire.
+
+### 3. Construire et lancer les conteneurs :
+
+```bash
+docker compose up -d --build
+```
+
+
+### 4. Créer la base de donnée :
+
+Rentrer dans le conteneur php
+
+```bash
+docker compose exec php bash
+```
+
+Exécuter les migrations
+
+```bash
+php bin/console doctrine:migrations:migrate
+```
+
+### 5. Générer les données :
+
+Toujours dans le conteneur php
+
+```bash
+php bin/console doctrine:fixtures:load
+```
+
+L’application accessible : http://localhost:8094
+
+MailHog accessible : http://localhost:8025
+
+(Adapter les ports en fonction du fichier .env. si modifiés)
+
+### 6. Comptes de test
+
+Après exécution des fixtures, les comptes suivants sont disponibles :
+
+- Administrateur  
+  Email : admin@ecoride.fr  
+
+- Employé  
+  Email : staff@ecoride.fr  
+
+- Passagers  
+  Emails: hermione@poudlard.com, bond007@mi6.co.uk
+
+- Conducteurs  
+  Emails: batman@batman.com, superman@dailyplanet.com,  ironman@starkindustries.com, spiderman@bugle.com
+
+  Mots de passe : `Azertyuiop12*`  
+(Les mots de passes sont identiques pour tous les comptes. Ceci n'est évidemment pas une bonne pratique.)
+---
+## 8. Améliorations futures
+
+- Tableau de bord statistiques pour l'administrateur
+- Ajout de la géolocalisation
+
+
+## 9. Auteur
+
+Projet développé par Delphine FUMEX
+
+- GitHub : https://github.com/Delphine2004
+- LinkedIn : https://www.linkedin.com/in/delphine-fumex/
+- Portfolio: https://delphinefumex.com
