@@ -170,7 +170,7 @@ php bin/console doctrine:fixtures:load
 
 L’application accessible : http://localhost:8094
 
-MailHog accessible : http://localhost:8025
+Emails accessible : http://localhost:8025
 
 (Adapter les ports en fonction du fichier .env. si modifiés)
 
